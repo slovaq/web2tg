@@ -7,6 +7,24 @@ import (
 	"strconv"
 )
 
+func CityCreate(writer http.ResponseWriter, request *http.Request) {
+	chat_id, err := strconv.Atoi(request.FormValue("name"))
+	if err != nil {
+		writer.Write([]byte("chat_id is not valid"))
+		return
+	}
+	city := DAL.CreateOrGetCity(request.FormValue("name"), chat_id)
+	writer.Write([]byte(fmt.Sprint(city)))
+}
+func CityGet(writer http.ResponseWriter, request *http.Request) {
+	city := DAL.GetCity(request.FormValue("city_name"))
+	if city == nil {
+		writer.Write([]byte("city not found"))
+		return
+	}
+	writer.Write([]byte(fmt.Sprint(city)))
+
+}
 func UserCreate(writer http.ResponseWriter, request *http.Request) {
 	user, err := DAL.CreateUser(
 		request.FormValue("login"),
@@ -31,7 +49,7 @@ func UserGet(writer http.ResponseWriter, request *http.Request) {
 	}
 	writer.Write([]byte(fmt.Sprint(user)))
 }
-func GetRecord(writer http.ResponseWriter, request *http.Request) {
+func RecordGet(writer http.ResponseWriter, request *http.Request) {
 	user, err := DAL.GetUser(
 		request.FormValue("login"),
 		request.FormValue("password"),
@@ -51,7 +69,7 @@ func GetRecord(writer http.ResponseWriter, request *http.Request) {
 	}
 	writer.Write([]byte(fmt.Sprint(record)))
 }
-func CreateRecord(writer http.ResponseWriter, request *http.Request) {
+func RecordCreate(writer http.ResponseWriter, request *http.Request) {
 
 }
 

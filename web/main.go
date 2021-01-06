@@ -83,13 +83,7 @@ func main() {
 	r.Route("/", func(r chi.Router) {
 		r.Get("/", index)
 	})
-	r.Route("/api", func(r chi.Router) {
-		r.Get("/user_create", API.UserCreate)
-		r.Get("/user_get", API.UserGet)
-
-		r.Get("record_get", API.GetRecord)
-		r.Get("record_create", API.CreateRecord)
-	})
+	r.Route("/api", API.Router)
 	err = http.ListenAndServe(":1111", r)
 	if err != nil {
 		fmt.Printf("Cant start server with error %s \n Exiting..", err)
