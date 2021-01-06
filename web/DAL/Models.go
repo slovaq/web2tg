@@ -1,4 +1,4 @@
-package main
+package DAL
 
 import (
 	"gorm.io/gorm"
@@ -7,7 +7,7 @@ import (
 
 type City struct {
 	gorm.Model
-	Name   string
+	Name   string `gorm:"unique"`
 	ChatID int
 }
 type Record struct {
