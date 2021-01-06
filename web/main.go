@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/slovaq/web2tg/web/API"
 	"html/template"
 	"log"
 	"net/http"
@@ -81,6 +82,13 @@ func main() {
 	r.Handle("/static", http.FileServer(http.Dir("static")))
 	r.Route("/", func(r chi.Router) {
 		r.Get("/", index)
+	})
+	r.Route("/api", func(r chi.Router) {
+		r.Get("/user_create", API.UserCreate)
+		r.Get("/user_get", API.UserGet)
+
+		r.Get("record_get", API.GetRecord)
+		r.Get("record_create", API.CreateRecord)
 	})
 	err = http.ListenAndServe(":1111", r)
 	if err != nil {
