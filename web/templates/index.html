@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+</head>
+<body>
+    <h1>Записи</h1>
+    <table>
+        <tr>
+            <td>ID</td>
+            <td>Время и дата</td>
+            <td>Куда</td>
+            <td>Текст</td>
+        </tr>
+        {{ range .records}}
+           <tr>
+                <td> {{ .ID }} </td>
+                <td>{{ .Date }}</td>
+                <td>{{ .Text }}</td>
+               <td>{{ .Destination}}</td>
+
+           </tr>
+        {{ else }}
+                <tr>
+                    <td>No rows</td>
+                </tr>
+        {{ end }}
+    </table>
+    <h1>Города</h1>
+    <table>
+
+    </table>
+</body>
+</html>
