@@ -9,15 +9,15 @@ import (
 	"net/http"
 )
 
-var db, _ = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+var DB, _ = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 
 func index(writer http.ResponseWriter, request *http.Request) {
 	var records []Record
 	var cities []City
 	var users []User
-	db.Find(&records) // select * from records to &record
-	db.Find(&cities)  // select * from records to &record
-	db.Find(&users)   // select * from records to &record
+	DB.Find(&records) // select * from Records to &record
+	DB.Find(&cities)  // select * from Records to &record
+	DB.Find(&users)   // select * from Records to &record
 
 	tmpl, err := template.ParseFiles("templates/index.html")
 	if err != nil {
@@ -25,19 +25,23 @@ func index(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	struct_data := struct {
-		records []Record
-		users   []User
-		cities  []City
-	}{records: records, users: users, cities: cities}
-	tmpl.Execute(writer, struct_data)
+	structData := struct {
+		Records []Record
+		Users   []User
+		Cities  []City
+	}{Records: records, Users: users, Cities: cities}
+	err = tmpl.Execute(writer, structData)
+	if err != nil {
+		writer.Write([]byte(err.Error()))
+	}
 }
 func main() {
-	db.AutoMigrate(&Record{})
-	db.AutoMigrate(&User{})
-	db.AutoMigrate(&City{})
+	DB.AutoMigrate(&Record{})
+	DB.AutoMigrate(&User{})
+	DB.AutoMigrate(&City{})
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
+	r.Handle("/static", http.FileServer(http.Dir("static")))
 	r.Route("/", func(r chi.Router) {
 		r.Get("/", index)
 	})

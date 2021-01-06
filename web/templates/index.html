@@ -13,23 +13,57 @@
             <td>Куда</td>
             <td>Текст</td>
         </tr>
-        {{ range .records}}
-           <tr>
-                <td> {{ .ID }} </td>
-                <td>{{ .Date }}</td>
-                <td>{{ .Text }}</td>
-               <td>{{ .Destination}}</td>
-
-           </tr>
+        {{ range .Records}}
+        <tr>
+            <td>{{ .ID }} </td>
+            <td>{{ .Date }}</td>
+            <td>{{ .Text }}</td>
+            <td>{{ .Destination}}</td>
+        </tr>
         {{ else }}
-                <tr>
-                    <td>No rows</td>
-                </tr>
+        <tr>
+            <td>Нет записей</td>
+        </tr>
         {{ end }}
     </table>
     <h1>Города</h1>
     <table>
+        <tr>
+            <td>ID</td>
+            <td>Название</td>
+            <td>ID Чата</td>
 
+        </tr>
+        {{ range .Cities }}
+        <tr>
+            <td> {{ .ID }}  </td>
+            <td> {{ .Name }} </td>
+            <td> {{ .ChatID }} </td>
+        </tr>
+        {{ else }}
+        <tr>
+            <td>Нет городов</td>
+        </tr>
+        {{ end }}
+    </table>
+    <h1>Юзеры</h1>
+    <table>
+        <tr>
+            <td> ID</td>
+            <td> Имя</td>
+            <td> Логин</td>
+        </tr>
+        {{ range .Users }}
+        <tr>
+            <td> {{ .ID }}</td>
+            <td> {{ .Name }} </td>
+            <td> {{ .Login }} </td>
+        </tr>
+        {{ else }}
+        <tr>
+            <td>Нет записей</td>
+        </tr>
+        {{ end }}
     </table>
 </body>
 </html>
