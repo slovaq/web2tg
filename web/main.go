@@ -2,15 +2,16 @@ package main
 
 import (
 	"fmt"
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
-	"github.com/slovaq/web2tg/web/API"
-	DAL "github.com/slovaq/web2tg/web/DAL"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"runtime"
+
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
+	"github.com/slovaq/web2tg/web/API"
+	DAL "github.com/slovaq/web2tg/web/DAL"
 )
 
 var DB = DAL.DB
@@ -84,6 +85,7 @@ func main() {
 		r.Handle("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("static/"))))
 
 	})
+	r.Route("/vue", vueAPI.vIndex)
 	r.Route("/api", API.Router)
 	err = http.ListenAndServe(":1111", r)
 	if err != nil {
