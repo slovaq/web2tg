@@ -2,33 +2,61 @@
 
 <header>
     <script src="https://ru.vuejs.org/js/vue.js"></script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/js/vendor/jquery.min.js" integrity="sha512-ju6u+4bPX50JQmgU97YOGAXmRMrD9as4LE05PdC3qycsGQmjGlfm041azyB1VfCXpkpt1i9gqXCT6XuxhBJtKg==" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/js/vendor/respond.min.js" integrity="sha512-qWVvreMuH9i0DrugcOtifxdtZVBBL0X75r9YweXsdCHtXUidlctw7NXg5KVP3ITPtqZ2S575A0wFkvgS2anqSA==" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/vendor/bootstrap/css/bootstrap.min.css" integrity="sha512-cp9JSDyi0CDCvBfFKYLWXevb3r8hRv5JxcxLkUq/LEtAmOg7X0yzR3p0x/g+S3aWcZw18mhxsCXyelKWmXgzzg==" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/flat-ui.min.css" integrity="sha512-6f7HT84a/AplPkpSRSKWqbseRTG4aRrhadjZezYQ0oVk/B+nm/US5KzQkyyOyh0Mn9cyDdChRdS9qaxJRHayww==" crossorigin="anonymous" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/js/flat-ui.min.js" integrity="sha512-GG/1z6B4MVJdQOw35lE4otrbjd2WYV+zhXgjUR+DTeaAc7s/ijgWsexEScSOIo8J4RlhC28CVerDjYQSH89ekQ==" crossorigin="anonymous"></script>
-   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/js/vendor/jquery.min.js"
+        integrity="sha512-ju6u+4bPX50JQmgU97YOGAXmRMrD9as4LE05PdC3qycsGQmjGlfm041azyB1VfCXpkpt1i9gqXCT6XuxhBJtKg=="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/js/vendor/respond.min.js"
+        integrity="sha512-qWVvreMuH9i0DrugcOtifxdtZVBBL0X75r9YweXsdCHtXUidlctw7NXg5KVP3ITPtqZ2S575A0wFkvgS2anqSA=="
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/vendor/bootstrap/css/bootstrap.min.css"
+        integrity="sha512-cp9JSDyi0CDCvBfFKYLWXevb3r8hRv5JxcxLkUq/LEtAmOg7X0yzR3p0x/g+S3aWcZw18mhxsCXyelKWmXgzzg=="
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/flat-ui.min.css"
+        integrity="sha512-6f7HT84a/AplPkpSRSKWqbseRTG4aRrhadjZezYQ0oVk/B+nm/US5KzQkyyOyh0Mn9cyDdChRdS9qaxJRHayww=="
+        crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/js/flat-ui.min.js"
+        integrity="sha512-GG/1z6B4MVJdQOw35lE4otrbjd2WYV+zhXgjUR+DTeaAc7s/ijgWsexEScSOIo8J4RlhC28CVerDjYQSH89ekQ=="
+        crossorigin="anonymous"></script>
+     
 </header>
-<style> 
-.shareBox{
-    border: 1px solid black;
-    background-color: #eff0f2;
-width: 70%;
-height: 100px;
-border-radius: 6px;
-
-
+<style>
+    @font-face {
+    font-family: 'Symbola';
+    src: url('/static/ttf/Symbola.ttf');
 }
+    .shareBox {
+        border: 1px solid black;
+        background-color: #f5feff;
+        width: 99%;
+        height: 100px;
+        border-radius: 6px;
+        padding-left: 2px;
+        padding-bottom: 2px;
+        padding-top: 2px;
+        padding-right: 2px;
+
+    }
 </style>
+
 <body>
-    <div id="app">
-        {{message}}
-        <a href="#fakelink" class="btn btn-block btn-lg btn-inverse" style="width: 150px;">Inverse Button</a>
+    <div id="app" style="padding-left: 20px;padding-top: 20px;padding-right: 20px;">
+        <div>
+            <a href="#fakelink" class="btn btn-lg btn-inverse" style="width: 150px;"><font face="Symbola">&#x1f5d8;</font>Update posts</a>
+            <a href="#fakelink" class="btn btn-lg btn-success" style="width: 150px;">Create posts</a>
+        </div>
 
-
-            <div class="shareBox">
-                share box
+        <div style="padding-top: 10px;">
+            <div style="padding-top: 10px; border: 1px solid black; width: 70%;
+        background-color: #e9e9e9;
+        border-radius: 6px;
+        padding-left: 10px;
+        padding-bottom: 10px;">
+                <div class="shareBox">
+                    share box
+                </div>
             </div>
+        </div>
     </div>
 </body>
 <script>

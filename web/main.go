@@ -61,7 +61,27 @@ func index(writer http.ResponseWriter, _ *http.Request) {
 		}
 	}
 }
+func otfRout(w http.ResponseWriter, r *http.Request) {
+	file := chi.URLParam(r, "file")
+	path := "./static/ttf/" + file
+	log.Println(path)
+	w.Header().Set("Content-Type", "application/x-font-ttf")
+	http.ServeFile(w, r, path)
+}
+func cssRout(w http.ResponseWriter, r *http.Request) {
+	file := chi.URLParam(r, "file")
+	path := "./static/css/" + file
+	log.Println(path)
+	w.Header().Set("Content-Type", "text/css")
+	http.ServeFile(w, r, path)
+}
+func Rout(r chi.Router) {
+	r.Get("/css/{file}", cssRout)
+	//	r.Get("/js", jsRout)
+	//	r.Get("/pic", picRout)
+	r.Get("/ttf/{file}", otfRout)
 
+}
 func main() {
 	//	errs := make([]error, 3, 3)
 	//errs[0] = DB.AutoMigrate(&DAL.Record{})
@@ -83,9 +103,11 @@ func main() {
 
 	r.Route("/", func(r chi.Router) {
 		r.Get("/", index)
-		r.Handle("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("static/"))))
+
+		//	r.Handle("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("static/"))))
 
 	})
+	r.Route("/static", Rout)
 	r.Route("/vue", vapi.Router)
 	r.Route("/api", API.Router)
 	err = http.ListenAndServe(":1111", r)
