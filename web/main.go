@@ -75,9 +75,16 @@ func cssRout(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/css")
 	http.ServeFile(w, r, path)
 }
+func jsRout(w http.ResponseWriter, r *http.Request) {
+	file := chi.URLParam(r, "file")
+	path := "./static/js/" + file
+	log.Println(path)
+	w.Header().Set("Content-Type", "application/javascript")
+	http.ServeFile(w, r, path)
+}
 func Rout(r chi.Router) {
 	r.Get("/css/{file}", cssRout)
-	//	r.Get("/js", jsRout)
+	r.Get("/js/{file}", jsRout)
 	//	r.Get("/pic", picRout)
 	r.Get("/ttf/{file}", otfRout)
 

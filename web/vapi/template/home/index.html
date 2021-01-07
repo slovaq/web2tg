@@ -19,8 +19,8 @@
         integrity="sha512-GG/1z6B4MVJdQOw35lE4otrbjd2WYV+zhXgjUR+DTeaAc7s/ijgWsexEScSOIo8J4RlhC28CVerDjYQSH89ekQ=="
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/static/css/uikit.min.css" />
-    <script src="js/uikit.min.js"></script>
-    <script src="js/uikit-icons.min.js"></script>
+    <script src="/static/js/uikit.min.js"></script>
+    <script src="/static/js/uikit-icons.min.js"></script>
 </header>
 <style>
     @font-face {
@@ -49,23 +49,68 @@
 
     .mainContainer {
         padding-top: 10px;
-     
+
         width: 70%;
-      
+
         border-radius: 6px;
         padding-left: 10px;
         padding-bottom: 10px;
     }
 </style>
 
+<head>
+    <title>Modal Component</title>
+    <script src="https://unpkg.com/vue"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/sandbox.css" />
+    <!-- template for the modal component -->
+</head>
+
 <body>
     <div id="app" style="padding-left: 20px;padding-top: 20px;padding-right: 20px;">
+        <div v-if="modVisible">
+            <div class="modal-mask">
+                <div class="modal-wrapper">
+                    <div class="modal-container">
 
+
+                        <input type="text" value="" placeholder="дата" class="form-control">
+                        <input type="text" value="" placeholder="сообщение" class="form-control">
+                        <div>
+                            <div style="padding-top: 10px;padding-bottom: 10px;">
+                                <select class=" select  select-block  select-primary " >
+                                    <optgroup label="Единоразово">
+                                        <option value="0">Один раз</option>
+                                    </optgroup>
+                                    <optgroup label="Систематически">
+                                        <option value="1">Каждый час</option>
+                                        <option value="2">Ежедневно</option>
+                                        <option value="3">Еженедельно</option>
+                                        <option value="4">Ежемесячно</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                        
+                    </div>
+                        <div style="padding-left: 30px;">
+                            <button v-on:click="modVisible=false" class="btn btn-lg btn-danger"
+                                style="width: 150px;">cancel</button>
+                            <button v-on:click="modVisible=false" class="btn btn-lg btn-success"
+                                style="width: 150px;">ok</button>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
         <div style="padding-left: 30px;">
-            <a href="#fakelink" class="btn btn-lg btn-success" style="width: 150px;">Create posts</a>
+            <button v-on:click="modVisible=true" class="btn btn-lg btn-success" style="width: 150px;">Create
+                posts</button>
             <a href="#fakelink" class="btn btn-lg btn-inverse" style="width: 150px;">Update posts</a>
 
         </div>
+
         <div v-if="items.length > 0 ">
 
             <div style="padding-top: 10px;">
@@ -92,6 +137,7 @@
         el: '#app',
         data: {
             message: 'Привет, Vue!',
+            modVisible: false,
             items: [{ date: "lol" },
             { date: 22 }
             ]
