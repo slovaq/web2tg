@@ -2,15 +2,15 @@ package main
 
 import (
 	"fmt"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
+	"github.com/slovaq/web2tg/web/API"
+	DAL "github.com/slovaq/web2tg/web/DAL"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"runtime"
-
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
-	DAL "github.com/slovaq/web2tg/web/DAL"
 )
 
 var DB = DAL.DB
@@ -78,10 +78,13 @@ func main() {
 	//	}
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
-	r.Handle("/static", http.FileServer(http.Dir("static")))
+
 	r.Route("/", func(r chi.Router) {
 		r.Get("/", index)
+		r.Handle("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("static/"))))
+
 	})
+	r.Route("/api", API.Router)
 	err = http.ListenAndServe(":1111", r)
 	if err != nil {
 		fmt.Printf("Cant start server with error %s \n Exiting..", err)

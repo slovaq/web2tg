@@ -19,6 +19,6 @@ type Record struct {
 type User struct {
 	gorm.Model
 	Name     string
-	Login    string
+	Login    string `gorm:"unique"`
 	Password string
 }
