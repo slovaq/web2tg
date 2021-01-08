@@ -7,7 +7,7 @@ import (
 
 func (u *User) GetRecord(recordID int) (*Record, error) {
 	var record Record
-	if result := DB.Where("id = ?", recordID); result.Error != nil {
+	if result := DB.First(&record, recordID); result.Error != nil {
 		return nil, result.Error
 	}
 	return &record, nil
