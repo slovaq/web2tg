@@ -61,63 +61,46 @@ func index(writer http.ResponseWriter, _ *http.Request) {
 		}
 	}
 }
-func otfRout(w http.ResponseWriter, r *http.Request) {
-	file := chi.URLParam(r, "file")
-	path := "./static/ttf/" + file
-	log.Println(path)
-	w.Header().Set("Content-Type", "application/x-font-ttf")
-	http.ServeFile(w, r, path)
-}
-func cssRout(w http.ResponseWriter, r *http.Request) {
-	file := chi.URLParam(r, "file")
-	path := "./static/css/" + file
-	log.Println(path)
-	w.Header().Set("Content-Type", "text/css")
-	http.ServeFile(w, r, path)
-}
-func jsRout(w http.ResponseWriter, r *http.Request) {
-	file := chi.URLParam(r, "file")
-	path := "./static/js/" + file
-	log.Println(path)
-	w.Header().Set("Content-Type", "application/javascript")
-	http.ServeFile(w, r, path)
-}
-func Rout(r chi.Router) {
-	r.Get("/css/{file}", cssRout)
-	r.Get("/js/{file}", jsRout)
-	//	r.Get("/pic", picRout)
-	r.Get("/ttf/{file}", otfRout)
 
+func staticRouter(w http.ResponseWriter, r *http.Request) {
+	file := chi.URLParam(r, "file")
+	typeFile := chi.URLParam(r, "type")
+	switch typeFile {
+	case "css":
+		log.Printf("Type [%s] of file: [%s]\n", typeFile, file)
+		w.Header().Set("Content-Type", "text/css")
+	case "js":
+		log.Printf("Type [%s] of file: [%s]\n", typeFile, file)
+		w.Header().Set("Content-Type", "application/javascript")
+	case "ttf":
+		log.Printf("Type [%s] of file: [%s]\n", typeFile, file)
+		w.Header().Set("Content-Type", "application/x-font-ttf")
+	default:
+		log.Printf("Undefined type [%s] of file: [%s]\n", typeFile, file)
+	}
+	path := "./static/" + typeFile + "/" + file
+	//	log.Println(path)
+	http.ServeFile(w, r, path)
 }
-func main() {
-	//	errs := make([]error, 3, 3)
-	//errs[0] = DB.AutoMigrate(&DAL.Record{})
-	//errs[1] = DB.AutoMigrate(&DAL.User{})
-	//errs[2] = DB.AutoMigrate(&DAL.City{})
+func init() {
 	err := DB.AutoMigrate(&DAL.Record{})
 	chk(err)
 	err = DB.AutoMigrate(&DAL.User{})
 	chk(err)
 	err = DB.AutoMigrate(&DAL.City{})
 	chk(err)
-	//	for _, err := range errs {
-	//		if err != nil {
-	//			fmt.Printf("error in main() with text: %s \n", err.Error())
-	//		}
-	//	}
+}
+
+func main() {
+
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
-	r.Route("/", func(r chi.Router) {
-		r.Get("/", index)
-
-		//	r.Handle("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("static/"))))
-
-	})
-	r.Route("/static", Rout)
+	r.HandleFunc("/", index)
+	r.HandleFunc("/static/{type}/{file}", staticRouter)
 	r.Route("/vue", vapi.Router)
 	r.Route("/api", API.Router)
-	err = http.ListenAndServe(":1111", r)
+	err := http.ListenAndServe(":1111", r)
 	if err != nil {
 		fmt.Printf("Cant start server with error %s \n Exiting..", err)
 	}
