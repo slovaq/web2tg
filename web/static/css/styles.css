@@ -1,7 +1,4 @@
-tr td {
-    border-color: black;
-    border-width: 1px;
-}
-body {
-    color: red;
+table, th, td {
+    padding: 2px;
+    border: 1px solid black;
 }

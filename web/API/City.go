@@ -6,6 +6,7 @@ import (
 	"github.com/slovaq/web2tg/web/DAL"
 	"net/http"
 	"strconv"
+	"strings"
 )
 func CityGetList(writer http.ResponseWriter, r *http.Request) {
 	writer.Header().Set("Content-Type", "application/json")
@@ -55,12 +56,13 @@ func CityGet(writer http.ResponseWriter, request *http.Request) {
 		Result:  nil,
 		Error:   nil,
 	}
-	city := DAL.GetCity(request.FormValue("city_name"))
+	city := DAL.GetCity(strings.TrimSpace(request.FormValue("city_name")))
 	if city == nil {
 		chk(&result, writer, fmt.Errorf("city not found"))
 		error_sended = true
 	}
 	result.Result = city
+	result.Success = true
 	returnData, err := json.Marshal(result)
 	if err != nil {
 		chk(&result, writer, err)
@@ -69,6 +71,7 @@ func CityGet(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 	if !error_sended {
+
 		writer.Write(returnData)
 	}
 
