@@ -3,15 +3,16 @@ package API
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/slovaq/web2tg/web/DAL"
 	"net/http"
+
+	"github.com/slovaq/web2tg/web/DAL"
 )
 
 func UserCreate(writer http.ResponseWriter, request *http.Request) {
 	writer.Header().Set("Content-Type", "application/json")
 
 	obj := JsonObject{
-		Success: false,
+		Success: true,
 		Result:  nil,
 		Error:   nil,
 	}
