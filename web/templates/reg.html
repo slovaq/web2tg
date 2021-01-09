@@ -1,0 +1,60 @@
+<html>
+    <body>
+        <form
+  id="app"
+  @submit="checkForm"
+  action="https://vuejs.org/"
+  method="post"
+>
+
+  <p v-if="errors.length">
+    <b>Пожалуйста исправьте указанные ошибки:</b>
+    <ul>
+      <li v-for="error in errors">{{ error }}</li>
+    </ul>
+  </p>
+
+  <p>
+    <label for="name">Имя</label>
+    <input
+      id="name"
+      v-model="name"
+      type="text"
+      name="name"
+    >
+  </p>
+
+  <p>
+    <label for="age">Возраст</label>
+    <input
+      id="age"
+      v-model="age"
+      type="number"
+      name="age"
+      min="0"
+    >
+  </p>
+
+  <p>
+    <label for="movie">Любимый фильм</label>
+    <select
+      id="movie"
+      v-model="movie"
+      name="movie"
+    >
+      <option>Star Wars</option>
+      <option>Vanilla Sky</option>
+      <option>Atomic Blonde</option>
+    </select>
+  </p>
+
+  <p>
+    <input
+      type="submit"
+      value="Отправить"
+    >
+  </p>
+
+</form>
+    </body>
+</html>

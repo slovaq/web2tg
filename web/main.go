@@ -90,12 +90,15 @@ func init() {
 	err = DB.AutoMigrate(&DAL.City{})
 	chk(err)
 }
-
+func reg(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "templates/reg.html")
+}
 func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
 	r.HandleFunc("/", index)
+	r.HandleFunc("/reg", reg)
 	r.HandleFunc("/static/{type}/{file}", staticRouter)
 	r.Route("/vue", vapi.Router)
 	r.Route("/api", API.Router)
