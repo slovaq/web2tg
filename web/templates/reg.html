@@ -1,60 +1,317 @@
 <html>
-    <body>
-        <form
-  id="app"
-  @submit="checkForm"
-  action="https://vuejs.org/"
-  method="post"
->
 
-  <p v-if="errors.length">
-    <b>Пожалуйста исправьте указанные ошибки:</b>
-    <ul>
-      <li v-for="error in errors">{{ error }}</li>
-    </ul>
-  </p>
+<header>
+    <script src="https://ru.vuejs.org/js/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/js/vendor/jquery.min.js"
+        integrity="sha512-ju6u+4bPX50JQmgU97YOGAXmRMrD9as4LE05PdC3qycsGQmjGlfm041azyB1VfCXpkpt1i9gqXCT6XuxhBJtKg=="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/js/vendor/respond.min.js"
+        integrity="sha512-qWVvreMuH9i0DrugcOtifxdtZVBBL0X75r9YweXsdCHtXUidlctw7NXg5KVP3ITPtqZ2S575A0wFkvgS2anqSA=="
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/vendor/bootstrap/css/bootstrap.min.css"
+        integrity="sha512-cp9JSDyi0CDCvBfFKYLWXevb3r8hRv5JxcxLkUq/LEtAmOg7X0yzR3p0x/g+S3aWcZw18mhxsCXyelKWmXgzzg=="
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/flat-ui.min.css"
+        integrity="sha512-6f7HT84a/AplPkpSRSKWqbseRTG4aRrhadjZezYQ0oVk/B+nm/US5KzQkyyOyh0Mn9cyDdChRdS9qaxJRHayww=="
+        crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/js/flat-ui.min.js"
+        integrity="sha512-GG/1z6B4MVJdQOw35lE4otrbjd2WYV+zhXgjUR+DTeaAc7s/ijgWsexEScSOIo8J4RlhC28CVerDjYQSH89ekQ=="
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/static/css/uikit.min.css" />
+    <script src="/static/js/uikit.min.js"></script>
+    <script src="/static/js/uikit-icons.min.js"></script>
+</header>
+<style>
+    @font-face {
+        font-family: 'Symbola';
+        src: url('/static/ttf/Symbola.ttf');
+    }
 
-  <p>
-    <label for="name">Имя</label>
-    <input
-      id="name"
-      v-model="name"
-      type="text"
-      name="name"
-    >
-  </p>
+    .shareBox {
 
-  <p>
-    <label for="age">Возраст</label>
-    <input
-      id="age"
-      v-model="age"
-      type="number"
-      name="age"
-      min="0"
-    >
-  </p>
+        width: 99%;
+        height: 100px;
+        border-radius: 6px;
+        padding-left: 2px;
+        padding-bottom: 2px;
+        padding-top: 2px;
+        padding-right: 2px;
 
-  <p>
-    <label for="movie">Любимый фильм</label>
-    <select
-      id="movie"
-      v-model="movie"
-      name="movie"
-    >
-      <option>Star Wars</option>
-      <option>Vanilla Sky</option>
-      <option>Atomic Blonde</option>
-    </select>
-  </p>
+    }
 
-  <p>
-    <input
-      type="submit"
-      value="Отправить"
-    >
-  </p>
+    .sbx {
+        right: 10px;
+        position: relative;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
 
-</form>
-    </body>
+    .mainContainer {
+        padding-top: 10px;
+
+        width: 70%;
+
+        border-radius: 6px;
+        padding-left: 10px;
+        padding-bottom: 10px;
+    }
+</style>
+<style>
+    .btn-grad-color {
+        background-image: linear-gradient(to right, #FF512F 0%, #DD2476 51%, #FF512F 100%);
+        box-shadow: 0 0 20px #eee;
+
+    }
+
+
+    .frame {
+
+        box-shadow: 0 0 20px rgb(0, 0, 0);
+        border-radius: 100px;
+    }
+
+    .btn-grad {
+
+
+        text-align: center;
+        text-transform: uppercase;
+        transition: 0.5s;
+        background-size: 200% auto;
+        color: white;
+
+        border-radius: 100px;
+        background-image: linear-gradient(to right, #FF512F 0%, #DD2476 51%, #FF512F 100%);
+        box-shadow: 0 0 20px #eee;
+
+    }
+
+    .btn-cp {
+
+
+        text-align: center;
+        text-transform: uppercase;
+        transition: 0.5s;
+        background-size: 200% auto;
+        color: black;
+
+        border-radius: 100px;
+        background-image: linear-gradient(to right, white 100%);
+        box-shadow: 0 0 20px rgb(255, 255, 255);
+
+
+    }
+
+    .btn-grad:hover {
+        background-position: right center;
+        /* change the direction of the change here */
+        color: #fff;
+        text-decoration: none;
+    }
+</style>
+
+<head>
+    <title>Modal Component</title>
+    <script src="https://unpkg.com/vue"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/sandbox.css" />
+    <!-- template for the modal component -->
+</head>
+
+<body>
+    <style>
+        .switch-field {
+            display: flex;
+            margin-bottom: 36px;
+            overflow: hidden;
+        }
+
+        .switch-field input {
+            position: absolute !important;
+            clip: rect(0, 0, 0, 0);
+            height: 1px;
+            width: 1px;
+            border: 0;
+            overflow: hidden;
+        }
+
+        .switch-field label {
+            background-color: #e4e4e4;
+            color: rgba(0, 0, 0, 0.6);
+            font-size: 14px;
+            line-height: 1;
+            text-align: center;
+            padding: 8px 16px;
+            margin-right: -1px;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+            transition: all 0.1s ease-in-out;
+        }
+
+        .switch-field label:hover {
+            cursor: pointer;
+        }
+
+        .switch-field input:checked+label {
+            background-color: #2ecc71;
+            box-shadow: none;
+        }
+
+        .switch-field label:first-of-type {
+            border-radius: 4px 0 0 4px;
+        }
+
+        .switch-field label:last-of-type {
+            border-radius: 0 4px 4px 0;
+        }
+    </style>
+    <div id="app">
+        <center>
+            <p v-if="errors.length">
+                <b>Пожалуйста, исправьте ошибки:</b>
+            <ul>
+                <li v-for="error in errors">{{ error }}</li>
+            </ul>
+            </p>
+        </center>
+        <div class="modal-mask" style="background-color: rgba(0, 0, 0, 0)">
+            <div class="modal-wrapper">
+                <div class="modal-container" style="width: 400px;height: 400px;">
+                   
+
+
+
+                    <div class="switch-field">
+                        <input type="radio" id="radio-one" name="switch-one" value="yes" checked />
+                        <label for="radio-one" v-on:click="logreg=true" style="width: 171px">Registration</label>
+                        <input type="radio" id="radio-two" name="switch-one" value="no" />
+                        <label for="radio-two" v-on:click="logreg=false" style="width: 171px">Login</label>
+                    </div>
+
+
+
+
+
+
+                    <div v-if=" logreg">
+
+                        <form @submit="checkForm" action="/something" method="post" novalidate="true">
+                            <div style="height:60% ;">
+                                <div style="padding-bottom: 7px;">
+                                    <input type="text" placeholder="Name" name="name" id="name" v-model="name"
+                                        class="form-control">
+                                </div>
+                                <div style="padding-bottom: 7px;">
+                                    <input type="email" name="email" placeholder="email" id="email" v-model="email"
+                                        class="form-control">
+                                </div>
+                                <div style="padding-bottom: 7px;">
+                                    <input type="password" placeholder="password" name="password" id="passF"
+                                        class="form-control">
+                                </div>
+                                <div style="padding-bottom: 7px;">
+                                    <input type="password" placeholder="password" name="password" id="passT"
+                                        class="form-control">
+                                </div>
+
+                            </div>
+
+                            <div style="padding-top: 10px;">
+                                <input type="submit" style="width: 340px;" class="btn btn-lg btn-success"
+                                    value="Submit">
+                            </div>
+
+                        </form>
+
+                    </div>
+                    <div v-else>
+                        <form @submit="checkForm" action="/something" method="post" novalidate="true">
+                            <div style="height:60% ;">
+                                <div style="padding-bottom: 7px;">
+                                    <input type="text" placeholder="Name" name="name" id="name" v-model="name"
+                                        class="form-control">
+                                </div>
+                                <div style="padding-bottom: 7px;">
+                                    <input type="email" name="email" placeholder="email" id="email" v-model="email"
+                                        class="form-control">
+                                </div>
+                                <div style="padding-bottom: 7px;">
+                                    <input type="password" placeholder="password" name="password" id="passF"
+                                        class="form-control">
+                                </div>
+                                <div style="padding-bottom: 7px;">
+                                    <input type="password" placeholder="password" name="password" id="passT"
+                                        class="form-control">
+                                </div>
+
+                            </div>
+
+                            <div style="padding-top: 10px;">
+                                <input type="submit" style="width: 340px;" class="btn btn-lg btn-success"
+                                    value="Submit">
+                            </div>
+
+                        </form>
+
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+   
+
+
+
+
+</body>
+<script>
+
+    const app = new Vue({
+        el: '#app',
+        data: {
+            errors: [],
+            name: null,
+            email: null,
+            movie: null,
+            passF: null,
+            passT: null,
+            logreg: true
+        },
+        methods: {
+
+            checkForm: function (e) {
+                this.errors = [];
+
+                if (!this.name) {
+                    this.errors.push('Укажите имя.');
+                }
+                if (!(this.passF !== this.passT) || !(this.passF.length == 0)) {
+                    this.errors.push('неправильный пароль');
+                }
+                if (!this.email) {
+                    this.errors.push('Укажите электронную почту.');
+                } else if (!this.validEmail(this.email)) {
+                    this.errors.push('Укажите корректный адрес электронной почты.');
+                }
+
+                if (!this.errors.length) {
+                    return true;
+                }
+
+                e.preventDefault();
+            },
+            validEmail: function (email) {
+                var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(email);
+            }
+        }
+
+    })
+</script>
+
 </html>
