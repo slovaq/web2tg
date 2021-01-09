@@ -7,7 +7,24 @@ import (
 	"net/http"
 	"strconv"
 )
+func CityGetList(writer http.ResponseWriter, r *http.Request) {
+	writer.Header().Set("Content-Type", "application/json")
+	obj := JsonObject{
+		Success: false,
+		Result:  nil,
+		Error:   nil,
+	}
+	cities, err := DAL.GetListOfCity()
+	if err != nil {
+		chk(&obj, writer, err)
+		return
+	}
 
+	obj.Success = true
+	obj.Result = cities
+	returnData, _ := json.Marshal(obj)
+	writer.Write(returnData)
+}
 func CityCreate(writer http.ResponseWriter, request *http.Request) {
 	writer.Header().Set("Content-Type", "application/json")
 	error_sended := false
@@ -16,7 +33,7 @@ func CityCreate(writer http.ResponseWriter, request *http.Request) {
 		Result:  nil,
 		Error:   nil,
 	}
-	chat_id, err := strconv.Atoi(request.FormValue("name"))
+	chat_id, err := strconv.Atoi(request.FormValue("chat_id"))
 	if err != nil {
 		chk(&obj, writer, err)
 		error_sended = true

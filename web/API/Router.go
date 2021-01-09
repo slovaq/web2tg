@@ -11,4 +11,5 @@ func Router(r chi.Router) {
 
 	r.Get("/city_create", CityCreate)
 	r.Get("/city_get", CityGet)
+	r.Get("/city_getAll", CityGetList)
 }

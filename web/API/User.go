@@ -2,6 +2,7 @@ package API
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/slovaq/web2tg/web/DAL"
 	"net/http"
 )
@@ -27,6 +28,7 @@ func UserCreate(writer http.ResponseWriter, request *http.Request) {
 	return_data, err := json.Marshal(obj)
 	if err != nil {
 		writer.Write([]byte("Server error"))
+		return
 	}
 	writer.Write(return_data)
 
@@ -39,15 +41,27 @@ func UserGet(writer http.ResponseWriter, request *http.Request) {
 		Result:  nil,
 		Error:   nil,
 	}
+	password := request.FormValue("password")
+	login := request.FormValue("login")
+	if password == "" {
+		chk(&obj, writer, fmt.Errorf("no password passed"))
+		return
+	}
+	if login == "" {
+		chk(&obj, writer, fmt.Errorf("no login passed"))
+		return
+
+	}
 	user, err := DAL.GetUser(
-		request.FormValue("login"),
-		request.FormValue("password"),
+		login, password,
 	)
+
 	if err != nil {
-		obj.Error = err.Error()
-		obj.Success = false
+		chk(&obj, writer, err)
+		return
 	}
 	obj.Result = user
+	obj.Success = true
 	return_data, err := json.Marshal(obj)
 	if err != nil {
 		writer.Write([]byte("Server error"))

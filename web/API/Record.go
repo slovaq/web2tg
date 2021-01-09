@@ -15,7 +15,6 @@ func chk(result *JsonObject, w http.ResponseWriter, err error) {
 	result.Error = err.Error()
 	result.Success = false
 	return_data, _ := json.Marshal(result)
-	fmt.Println(return_data)
 	w.Write(return_data)
 	if err != nil {
 		fmt.Println(err.Error())
