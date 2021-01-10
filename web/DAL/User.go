@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 )
+
 func SHA256(text string) string {
 	algorithm := sha256.New()
 	algorithm.Write([]byte(text))
@@ -27,7 +28,7 @@ func CreateUser(login string, name string, password string) (*User, error) {
 		Name:     name,
 	}
 	if result := DB.Create(&user); result.Error != nil {
-		return nil, fmt.Errorf("login %s is exists", login)
+		return nil, fmt.Errorf("user %s with login %s is exists", name, login)
 	}
 	user.Password = "hidden"
 	return &user, nil

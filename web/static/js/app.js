@@ -3,7 +3,7 @@ const app = new Vue({
     el: '#app',
     data: {
         errors: [],
-        name: null,
+        login: null,
         email: null,
         movie: null,
         passF: null,
@@ -15,7 +15,7 @@ const app = new Vue({
         checkForm: function (e) {
             this.errors = [];
 
-            if (!this.name) {
+            if (!this.login) {
                 this.errors.push('Укажите имя.');
             }
             if (!(this.passF !== this.passT) || !(this.passF.length == 0)) {

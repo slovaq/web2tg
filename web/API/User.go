@@ -16,10 +16,29 @@ func UserCreate(writer http.ResponseWriter, request *http.Request) {
 		Result:  nil,
 		Error:   nil,
 	}
-	user, err := DAL.CreateUser(
+	vars := []string{
 		request.FormValue("login"),
 		request.FormValue("name"),
 		request.FormValue("password"),
+	}
+	// Если имя не указано - заполнить его из поля логина
+	if vars[0] == "" {
+		obj.Error = fmt.Errorf("No login passed")
+		obj.Success = false
+	}
+	// FIXME: Проверки не работают
+	if vars[2] == "" {
+		obj.Error = fmt.Errorf("No password passed")
+		obj.Success = false
+	}
+	if vars[1] == "" {
+		vars[1] = vars[0]
+	}
+	//
+	user, err := DAL.CreateUser(
+		vars[0],
+		vars[1],
+		vars[2],
 	)
 	if err != nil {
 		obj.Error = err.Error()
