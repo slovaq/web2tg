@@ -7,12 +7,27 @@ const app = new Vue({
         email: null,
         movie: null,
         passF: null,
+        passLogin: null,
         passT: null,
         logreg: true,
         RegSuccess:true,
         SuccFalse:true
     },
     methods: {
+        axiosLog() {
+            console.log("send")
+            console.log("this.login: " + this.login + " this.passF: " + this.passF )
+            axios.get(`/api/user_get?login=${this.login}&password=${this.passF}`)
+                .then(function (response) {
+                    // handle success
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                });
+
+        },
         axiosReg() {
             console.log("send")
             axios.get(`/api/user_create?login=${this.email}&name=${this.login}&password=${this.passF}`)
@@ -28,18 +43,19 @@ const app = new Vue({
         },
         logHandler() {
             this.errors = [];
-            console.log("this.login: " + this.login + " this.passF: " + this.passF + " this.passT: " + this.passT)
+            console.log("this.login: " + this.login + " this.passF: " + this.passF )
             if (!this.login) {
                 this.errors.push('Укажите имя.');
-            }      
+            }
+           
             if (this.passF.length == 0) {
                 this.errors.push('укажите пароль');
             }
-            if (!this.email) {
-                this.errors.push('Укажите электронную почту.');
-            } else if (!this.validEmail(this.email)) {
-                this.errors.push('Укажите корректный адрес электронной почты.');
-            }
+         //   if (!this.email) {
+          //      this.errors.push('Укажите электронную почту.');
+         //   } else if (!this.validEmail(this.email)) {
+         //       this.errors.push('Укажите корректный адрес электронной почты.');
+        //    }
             if (this.errors.length == 0) {
                 console.log("log ok")
                 this.RegSuccess=false

@@ -76,18 +76,19 @@
                         <div v-else>
                             <form @submit.prevent="logHandler">
                                 <div style="height:60% ;">
-                               
                                     <div style="padding-bottom: 7px;">
-                                        <input type="email" name="email" placeholder="email" id="email" v-model="email"
+                                        <input type="text" placeholder="Name" name="login" id="login" v-model="login"
                                             class="form-control">
                                     </div>
+                                    
                                     <div style="padding-bottom: 7px;">
                                         <input type="password" placeholder="password" name="password" id="passF"
-                                            class="form-control">
+                                            v-model="passF" class="form-control">
                                     </div>
                                     
 
                                 </div>
+
 
                                 <div style="padding-top: 10px;">
                                     <input type="submit" style="width: 340px;" class="btn btn-lg btn-success"
