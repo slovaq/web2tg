@@ -1,12 +1,13 @@
 <!doctype html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Modal Component</title>
-    
+
     <link rel="stylesheet" type="text/css" href="/static/css/sandbox.css" />
     <!-- template for the modal component -->
     <link rel="stylesheet" href="/static/css/styles.css">
@@ -24,110 +25,117 @@
 
 <body>
 
-<div id="app">
-    <p class="error_msg" v-if="errors.length">
-        <b>Пожалуйста, исправьте ошибки:</b>
+    <div id="app">
+        <p class="error_msg" v-if="errors.length">
+            <b>Пожалуйста, исправьте ошибки:</b>
         <ul class="error_list">
             <li class="error_list" v-for="error in errors">{{ error }}</li>
         </ul>
-    </p>
-    <div class="modal-mask" style="background-color: rgba(0, 0, 0, 0)">
-        <div class="modal-wrapper">
-            <div class="modal-container" style="width: 400px;height: 400px;">
-                <div class="switch-field">
-                    <input type="radio" id="radio-one" name="switch-one" value="yes" checked />
-                    <label for="radio-one" v-on:click="logreg=true" style="width: 171px">Registration</label>
-                    <input type="radio" id="radio-two" name="switch-one" value="no" />
-                    <label for="radio-two" v-on:click="logreg=false" style="width: 171px">Login</label>
+        </p>
+        <div class="modal-mask" style="background-color: rgba(0, 0, 0, 0)">
+            <div class="modal-wrapper">
+                <div class="modal-container" style="width: 400px;height: 400px;">
+                    <div v-if="RegSuccess">
+                        <div class="switch-field">
+                            <input type="radio" id="radio-one" name="switch-one" value="yes" checked />
+                            <label for="radio-one" v-on:click="logreg=true" style="width: 171px">Registration</label>
+                            <input type="radio" id="radio-two" name="switch-one" value="no" />
+                            <label for="radio-two" v-on:click="logreg=false" style="width: 171px">Login</label>
+                        </div>
+                        <div v-if=" logreg">
+
+                            <form @submit.prevent="subHandler">
+                                <div style="height:60% ;">
+                                    <div style="padding-bottom: 7px;">
+                                        <input type="text" placeholder="Name" name="login" id="login" v-model="login"
+                                            class="form-control">
+                                    </div>
+                                    <div style="padding-bottom: 7px;">
+                                        <input type="email" name="email" placeholder="email" id="email" v-model="email"
+                                            class="form-control">
+                                    </div>
+                                    <div style="padding-bottom: 7px;">
+                                        <input type="password" placeholder="password" name="password" id="passF"
+                                            v-model="passF" class="form-control">
+                                    </div>
+                                    <div style="padding-bottom: 7px;">
+                                        <input type="password" placeholder="password" name="password" id="passT"
+                                            v-model="passT" class="form-control">
+                                    </div>
+
+                                </div>
+
+                                <div style="padding-top: 10px;">
+                                    <input type="submit" style="width: 340px;" class="btn btn-lg btn-success"
+                                        value="Submit">
+                                </div>
+
+                            </form>
+
+                        </div>
+                        <div v-else>
+                            <form @submit="checkForm" action="/api/" method="post" novalidate="true">
+                                <div style="height:60% ;">
+                                    <div style="padding-bottom: 7px;">
+                                        <input type="text" placeholder="Name" name="name" id="name" v-model="name"
+                                            class="form-control">
+                                    </div>
+                                    <div style="padding-bottom: 7px;">
+                                        <input type="email" name="email" placeholder="email" id="email" v-model="email"
+                                            class="form-control">
+                                    </div>
+                                    <div style="padding-bottom: 7px;">
+                                        <input type="password" placeholder="password" name="password" id="passF"
+                                            class="form-control">
+                                    </div>
+                                    <div style="padding-bottom: 7px;">
+                                        <input type="password" placeholder="password" name="password" id="passT"
+                                            class="form-control">
+                                    </div>
+
+                                </div>
+
+                                <div style="padding-top: 10px;">
+                                    <input type="submit" style="width: 340px;" class="btn btn-lg btn-success"
+                                        value="Submit">
+                                </div>
+
+                            </form>
+
+
+                        </div>
+                    </div>
+                    <div v-else>
+                            Success
+                    </div>
+
+
                 </div>
-                <div v-if=" logreg">
-
-                    <form @submit.prevent="subHandler" >
-                        <div style="height:60% ;">
-                            <div style="padding-bottom: 7px;">
-                                <input type="text" placeholder="Name" name="login" id="login" v-model="login"
-                                       class="form-control">
-                            </div>
-                            <div style="padding-bottom: 7px;">
-                                <input type="email" name="email" placeholder="email" id="email" v-model="email"
-                                       class="form-control">
-                            </div>
-                            <div style="padding-bottom: 7px;">
-                                <input type="password" placeholder="password" name="password" id="passF" v-model="passF"
-                                       class="form-control">
-                            </div>
-                            <div style="padding-bottom: 7px;">
-                                <input type="password" placeholder="password" name="password" id="passT" v-model="passT"
-                                       class="form-control">
-                            </div>
-
-                        </div>
-
-                        <div style="padding-top: 10px;">
-                            <input type="submit" style="width: 340px;" class="btn btn-lg btn-success"
-                                   value="Submit">
-                        </div>
-
-                    </form>
-
-                </div>
-                <div v-else>
-                    <form @submit="checkForm" action="/api/" method="post" novalidate="true">
-                        <div style="height:60% ;">
-                            <div style="padding-bottom: 7px;">
-                                <input type="text" placeholder="Name" name="name" id="name" v-model="name"
-                                       class="form-control">
-                            </div>
-                            <div style="padding-bottom: 7px;">
-                                <input type="email" name="email" placeholder="email" id="email" v-model="email"
-                                       class="form-control">
-                            </div>
-                            <div style="padding-bottom: 7px;">
-                                <input type="password" placeholder="password" name="password" id="passF"
-                                       class="form-control">
-                            </div>
-                            <div style="padding-bottom: 7px;">
-                                <input type="password" placeholder="password" name="password" id="passT"
-                                       class="form-control">
-                            </div>
-
-                        </div>
-
-                        <div style="padding-top: 10px;">
-                            <input type="submit" style="width: 340px;" class="btn btn-lg btn-success"
-                                   value="Submit">
-                        </div>
-
-                    </form>
-
-
-                </div>
-
             </div>
         </div>
     </div>
-</div>
 </body>
 <script src="/static/js/compressed.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/js/vendor/jquery.min.js"
-        integrity="sha512-ju6u+4bPX50JQmgU97YOGAXmRMrD9as4LE05PdC3qycsGQmjGlfm041azyB1VfCXpkpt1i9gqXCT6XuxhBJtKg=="
-        crossorigin="anonymous"></script>
+    integrity="sha512-ju6u+4bPX50JQmgU97YOGAXmRMrD9as4LE05PdC3qycsGQmjGlfm041azyB1VfCXpkpt1i9gqXCT6XuxhBJtKg=="
+    crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/js/vendor/respond.min.js"
-        integrity="sha512-qWVvreMuH9i0DrugcOtifxdtZVBBL0X75r9YweXsdCHtXUidlctw7NXg5KVP3ITPtqZ2S575A0wFkvgS2anqSA=="
-        crossorigin="anonymous"></script>
+    integrity="sha512-qWVvreMuH9i0DrugcOtifxdtZVBBL0X75r9YweXsdCHtXUidlctw7NXg5KVP3ITPtqZ2S575A0wFkvgS2anqSA=="
+    crossorigin="anonymous"></script>
 <link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/vendor/bootstrap/css/bootstrap.min.css"
-      integrity="sha512-cp9JSDyi0CDCvBfFKYLWXevb3r8hRv5JxcxLkUq/LEtAmOg7X0yzR3p0x/g+S3aWcZw18mhxsCXyelKWmXgzzg=="
-      crossorigin="anonymous" />
+    href="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/vendor/bootstrap/css/bootstrap.min.css"
+    integrity="sha512-cp9JSDyi0CDCvBfFKYLWXevb3r8hRv5JxcxLkUq/LEtAmOg7X0yzR3p0x/g+S3aWcZw18mhxsCXyelKWmXgzzg=="
+    crossorigin="anonymous" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/flat-ui.min.css"
-      integrity="sha512-6f7HT84a/AplPkpSRSKWqbseRTG4aRrhadjZezYQ0oVk/B+nm/US5KzQkyyOyh0Mn9cyDdChRdS9qaxJRHayww=="
-      crossorigin="anonymous" />
+    integrity="sha512-6f7HT84a/AplPkpSRSKWqbseRTG4aRrhadjZezYQ0oVk/B+nm/US5KzQkyyOyh0Mn9cyDdChRdS9qaxJRHayww=="
+    crossorigin="anonymous" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/js/flat-ui.min.js"
-        integrity="sha512-GG/1z6B4MVJdQOw35lE4otrbjd2WYV+zhXgjUR+DTeaAc7s/ijgWsexEScSOIo8J4RlhC28CVerDjYQSH89ekQ=="
-        crossorigin="anonymous"></script>
+    integrity="sha512-GG/1z6B4MVJdQOw35lE4otrbjd2WYV+zhXgjUR+DTeaAc7s/ijgWsexEScSOIo8J4RlhC28CVerDjYQSH89ekQ=="
+    crossorigin="anonymous"></script>
 <script src="/static/js/app.js"></script>
 <script src="/static/js/uikit.min.js"></script>
 <script src="/static/js/uikit-icons.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 </html>

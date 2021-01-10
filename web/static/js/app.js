@@ -8,12 +8,13 @@ const app = new Vue({
         movie: null,
         passF: null,
         passT: null,
-        logreg: true
+        logreg: true,
+        RegSuccess:true
     },
     methods: {
         axiosReg() {
             console.log("send")
-            axios.get('/user?ID=12345')
+            axios.get(`/api/user_create?login=${this.email}&name=${this.login}&password=${this.passF}`)
                 .then(function (response) {
                     // handle success
                     console.log(response);
@@ -43,6 +44,7 @@ const app = new Vue({
             }
             if (this.errors.length == 0) {
                 console.log("reg ok")
+                this.RegSuccess=false
                 this.axiosReg()
             }
 
