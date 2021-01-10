@@ -9,7 +9,8 @@ const app = new Vue({
         passF: null,
         passT: null,
         logreg: true,
-        RegSuccess:true
+        RegSuccess:true,
+        SuccFalse:true
     },
     methods: {
         axiosReg() {
