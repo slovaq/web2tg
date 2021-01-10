@@ -42,7 +42,7 @@
                 </div>
                 <div v-if=" logreg">
 
-                    <form @submit="checkForm" action="/api/user_create" method="get" novalidate="true">
+                    <form @submit.prevent="subHandler" >
                         <div style="height:60% ;">
                             <div style="padding-bottom: 7px;">
                                 <input type="text" placeholder="Name" name="login" id="login" v-model="login"
@@ -53,11 +53,11 @@
                                        class="form-control">
                             </div>
                             <div style="padding-bottom: 7px;">
-                                <input type="password" placeholder="password" name="password" id="passF"
+                                <input type="password" placeholder="password" name="password" id="passF" v-model="passF"
                                        class="form-control">
                             </div>
                             <div style="padding-bottom: 7px;">
-                                <input type="password" placeholder="password" name="password" id="passT"
+                                <input type="password" placeholder="password" name="password" id="passT" v-model="passT"
                                        class="form-control">
                             </div>
 
