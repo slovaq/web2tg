@@ -42,7 +42,7 @@
                             <input type="radio" id="radio-two" name="switch-one" value="no" />
                             <label for="radio-two" v-on:click="logreg=false" style="width: 171px">Login</label>
                         </div>
-                        <div v-if=" logreg">
+                        <div v-if="logreg">
 
                             <form @submit.prevent="subHandler">
                                 <div style="height:60% ;">
@@ -74,12 +74,9 @@
 
                         </div>
                         <div v-else>
-                            <form @submit="checkForm" action="/api/" method="post" novalidate="true">
+                            <form @submit.prevent="logHandler">
                                 <div style="height:60% ;">
-                                    <div style="padding-bottom: 7px;">
-                                        <input type="text" placeholder="Name" name="name" id="name" v-model="name"
-                                            class="form-control">
-                                    </div>
+                               
                                     <div style="padding-bottom: 7px;">
                                         <input type="email" name="email" placeholder="email" id="email" v-model="email"
                                             class="form-control">
@@ -88,10 +85,7 @@
                                         <input type="password" placeholder="password" name="password" id="passF"
                                             class="form-control">
                                     </div>
-                                    <div style="padding-bottom: 7px;">
-                                        <input type="password" placeholder="password" name="password" id="passT"
-                                            class="form-control">
-                                    </div>
+                                    
 
                                 </div>
 

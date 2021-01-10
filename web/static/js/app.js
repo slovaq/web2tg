@@ -26,6 +26,27 @@ const app = new Vue({
                 });
 
         },
+        logHandler() {
+            this.errors = [];
+            console.log("this.login: " + this.login + " this.passF: " + this.passF + " this.passT: " + this.passT)
+            if (!this.login) {
+                this.errors.push('Укажите имя.');
+            }      
+            if (this.passF.length == 0) {
+                this.errors.push('укажите пароль');
+            }
+            if (!this.email) {
+                this.errors.push('Укажите электронную почту.');
+            } else if (!this.validEmail(this.email)) {
+                this.errors.push('Укажите корректный адрес электронной почты.');
+            }
+            if (this.errors.length == 0) {
+                console.log("log ok")
+                this.RegSuccess=false
+                this.axiosLog()
+            }
+
+        },
         subHandler() {
             this.errors = [];
             console.log("this.login: " + this.login + " this.passF: " + this.passF + " this.passT: " + this.passT)
