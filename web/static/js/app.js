@@ -11,10 +11,22 @@ const app = new Vue({
         logreg: true
     },
     methods: {
+        axiosReg() {
+            console.log("send")
+            axios.get('/user?ID=12345')
+                .then(function (response) {
+                    // handle success
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                });
 
+        },
         subHandler() {
             this.errors = [];
-console.log("this.login: "+this.login+" this.passF: "+this.passF+" this.passT: "+this.passT)
+            console.log("this.login: " + this.login + " this.passF: " + this.passF + " this.passT: " + this.passT)
             if (!this.login) {
                 this.errors.push('Укажите имя.');
             }
@@ -29,10 +41,11 @@ console.log("this.login: "+this.login+" this.passF: "+this.passF+" this.passT: "
             } else if (!this.validEmail(this.email)) {
                 this.errors.push('Укажите корректный адрес электронной почты.');
             }
-            if(this.errors.length==0){
+            if (this.errors.length == 0) {
                 console.log("reg ok")
+                this.axiosReg()
             }
-           
+
         },
         validEmail: function (email) {
             var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
