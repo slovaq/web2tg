@@ -21,17 +21,16 @@ const app = new Vue({
             if (!(this.passF !== this.passT) || !(this.passF.length == 0)) {
                 this.errors.push('неправильный пароль');
             }
+            if (this.passF.length == 0) {
+                this.errors.push('не введен пароль');
+            }
             if (!this.email) {
                 this.errors.push('Укажите электронную почту.');
             } else if (!this.validEmail(this.email)) {
                 this.errors.push('Укажите корректный адрес электронной почты.');
             }
 
-            if (!this.errors.length) {
-                return true;
-            }
-
-            e.preventDefault();
+           
         },
         validEmail: function (email) {
             var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
