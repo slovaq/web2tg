@@ -10,6 +10,7 @@
 `localhost:1111/api/user_create?`
 `localhost:1111/api/user_create?login=analwormx&name=123&password=123`
 А если узнать, существуют ли пользователь, то **это**
+/api/user_get?login=analwormx&name=123&password=123`
 
 #### Поля
 	login - логин пользователя ( пример: torvarlds) 
