@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 )
+
 func CityGetList(writer http.ResponseWriter, r *http.Request) {
 	writer.Header().Set("Content-Type", "application/json")
 	obj := JsonObject{
@@ -34,12 +35,12 @@ func CityCreate(writer http.ResponseWriter, request *http.Request) {
 		Result:  nil,
 		Error:   nil,
 	}
-	chat_id, err := strconv.Atoi(request.FormValue("chat_id"))
+	chatId, err := strconv.Atoi(request.FormValue("chat_id"))
 	if err != nil {
 		chk(&obj, writer, err)
 		error_sended = true
 	}
-	city := DAL.CreateOrGetCity(request.FormValue("name"), chat_id)
+	city := DAL.CreateOrGetCity(request.FormValue("name"), chatId)
 	obj.Success = true
 	obj.Result = city
 	returnData, err := json.Marshal(obj)
@@ -50,7 +51,7 @@ func CityCreate(writer http.ResponseWriter, request *http.Request) {
 }
 func CityGet(writer http.ResponseWriter, request *http.Request) {
 	writer.Header().Set("Content-Type", "application/json")
-	error_sended := false
+	errorSended := false
 	result := JsonObject{
 		Success: false,
 		Result:  nil,
@@ -59,7 +60,7 @@ func CityGet(writer http.ResponseWriter, request *http.Request) {
 	city := DAL.GetCity(strings.TrimSpace(request.FormValue("city_name")))
 	if city == nil {
 		chk(&result, writer, fmt.Errorf("city not found"))
-		error_sended = true
+		errorSended = true
 	}
 	result.Result = city
 	result.Success = true
@@ -70,7 +71,7 @@ func CityGet(writer http.ResponseWriter, request *http.Request) {
 		fmt.Println(err.Error())
 		return
 	}
-	if !error_sended {
+	if !errorSended {
 
 		writer.Write(returnData)
 	}
