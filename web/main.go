@@ -177,12 +177,38 @@ func authMiddleware(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+func profile(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles("templates/profile.html", "templates/base.html")
 
+	var records []DAL.Record
+	var cities []DAL.City
+	var users []DAL.User
+	DB.Find(&records) // select * from Records to &record
+	DB.Find(&cities)  // select * from Records to &record
+	DB.Find(&users)   // select * from Records to &record
+
+	var structData = struct {
+		Records []DAL.Record
+		Users   []DAL.User
+		Cities  []DAL.City
+	}{Records: records, Users: users, Cities: cities}
+
+	err = tmpl.Execute(w, structData)
+	if err != nil {
+		_, err := w.Write([]byte(err.Error()))
+		if err != nil {
+			fmt.Printf("error in index() with text: %s \n", err.Error())
+		}
+		return
+	}
+
+}
 func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
 	r.HandleFunc("/", index)
+	r.HandleFunc("/profile", profile)
 	r.HandleFunc("/reg", reg)
 	r.Route("/auth", func(r chi.Router) {
 		r.With(authMiddleware).Route("/", func(r chi.Router) {
