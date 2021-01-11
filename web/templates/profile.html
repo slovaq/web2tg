@@ -3,15 +3,25 @@
     <title>Страница всего!</title>
 </head>
 <body>
-    <nav class="uk-navbar-container" uk-navbar>
-        <div class="uk-navbar-left">
-            <ul class="uk-navbar-nav">
-                <ul class="uk-active"><a href="#">1</a></ul>
-                <ul class="uk-active"><a href="#">2</a></ul>
-            </ul>
+    <form class="uk-grid-small" uk-grid action="/api/record_create">
+        <div class="uk-width-1-1">
+                    <input type="datetime-local" id="localdate" name="date"/>
+                    
+                    <button type="submit">Отправить</button>
         </div>
-    </nav>
-    <table class="uk-table uk-table-hover ">
+        <div class="uk-width-1-4">
+             <textarea class="uk-textarea" name="text" id="" cols="15" rows="5"></textarea>
+             <input type="text" name="cities" id="" placeholder="Vladimir, Moscow, etc...">
+             
+        </div>
+        <div class="uk-width-1-2">
+            <input type="text" name="login" id="" placeholder="Логин">
+             <input type="text" name="password" id="" placeholder="Пароль">
+        </div>
+       
+       
+    </form>
+    <table class="uk-table uk-table-hover">
         <caption>Записи</caption>
         <thead>
             <tr>
