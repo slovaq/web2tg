@@ -90,15 +90,24 @@ func RecordCreate(writer http.ResponseWriter, request *http.Request) {
 
 	}
 	//layout := "2006-01-02T15:04:05.000Z"
-
-	timer_date := request.FormValue("date")
-	text := request.FormValue("text")
-	// ждек почини время
-	date, err = time.Parse(time.RFC3339, timer_date)
+	dateTimePicker := request.FormValue("dateTimePicker")
+	fmt.Println(dateTimePicker)
+	dt := strings.Split(dateTimePicker, ", ")
+	//form := "2006-01-02T15:04:05"
+	tm := dt[0] + "T" + dt[1]
+	fmt.Println(tm)
+	date, err = time.Parse("2006-01-02T15:04:05", tm)
 	if err != nil {
 		chk(&result, writer, err)
 		return
 	}
+	fmt.Printf("%d-%02d-%02d %02d:%02d:%02d-00:00\n",
+		date.Year(), date.Month(), date.Day(),
+		date.Hour(), date.Minute(), date.Second())
+	//timer_date := request.FormValue("date")
+	text := request.FormValue("text")
+	// ждек почини время
+
 	fmt.Println(date)
 	record, err = user.CreateRecord(date, cities, text)
 	if err != nil {
