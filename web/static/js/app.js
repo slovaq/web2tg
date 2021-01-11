@@ -15,6 +15,11 @@ const app = new Vue({
         SuccFalse:true
     },
     methods: {
+        removeLog(){
+            $cookies.remove("login") 
+            $cookies.remove("password")
+            location.href = '/reg'
+        },
         axiosLog() {
             console.log("send")
             console.log("this.login: " + this.login + " this.passF: " + this.passF )
@@ -38,6 +43,8 @@ const app = new Vue({
                 .then(function (response) {
                     // handle success
                     console.log(response);
+                    $cookies.set("login", app.login,{ expires: "30d" } );
+                    $cookies.set("password", app.passF,{ expires: "30d" } );
                 })
                 .catch(function (error) {
                     // handle error
