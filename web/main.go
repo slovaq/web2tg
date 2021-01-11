@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"runtime"
 	"time"
@@ -144,8 +145,28 @@ func authMiddleware(next http.Handler) http.Handler {
 		} else {
 			fmt.Println(password.Value)
 		}
-		fmt.Printf("(authMiddleware)> user:%s|password: %s\n", login, password)
-		if login.Value == "" || password.Value == "" {
+		decodedlogin, err := url.QueryUnescape(login.Value)
+		if err != nil {
+
+			fmt.Printf("[login] error %s\n", err.Error())
+
+			//fmt.Fprintf(w, "[login] error %s", err)
+			http.Redirect(w, r, "/reg", 301)
+			return
+
+		}
+		decodedpassword, err := url.QueryUnescape(password.Value)
+		if err != nil {
+
+			fmt.Printf("[login] error %s\n", err.Error())
+
+			//fmt.Fprintf(w, "[login] error %s", err)
+			http.Redirect(w, r, "/reg", 301)
+			return
+
+		}
+		fmt.Printf("(authMiddleware)> user:%s|password: %s\n", decodedlogin, decodedpassword)
+		if decodedlogin == "" || decodedpassword == "" {
 			tmpl, err := template.ParseFiles("templates/error.html", "templates/base.html")
 			if err != nil {
 				_, err := w.Write([]byte(err.Error()))
@@ -158,7 +179,7 @@ func authMiddleware(next http.Handler) http.Handler {
 			tmpl.Execute(w, nil)
 			return
 		}
-		_, useErr := DAL.GetUser(login.Value, password.Value)
+		_, useErr := DAL.GetUser(decodedlogin, decodedpassword)
 
 		if useErr != nil {
 			tmpl, err := template.ParseFiles("templates/error.html", "templates/base.html")

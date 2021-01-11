@@ -1,0 +1,22 @@
+{{ template "header"}}
+<head>
+    <title>Error</title>
+</head>
+<body>
+
+    <div id="app">
+        
+        <div class="modal-mask" style="background-color: rgba(0, 0, 0, 0)">
+            <div class="modal-wrapper">
+                <div class="modal-container" style="width: 400px;height: 400px;">
+                    <center>Hello, {{ .User}}!</center>
+                    <button onclick=" app.removeLog()"  style="width: 340px;" class="btn btn-lg btn-success"
+                    value="return to login page!">log Out</button>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{{ template "footer"}}
+</html>

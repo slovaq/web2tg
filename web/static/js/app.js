@@ -15,6 +15,11 @@ const app = new Vue({
         SuccFalse:true
     },
     methods: {
+        removeLog(){
+            $cookies.remove("login") 
+            $cookies.remove("password")
+            location.href = '/reg'
+        },
         axiosLog() {
             console.log("send")
             console.log("this.login: " + this.login + " this.passF: " + this.passF )
