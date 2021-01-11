@@ -21,6 +21,8 @@ const app = new Vue({
                 .then(function (response) {
                     // handle success
                     console.log(response);
+                    console.log("this.login: " + app.login + " this.passF: " + app.passF )
+                    $cookies.set(app.login, app.passF ,"expiring time");
                 })
                 .catch(function (error) {
                     // handle error
