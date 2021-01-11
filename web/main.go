@@ -112,8 +112,16 @@ func authMiddleware(next http.Handler) http.Handler {
 			fmt.Println(c.Value)
 		}
 		if c == nil {
-			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte(fmt.Sprintf("forbidden!\n")))
+			tmpl, err := template.ParseFiles("templates/error.html", "templates/base.html")
+			if err != nil {
+				_, err := w.Write([]byte(err.Error()))
+				if err != nil {
+					fmt.Printf("error in index() with text: %s \n", err.Error())
+				}
+				fmt.Fprintf(w, "error %s", err)
+				return
+			}
+			tmpl.Execute(w, nil)
 			return
 		}
 
@@ -128,7 +136,7 @@ func main() {
 	r.HandleFunc("/", index)
 	r.HandleFunc("/reg", reg)
 	r.Route("/auth", func(r chi.Router) {
-		r.With(authMiddleware).Route("/{req}", func(r chi.Router) {
+		r.With(authMiddleware).Route("/", func(r chi.Router) {
 			r.Get("/", vapi.GetHandler)
 			r.Put("/", vapi.PutHandler)
 		})
