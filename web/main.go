@@ -93,12 +93,38 @@ func init() {
 func reg(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "templates/reg.html")
 }
+func authMiddleware(next http.Handler) http.Handler {
+
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		c, err := r.Cookie("name")
+		if err != nil {
+			fmt.Println(err.Error())
+		} else {
+			fmt.Println(c.Value)
+		}
+		if c == nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(fmt.Sprintf("forbidden!\n")))
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
 func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
 	r.HandleFunc("/", index)
 	r.HandleFunc("/reg", reg)
+	r.Route("/auth", func(r chi.Router) {
+		r.With(authMiddleware).Route("/{req}", func(r chi.Router) {
+			r.Get("/", vapi.GetHandler)
+			r.Put("/", vapi.PutHandler)
+		})
+	})
 	r.HandleFunc("/static/{type}/{file}", staticRouter)
 	r.Route("/vue", vapi.Router)
 	r.Route("/api", API.Router)
