@@ -43,6 +43,8 @@ const app = new Vue({
                 .then(function (response) {
                     // handle success
                     console.log(response);
+                    $cookies.set("login", app.login,{ expires: "30d" } );
+                    $cookies.set("password", app.passF,{ expires: "30d" } );
                 })
                 .catch(function (error) {
                     // handle error
