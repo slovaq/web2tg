@@ -1,8 +1,16 @@
 package API
 
-import "github.com/go-chi/chi"
+import (
+	"net/http"
 
+	"github.com/go-chi/chi"
+)
+
+// Router...
 func Router(r chi.Router) {
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("access denied"))
+	})
 	r.Get("/user_create", UserCreate)
 	r.Get("/user_get", UserGet)
 
