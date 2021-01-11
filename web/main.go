@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"runtime"
+	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -31,7 +32,6 @@ func chk(err error) {
 		}
 	}
 }
-
 func index(writer http.ResponseWriter, _ *http.Request) {
 	var records []DAL.Record
 	var cities []DAL.City
@@ -102,6 +102,81 @@ func reg(w http.ResponseWriter, r *http.Request) {
 	}
 	tmpl.Execute(w, nil)
 }
+
+var epoch = time.Unix(0, 0).Format(time.RFC1123)
+var noCacheHeaders = map[string]string{
+	"Expires":         epoch,
+	"Cache-Control":   "no-cache, private, max-age=0",
+	"Pragma":          "no-cache",
+	"X-Accel-Expires": "0",
+}
+
+func authMiddleware(next http.Handler) http.Handler {
+
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		for k, v := range noCacheHeaders {
+			w.Header().Set(k, v)
+		}
+
+		fmt.Println("start")
+		login, err := r.Cookie("login")
+		if err != nil {
+			fmt.Printf("[login] error %s\n", err.Error())
+
+			//fmt.Fprintf(w, "[login] error %s", err)
+			http.Redirect(w, r, "/reg", 301)
+			return
+
+		} else {
+			fmt.Println(login.Value)
+		}
+		password, err := r.Cookie("password")
+		if err != nil {
+			fmt.Println(err.Error())
+			if err != nil {
+				_, err := w.Write([]byte(err.Error()))
+				if err != nil {
+					fmt.Printf("error in index() with text: %s \n", err.Error())
+				}
+				http.Redirect(w, r, "/reg", 301)
+				return
+			}
+		} else {
+			fmt.Println(password.Value)
+		}
+		fmt.Printf("(authMiddleware)> user:%s|password: %s\n", login, password)
+		if login.Value == "" || password.Value == "" {
+			tmpl, err := template.ParseFiles("templates/error.html", "templates/base.html")
+			if err != nil {
+				_, err := w.Write([]byte(err.Error()))
+				if err != nil {
+					fmt.Printf("error in index() with text: %s \n", err.Error())
+				}
+				fmt.Fprintf(w, "error %s", err)
+				return
+			}
+			tmpl.Execute(w, nil)
+			return
+		}
+		_, useErr := DAL.GetUser(login.Value, password.Value)
+
+		if useErr != nil {
+			tmpl, err := template.ParseFiles("templates/error.html", "templates/base.html")
+			if err != nil {
+				_, err := w.Write([]byte(err.Error()))
+				if err != nil {
+					fmt.Printf("error in index() with text: %s \n", err.Error())
+				}
+				fmt.Fprintf(w, "error %s", err)
+				return
+			}
+			tmpl.Execute(w, nil)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
 func profile(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("templates/profile.html", "templates/base.html")
 
@@ -128,34 +203,6 @@ func profile(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
-func authMiddleware(next http.Handler) http.Handler {
-
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		c, err := r.Cookie("name")
-		if err != nil {
-			fmt.Println(err.Error())
-		} else {
-			fmt.Println(c.Value)
-		}
-		if c == nil {
-			tmpl, err := template.ParseFiles("templates/error.html", "templates/base.html")
-			if err != nil {
-				_, err := w.Write([]byte(err.Error()))
-				if err != nil {
-					fmt.Printf("error in index() with text: %s \n", err.Error())
-				}
-				fmt.Fprintf(w, "error %s", err)
-				return
-			}
-			tmpl.Execute(w, nil)
-			return
-		}
-
-		next.ServeHTTP(w, r)
-	})
-}
-
 func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)

@@ -1,8 +1,9 @@
-
 {{ template "header"}}
+
 <head>
     <title>Регистрация</title>
 </head>
+
 <body>
 
     <div id="app">
@@ -60,12 +61,12 @@
                                         <input type="text" placeholder="Name" name="login" id="login" v-model="login"
                                             class="form-control">
                                     </div>
-                                    
+
                                     <div style="padding-bottom: 7px;">
                                         <input type="password" placeholder="password" name="password" id="passF"
                                             v-model="passF" class="form-control">
                                     </div>
-                                    
+
 
                                 </div>
 
@@ -82,7 +83,12 @@
                     </div>
                     <div v-else>
 
-                        <div v-if="SuccFalse">Success</div>
+                        <div v-if="SuccFalse">
+                            <div>Success</div>
+                            <button onclick="location.href = '/auth';"  style="width: 340px;" class="btn btn-lg btn-success"
+                            value="return to login page!">return to main page!</button>
+
+                        </div>
                         <div v-else>failed</div>
                     </div>
                 </div>
@@ -91,4 +97,5 @@
     </div>
 </body>
 {{ template "footer"}}
+
 </html>
