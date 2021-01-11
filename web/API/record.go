@@ -93,6 +93,7 @@ func RecordCreate(writer http.ResponseWriter, request *http.Request) {
 
 	timer_date := request.FormValue("date")
 	text := request.FormValue("text")
+	// ждек почини время
 	date, err = time.Parse(time.RFC3339, timer_date)
 	if err != nil {
 		chk(&result, writer, err)
