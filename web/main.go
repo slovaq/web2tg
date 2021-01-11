@@ -112,7 +112,7 @@ func authMiddleware(next http.Handler) http.Handler {
 			fmt.Println(c.Value)
 		}
 		if c == nil {
-			tmpl, err := template.ParseFiles("templates/reg.html", "templates/base.html")
+			tmpl, err := template.ParseFiles("templates/error.html", "templates/base.html")
 			if err != nil {
 				_, err := w.Write([]byte(err.Error()))
 				if err != nil {
