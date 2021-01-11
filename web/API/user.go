@@ -40,6 +40,7 @@ func UserCreate(writer http.ResponseWriter, request *http.Request) {
 		vars[1],
 		vars[2],
 	)
+
 	if err != nil {
 		obj.Error = err.Error()
 		obj.Success = false
@@ -80,6 +81,7 @@ func UserGet(writer http.ResponseWriter, request *http.Request) {
 		chk(&obj, writer, err)
 		return
 	}
+
 	obj.Result = user
 	obj.Success = true
 	return_data, err := json.Marshal(obj)

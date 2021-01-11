@@ -39,7 +39,7 @@ func index(writer http.ResponseWriter, _ *http.Request) {
 	DB.Find(&cities)  // select * from Records to &record
 	DB.Find(&users)   // select * from Records to &record
 
-	tmpl, err := template.ParseFiles("templates/index.html")
+	tmpl, err := template.ParseFiles("templates/index.html", "templates/base.html")
 	if err != nil {
 		_, err := writer.Write([]byte(err.Error()))
 		if err != nil {
@@ -91,7 +91,15 @@ func init() {
 	chk(err)
 }
 func reg(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "templates/reg.html")
+	tmpl, err := template.ParseFiles("templates/reg.html", "templates/base.html")
+	if err != nil {
+		_, err := w.Write([]byte(err.Error()))
+		if err != nil {
+			fmt.Printf("error in index() with text: %s \n", err.Error())
+		}
+		return
+	}
+	tmpl.Execute(w, nil)
 }
 func main() {
 	r := chi.NewRouter()

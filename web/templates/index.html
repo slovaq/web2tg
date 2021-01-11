@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+{{ template "base_header" }}
 <head>
-    <meta charset="UTF-8">
-    <title>Index</title>
-    <link rel="stylesheet" href="static/css/styles.css">
+    <title>Index page</title>
 </head>
 <body>
     <h1>Записи</h1>
     <table>
-        <tr>
+        <tr class="table_header">
             <td>ID</td>
             <td>Время и дата</td>
             <td>Куда</td>
@@ -23,7 +20,7 @@
         </tr>
         {{ else }}
         <tr>
-            <td>Нет записей</td>
+            <td colspan="4">Нет записей</td>
         </tr>
         {{ end }}
     </table>
@@ -33,7 +30,7 @@
             <td>ID</td>
             <td>Название</td>
             <td>ID Чата</td>
-
+            
         </tr>
         {{ range .Cities }}
         <tr>
@@ -43,7 +40,7 @@
         </tr>
         {{ else }}
         <tr>
-            <td>Нет городов</td>
+            <td colspan="4">Нет городов</td>
         </tr>
         {{ end }}
     </table>
@@ -62,9 +59,9 @@
         </tr>
         {{ else }}
         <tr>
-            <td>Нет записей</td>
+            <td colspan="3">Юзеров нет</td>
         </tr>
         {{ end }}
     </table>
 </body>
-</html>
+{{ template "base_footer"}}
