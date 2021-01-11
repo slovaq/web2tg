@@ -108,7 +108,7 @@ func RecordCreate(writer http.ResponseWriter, request *http.Request) {
 	text := request.FormValue("text")
 	// ждек почини время
 
-	fmt.Println(date)
+	//fmt.Println(date)
 	record, err = user.CreateRecord(date, cities, text)
 	if err != nil {
 		chk(&result, writer, err) // Проверка пользователя на существование
