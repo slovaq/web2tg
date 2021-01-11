@@ -3,11 +3,12 @@ package API
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/slovaq/web2tg/web/DAL"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/slovaq/web2tg/web/DAL"
 )
 
 func chk(result *JsonObject, w http.ResponseWriter, err error) {
@@ -81,8 +82,8 @@ func RecordCreate(writer http.ResponseWriter, request *http.Request) {
 		chk(&result, writer, err) // Проверка пользователя на существование
 	}
 	cities_encoded := request.FormValue("cities") // from json comma separated string encoded to []string
-	cities_decoded := strings.Split(cities_encoded, ",")
-	for _, cityName := range cities_decoded {
+	citiesDecoded := strings.Split(cities_encoded, ",")
+	for _, cityName := range citiesDecoded {
 		if city := DAL.GetCity(cityName); city != nil {
 			cities = append(cities, *city)
 		}
@@ -90,9 +91,14 @@ func RecordCreate(writer http.ResponseWriter, request *http.Request) {
 	}
 	//layout := "2006-01-02T15:04:05.000Z"
 
-	//timer_date := request.FormValue("time")
+	timer_date := request.FormValue("date")
 	text := request.FormValue("text")
-	date = time.Now()
+	date, err = time.Parse(time.RFC3339, timer_date)
+	if err != nil {
+		chk(&result, writer, err)
+		return
+	}
+	fmt.Println(date)
 	record, err = user.CreateRecord(date, cities, text)
 	if err != nil {
 		chk(&result, writer, err) // Проверка пользователя на существование
