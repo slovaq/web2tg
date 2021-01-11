@@ -12,7 +12,8 @@ const app = new Vue({
         passT: null,
         logreg: true,
         RegSuccess:true,
-        SuccFalse:true
+        SuccFalse:true,
+        SuccFalseMessage:""
     },
     methods: {
         removeLog(){
@@ -27,9 +28,18 @@ const app = new Vue({
                 .then(function (response) {
                     // handle success
                     console.log(response);
-                    console.log("this.login: " + app.login + " this.passF: " + app.passF )
-                    $cookies.set("login", app.login,{ expires: "30d" } );
-                    $cookies.set("password", app.passF,{ expires: "30d" } );
+                    if (response.data.Error!=null){
+                        console.log(response.data.Error);
+                        $cookies.remove("login") 
+                        $cookies.remove("password")
+                        app.SuccFalse=false
+                        app.SuccFalseMessage=response.data.Error
+                    } else{
+                        console.log("this.login: " + app.login + " this.passF: " + app.passF )
+                        $cookies.set("login", app.login,{ expires: "30d" } );
+                        $cookies.set("password", app.passF,{ expires: "30d" } );
+                    }
+                    
                 })
                 .catch(function (error) {
                     // handle error
@@ -43,7 +53,7 @@ const app = new Vue({
                 .then(function (response) {
                     // handle success
                     console.log(response);
-                    $cookies.set("login", app.login,{ expires: "30d" } );
+                    $cookies.set("login", app.email,{ expires: "30d" } );
                     $cookies.set("password", app.passF,{ expires: "30d" } );
                 })
                 .catch(function (error) {
