@@ -3,8 +3,37 @@
     <title>Страница всего!</title>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-embossed navbar-expand-lg">
-        
+    <nav class="uk-navbar-container" uk-navbar>
+        <div class="uk-navbar-left">
+            <ul class="uk-navbar-nav">
+                <ul class="uk-active"><a href="#">1</a></ul>
+                <ul class="uk-active"><a href="#">2</a></ul>
+            </ul>
+        </div>
     </nav>
+    <table class="uk-table uk-table-hover ">
+        <caption>Записи</caption>
+        <thead>
+            <tr>
+                <th class="uk-table-shrink">ID</td>
+                <th>Когда отправить</td>
+                <th>Текст</td>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range .Records }}
+            <tr>
+                <td>{{.ID}}</td>
+                <td>{{.Date}}</td>
+                <td>{{.Text}}</td>
+            </tr>
+            {{ else }}
+                <tr>
+                    <td colspan="3">nothing</td>
+                </tr>
+            {{ end }}
+        </tbody>
+    </table>
 </body>
 {{ template "footer"}}
+</html>

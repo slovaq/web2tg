@@ -31,6 +31,7 @@ func chk(err error) {
 		}
 	}
 }
+
 func index(writer http.ResponseWriter, _ *http.Request) {
 	var records []DAL.Record
 	var cities []DAL.City
@@ -101,6 +102,32 @@ func reg(w http.ResponseWriter, r *http.Request) {
 	}
 	tmpl.Execute(w, nil)
 }
+func profile(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles("templates/profile.html", "templates/base.html")
+
+	var records []DAL.Record
+	var cities []DAL.City
+	var users []DAL.User
+	DB.Find(&records) // select * from Records to &record
+	DB.Find(&cities)  // select * from Records to &record
+	DB.Find(&users)   // select * from Records to &record
+
+	var structData = struct {
+		Records []DAL.Record
+		Users   []DAL.User
+		Cities  []DAL.City
+	}{Records: records, Users: users, Cities: cities}
+
+	err = tmpl.Execute(w, structData)
+	if err != nil {
+		_, err := w.Write([]byte(err.Error()))
+		if err != nil {
+			fmt.Printf("error in index() with text: %s \n", err.Error())
+		}
+		return
+	}
+
+}
 func authMiddleware(next http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -134,6 +161,7 @@ func main() {
 	r.Use(middleware.Logger)
 
 	r.HandleFunc("/", index)
+	r.HandleFunc("/profile", profile)
 	r.HandleFunc("/reg", reg)
 	r.Route("/auth", func(r chi.Router) {
 		r.With(authMiddleware).Route("/", func(r chi.Router) {
