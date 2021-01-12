@@ -62,7 +62,7 @@
     <title>Modal Component</title>
     <script src="https://unpkg.com/vue"></script>
     <link rel="stylesheet" type="text/css" href="/static/css/sandbox.css" />
-   
+
     <!-- template for the modal component -->
 </head>
 
@@ -72,79 +72,84 @@
             <div class="modal-mask">
                 <div class="modal-wrapper">
                     <div class="modal-container">
+                        <form @submit.prevent="subHandler">
+                            <vue-ctk-date-time-picker v-model="date" :range="false">
+                            </vue-ctk-date-time-picker>
+                            <input type="text" value="" placeholder="сообщение"  v-model="message" class="form-control">
+                            <div>
+                                <div style="padding-top: 10px;padding-bottom: 10px;">
+                                    <select class=" select  select-block  select-primary ">
+                                        <optgroup label="Единоразово">
+                                            <option value="0">Один раз</option>
+                                        </optgroup>
+                                        <optgroup label="Систематически">
+                                            <option value="1">Каждый час</option>
+                                            <option value="2">Ежедневно</option>
+                                            <option value="3">Еженедельно</option>
+                                            <option value="4">Ежемесячно</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
 
-                        <vue-ctk-date-time-picker v-model="date" :range="false">
-                        </vue-ctk-date-time-picker>
-                        <input type="text" value="" placeholder="сообщение" class="form-control">
-                        <div>
-                            <div style="padding-top: 10px;padding-bottom: 10px;">
-                                <select class=" select  select-block  select-primary ">
-                                    <optgroup label="Единоразово">
-                                        <option value="0">Один раз</option>
-                                    </optgroup>
-                                    <optgroup label="Систематически">
-                                        <option value="1">Каждый час</option>
-                                        <option value="2">Ежедневно</option>
-                                        <option value="3">Еженедельно</option>
-                                        <option value="4">Ежемесячно</option>
-                                    </optgroup>
-                                </select>
                             </div>
+                            <div style="padding-left: 30px;">
+                                <button v-on:click="modVisible=false" class="btn btn-lg btn-danger"
+                                    style="width: 150px;">cancel</button>
+                         
+                                <button type="submit"  class="btn btn-lg btn-success"
+                                    style="width: 150px;">ok</button>
+                        </form>
 
-                        </div>
-                        <div style="padding-left: 30px;">
-                            <button v-on:click="modVisible=false" class="btn btn-lg btn-danger"
-                                style="width: 150px;">cancel</button>
-                            <button v-on:click="modVisible=false" class="btn btn-lg btn-success"
-                                style="width: 150px;">ok</button>
-
-
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div style="padding-left: 30px;">
-            <button v-on:click="inst()" class="btn btn-lg btn-success" style="width: 150px;">Create
-                posts</button>
-            <a href="#fakelink" class="btn btn-lg btn-inverse" style="width: 150px;">Update posts</a>
-
-        </div>
-
-        <div v-if="items.length > 0 ">
-
-            <div style="padding-top: 10px;">
-                <div class="mainContainer">
-                    <div v-for="item in items" :key="item.message">
-                        <div style="padding-left: 20px;padding-top: 20px;padding-right: 20px;">
-                            <div class="uk-card uk-card-default uk-card-body">
-                                <h3 class="uk-card-title">{{item.date}}</h3>
-                                <p>Lorem ipsum <a href="#">dolor</a> sit amet, consectetur adipiscing elit, sed do
-                                    eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                            </div>
-                        </div>
                     </div>
 
                 </div>
-
             </div>
         </div>
+    </div>
+    <div style="padding-left: 30px;">
+        <button v-on:click="inst()" class="btn btn-lg btn-success" style="width: 150px;">Create
+            posts</button>
+        <a href="#fakelink" class="btn btn-lg btn-inverse" style="width: 150px;">Update posts</a>
+
+    </div>
+
+    <div v-if="items.length > 0 ">
+
+        <div style="padding-top: 10px;">
+            <div class="mainContainer">
+                <div v-for="item in items" :key="item.message">
+                    <div style="padding-left: 20px;padding-top: 20px;padding-right: 20px;">
+                        <div class="uk-card uk-card-default uk-card-body">
+                            <h3 class="uk-card-title">{{item.date}}</h3>
+                            <p>Lorem ipsum <a href="#">dolor</a> sit amet, consectetur adipiscing elit, sed do
+                                eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
 
     </div>
 </body>
 
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/vue-ctk-date-time-picker@2.0.6/dist/vue-ctk-date-time-picker.css">
-<script src="https://cdn.jsdelivr.net/npm/vue-ctk-date-time-picker@2.0.6/dist/vue-ctk-date-time-picker.umd.min.js" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css"
+    href="https://cdn.jsdelivr.net/npm/vue-ctk-date-time-picker@2.0.6/dist/vue-ctk-date-time-picker.css">
+<script src="https://cdn.jsdelivr.net/npm/vue-ctk-date-time-picker@2.0.6/dist/vue-ctk-date-time-picker.umd.min.js"
+    charset="utf-8"></script>
 <script>
- Vue.component('vue-ctk-date-time-picker', window['vue-ctk-date-time-picker']);
+    Vue.component('vue-ctk-date-time-picker', window['vue-ctk-date-time-picker']);
     var app = new Vue({
         el: '#app',
         data: {
-            date:null,
-            message: 'Привет, Vue!',
+            date: null,
+            login: null,
+            message: null,
             modVisible: false,
-            value:null,
+            value: null,
+            passT: null,
             items: [{ date: "lol" },
             { date: 22 }
             ]
@@ -153,7 +158,28 @@
             inst() {
                 app.modVisible = true;
             },
-           
+            AxiosSend() {
+
+                app.modVisible = false
+            },
+            subHandler() {
+                this.errors = [];
+                console.log( " mesage:"+this.message+ " date: "+this.date)
+                if (!this.message) {
+                    this.errors.push('введите сообщение');
+                }
+                
+                
+                if (this.errors.length == 0) {
+                    console.log("reg ok")
+                    app.modVisible = false
+                } else {
+
+                    console.log(this.errors)
+                }
+
+            },
+
         }
 
     })
