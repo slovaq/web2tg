@@ -62,6 +62,7 @@
     <title>Modal Component</title>
     <script src="https://unpkg.com/vue"></script>
     <link rel="stylesheet" type="text/css" href="/static/css/sandbox.css" />
+   
     <!-- template for the modal component -->
 </head>
 
@@ -72,12 +73,12 @@
                 <div class="modal-wrapper">
                     <div class="modal-container">
 
-
-                        <input type="text" value="" placeholder="дата" class="form-control">
+                        <vue-ctk-date-time-picker v-model="date" :range="false">
+                        </vue-ctk-date-time-picker>
                         <input type="text" value="" placeholder="сообщение" class="form-control">
                         <div>
                             <div style="padding-top: 10px;padding-bottom: 10px;">
-                                <select class=" select  select-block  select-primary " >
+                                <select class=" select  select-block  select-primary ">
                                     <optgroup label="Единоразово">
                                         <option value="0">Один раз</option>
                                     </optgroup>
@@ -89,8 +90,8 @@
                                     </optgroup>
                                 </select>
                             </div>
-                        
-                    </div>
+
+                        </div>
                         <div style="padding-left: 30px;">
                             <button v-on:click="modVisible=false" class="btn btn-lg btn-danger"
                                 style="width: 150px;">cancel</button>
@@ -105,7 +106,7 @@
             </div>
         </div>
         <div style="padding-left: 30px;">
-            <button v-on:click="modVisible=true" class="btn btn-lg btn-success" style="width: 150px;">Create
+            <button v-on:click="inst()" class="btn btn-lg btn-success" style="width: 150px;">Create
                 posts</button>
             <a href="#fakelink" class="btn btn-lg btn-inverse" style="width: 150px;">Update posts</a>
 
@@ -132,16 +133,29 @@
 
     </div>
 </body>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/vue-ctk-date-time-picker@2.0.6/dist/vue-ctk-date-time-picker.css">
+<script src="https://cdn.jsdelivr.net/npm/vue-ctk-date-time-picker@2.0.6/dist/vue-ctk-date-time-picker.umd.min.js" charset="utf-8"></script>
 <script>
+ Vue.component('vue-ctk-date-time-picker', window['vue-ctk-date-time-picker']);
     var app = new Vue({
         el: '#app',
         data: {
+            date:null,
             message: 'Привет, Vue!',
             modVisible: false,
+            value:null,
             items: [{ date: "lol" },
             { date: 22 }
             ]
+        },
+        methods: {
+            inst() {
+                app.modVisible = true;
+            },
+           
         }
+
     })
 
 </script>

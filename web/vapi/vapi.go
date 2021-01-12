@@ -33,6 +33,6 @@ func create(w http.ResponseWriter, r *http.Request) {
 }
 func vIndex(w http.ResponseWriter, r *http.Request) {
 	log.Println(">vapi index")
-	http.ServeFile(w, r, "vapi/template/home/index.html")
+	http.ServeFile(w, r, "vapi/template/home/posts.html")
 	fmt.Fprintf(w, "v index")
 }
