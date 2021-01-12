@@ -147,6 +147,7 @@ func main() {
 	r.Route("/auth", func(r chi.Router) {
 		r.With(authMiddleware).Route("/", func(r chi.Router) {
 			r.Get("/", vapi.GetHandler)
+			r.Get("/index", vapi.Index)
 			r.Put("/", vapi.PutHandler)
 		})
 	})

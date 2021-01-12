@@ -11,7 +11,7 @@ import (
 
 func Router(r chi.Router) {
 	log.Println(">vapi router")
-	r.Get("/index", vIndex)
+	r.Get("/index", Index)
 	r.Get("/create", create)
 
 }
@@ -31,7 +31,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode("ok")
 }
-func vIndex(w http.ResponseWriter, r *http.Request) {
+func Index(w http.ResponseWriter, r *http.Request) {
 	log.Println(">vapi index")
 	http.ServeFile(w, r, "vapi/template/home/posts.html")
 	fmt.Fprintf(w, "v index")

@@ -76,11 +76,16 @@
                             <vue-ctk-date-time-picker v-model="date" :range="false">
                             </vue-ctk-date-time-picker>
                             <input type="text" value="" placeholder="сообщение"  v-model="message" class="form-control">
+                            <select v-model="city">
+                              
+                                <option value="Москва">Москва</option>
+                             
+                              </select>
                             <div>
                                 <div style="padding-top: 10px;padding-bottom: 10px;">
-                                    <select class=" select  select-block  select-primary ">
+                                    <select v-model="repeat" class=" select  select-block  select-primary ">
                                         <optgroup label="Единоразово">
-                                            <option value="0">Один раз</option>
+                                            <option value="one">Один раз</option>
                                         </optgroup>
                                         <optgroup label="Систематически">
                                             <option value="1">Каждый час</option>
@@ -145,6 +150,8 @@
         el: '#app',
         data: {
             date: null,
+            city: 'Москва',
+            repeat:"one",
             login: null,
             message: null,
             modVisible: false,
@@ -164,7 +171,7 @@
             },
             subHandler() {
                 this.errors = [];
-                console.log( " mesage:"+this.message+ " date: "+this.date)
+                console.log( " message:"+this.message+ " date: "+this.date+ " city: "+this.city+ " repeat: "+this.repeat)
                 if (!this.message) {
                     this.errors.push('введите сообщение');
                 }
