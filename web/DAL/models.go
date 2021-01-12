@@ -23,6 +23,7 @@ type User struct {
 }
 type ClientConfig struct {
 	Login    string
+	City     string
 	ChatLink string
 	BotToken string
 }

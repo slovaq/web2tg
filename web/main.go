@@ -151,7 +151,7 @@ func main() {
 	r.Route("/auth", func(r chi.Router) {
 		r.With(authMiddleware).Route("/", func(r chi.Router) {
 			r.Get("/", vapi.GetHandler)
-			r.Get("/create_config", vapi.CreateConf) // /auth/create_config?chatLink=@alala&token=botfathertoken
+			r.Get("/create_config", vapi.CreateConf) // /auth/create_config?chatLink=@alalgdfgfdga&token=botfathertokenegbcgbcg&city=test
 			r.Get("/index", vapi.Index)
 			r.Put("/", vapi.PutHandler)
 		})

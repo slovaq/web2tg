@@ -20,24 +20,64 @@ type Posts struct {
 }
 type ClientConfig struct {
 	Login    string
+	City     string
 	ChatLink string
 	BotToken string
 }
 
 var DB, _ = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 
-func CreateConfig(login string, chatLink string, token string) (*ClientConfig, error) {
+func CreateConfig(login string, city string, chatLink string, token string) (*ClientConfig, string, error) {
 	conf := ClientConfig{
 		Login:    login,
+		City:     city,
 		ChatLink: chatLink,
 		BotToken: token,
 	}
-	if result := DB.Create(&conf); result.Error != nil {
-		return nil, fmt.Errorf("conf %s with login %s is exists", login, chatLink)
-	}
+	fmt.Printf("login> %s\n\tcity> %s\n\tchatLink> %s\n\ttoken> %s\n", login, city, chatLink, token)
+	//var user ClientConfig
+	var user []ClientConfig
+	//DB.Raws("select * from client_configs").Scan(&conf)
+	//rows, _ := DB.Raw("select * from client_configs where login = ?", conf.Login).Rows()
+	//defer rows.Close()
+	//	for rows.Next() {
 
-	return &conf, nil
+	//		var us ClientConfig
+	//		rows.Scan(&us)
+	//	user = append(user, us)
+	//		fmt.Println(us)
+	//		// do something
+	//	}
+	DB.Where("city = ? and login = ?", city, login).Find(&user)
+	fmt.Println(user)
+	if len(user) == 0 {
+		if result := DB.Create(&conf); result.Error != nil {
+			return nil, "", fmt.Errorf("conf %s with login %s is exists", login, chatLink)
+		}
+		return &conf, "create", nil
+	}
+	rconf := ClientConfig{
+		Login:    login,
+		City:     city,
+		ChatLink: chatLink,
+		BotToken: token,
+	}
+	DB.Model(&rconf).Where("city = ? and login = ?", city, login).Updates(rconf)
+	//DB.Model(&ClientConfig{}).Where("login = ?", user[0].Login).Update("name", "hello")
+	return &rconf, "update", nil
+
+	//	if result := DB.Create(&conf); result.Error != nil {
+	//		return nil, fmt.Errorf("conf %s with login %s is exists", login, chatLink)
+	//	}
+
+	//return &conf, nil
 }
+
+type CreateConfData struct {
+	User   *ClientConfig
+	Status string
+}
+
 func CreateConf(w http.ResponseWriter, r *http.Request) {
 	log.Println(">vapi create")
 	logix, err := r.Cookie("login")
@@ -54,9 +94,14 @@ func CreateConf(w http.ResponseWriter, r *http.Request) {
 	login := logix.Value
 	chatLink := r.FormValue("chatLink")
 	token := r.FormValue("token")
-	user, _ := CreateConfig(login, chatLink, token)
+	city := r.FormValue("city")
+	user, status, _ := CreateConfig(login, city, chatLink, token)
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(user)
+	data := &CreateConfData{
+		User:   user,
+		Status: status,
+	}
+	json.NewEncoder(w).Encode(data)
 }
 func Index(w http.ResponseWriter, r *http.Request) {
 	log.Println(">vapi index")
