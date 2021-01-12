@@ -23,60 +23,111 @@
 <body>
 
     <div id="app">
+       
 
-        <div class="modal-mask" style="background-color: rgba(0, 0, 0, 0)">
-            <div class="modal-wrapper">
-
-                <div class="modal-container" style="width: 400px;height: 400px;">
-                    Hello, [[.User]]! 
-                    <div id='list-wrapper' v-if="posts.length > 0">
-
-                        <table >
-                           
-                            <tr>
-                              <th>login</th>
-                              <th>ChatLink</th>
-                              <th>BotToken </th>
-                              <th>City </th>
-                              <th>Button </th>
-                            </tr>
-                         
-                         
-                            <tr v-for="post in posts" >
+        <div v-if="modVisible">
+            <div class="modal-mask">
+                <div class="modal-wrapper">
+                    <div class="modal-container">
+                        <form @submit.prevent="subHandler">
+                            <vue-ctk-date-time-picker v-model="date" :range="false">
+                            </vue-ctk-date-time-picker>
+                            <input type="text" value="" placeholder="сообщение"  v-model="message" class="form-control">
+                            <select v-model="city">
                               
-                                 <td>{{ post.login }}</td> 
-                               <td>{{ post.ChatLink }}</td> 
-                               <td>{{ post.BotToken }}</td>  
-                               <td>{{ post.City }}</td>  
-                               <td> <button onclick=" app.removeLog()" class="btn btn-lg btn-success"
-                                value="return to login page!">edit</button></td>  
-                            </tr>
+                                <option value="Москва">Москва</option>
+                             
+                              </select>
+                            <div>
+                                <div style="padding-top: 10px;padding-bottom: 10px;">
+                                    <select v-model="repeat" class=" select  select-block  select-primary ">
+                                        <optgroup label="Единоразово">
+                                            <option value="one">Один раз</option>
+                                        </optgroup>
+                                        <optgroup label="Систематически">
+                                            <option value="1">Каждый час</option>
+                                            <option value="2">Ежедневно</option>
+                                            <option value="3">Еженедельно</option>
+                                            <option value="4">Ежемесячно</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div style="padding-left: 30px;">
+                                <button v-on:click="modVisible=false" class="btn btn-lg btn-danger"
+                                    style="width: 150px;">cancel</button>
                          
-                        </table>
+                                <button type="submit"  class="btn btn-lg btn-success"
+                                    style="width: 150px;">ok</button>
+                            </div>
+                        </form>
+
                     </div>
-                    <div id='list-wrapper' v-else>
-                        <table>
-
-                            <tr>
-                                <td> Login</td>
-                                <td> Chat Link</td>
-                                <td> Bot Token</td>
-                                <td> City</td>
-                            </tr>
-
-                            <tr>
-                                <td colspan="3">Юзеров нет</td>
-                            </tr>
-
-                        </table>
-                    </div>
-                 
-                    <button onclick=" app.removeLog()" style="width: 340px;" class="btn btn-lg btn-success"
-                        value="return to login page!">log Out</button>
 
                 </div>
             </div>
         </div>
+        <div v-else>
+
+            <div class="modal-mask" style="background-color: rgba(0, 0, 0, 0)">
+            
+                <div class="modal-wrapper">
+    
+                    <div class="modal-container" style="width: 400px;height: 400px;">
+                        Hello, [[.User]]! 
+                        <div id='list-wrapper' v-if="posts.length > 0">
+    
+                            <table >
+                               
+                                <tr>
+                                  <th>login</th>
+                                  <th>ChatLink</th>
+                                  <th>BotToken </th>
+                                  <th>City </th>
+                                  <th>Button </th>
+                                </tr>
+                             
+                             
+                                <tr v-for="post in posts" >
+                                  
+                                     <td>{{ post.login }}</td> 
+                                   <td>{{ post.ChatLink }}</td> 
+                                   <td>{{ post.BotToken }}</td>  
+                                   <td>{{ post.City }}</td>  
+                                   <td> <button onclick=" app.modVisible=true" class="btn btn-lg btn-success"
+                                    value="return to login page!">edit</button></td>  
+                                </tr>
+                             
+                            </table>
+                        </div>
+                        <div id='list-wrapper' v-else>
+                            <table>
+    
+                                <tr>
+                                    <td> Login</td>
+                                    <td> Chat Link</td>
+                                    <td> Bot Token</td>
+                                    <td> City</td>
+                                </tr>
+    
+                                <tr>
+                                    <td colspan="3">Юзеров нет</td>
+                                </tr>
+    
+                            </table>
+                        </div>
+                     
+                        <button onclick=" app.removeLog()" style="width: 340px;" class="btn btn-lg btn-success"
+                            value="return to login page!">log Out</button>
+    
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
     </div>
 </body>
 <script src="/static/js/compressed.js"></script>
@@ -89,13 +140,10 @@
         el: '#app',
         data: {
             posts: [
-                { login: "test", ChatLink: "ChatLink", BotToken: "Bot Token", City: "City" },
+              //  { login: "test", ChatLink: "ChatLink", BotToken: "Bot Token", City: "City" },
                 { login: "test", ChatLink: "ChatLink", BotToken: "Bot Token", City: "City" }
             ],
-            shoppingItems: [
-      {name: 'apple', price: '10'},
-      {name: 'orange', price: '12'}
-    ]
+            modVisible:false,
 
         },
         methods: {
