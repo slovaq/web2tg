@@ -78,6 +78,34 @@ type CreateConfData struct {
 	Status string
 }
 
+func GetConf(w http.ResponseWriter, r *http.Request) {
+	log.Println(">vapi get conf ")
+	logix, err := r.Cookie("login")
+	if err != nil {
+		fmt.Printf("[login] error %s\n", err.Error())
+
+		//fmt.Fprintf(w, "[login] error %s", err)
+		http.Redirect(w, r, "/reg", 301)
+		return
+
+	} else {
+		fmt.Println(logix.Value)
+	}
+	login := logix.Value
+	var user []ClientConfig
+	DB.Where("login = ?", login).Find(&user)
+	for i := 0; len(user) < 0; i++ {
+		fmt.Println(user[i])
+
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	//	data := &CreateConfData{
+	//		User:   user,
+	//		Status: status,
+	//	}
+	json.NewEncoder(w).Encode(user)
+}
 func CreateConf(w http.ResponseWriter, r *http.Request) {
 	log.Println(">vapi create")
 	logix, err := r.Cookie("login")
