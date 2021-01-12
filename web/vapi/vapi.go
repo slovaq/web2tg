@@ -5,16 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-
-	"github.com/go-chi/chi"
 )
-
-func Router(r chi.Router) {
-	log.Println(">vapi router")
-	r.Get("/index", Index)
-	r.Get("/create", create)
-
-}
 
 type Post struct {
 	Date string
@@ -25,7 +16,7 @@ type Posts struct {
 	Data  []Post
 }
 
-func create(w http.ResponseWriter, r *http.Request) {
+func Create(w http.ResponseWriter, r *http.Request) {
 	log.Println(">vapi create")
 
 	w.Header().Set("Content-Type", "application/json")

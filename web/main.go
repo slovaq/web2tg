@@ -147,12 +147,13 @@ func main() {
 	r.Route("/auth", func(r chi.Router) {
 		r.With(authMiddleware).Route("/", func(r chi.Router) {
 			r.Get("/", vapi.GetHandler)
+			r.Get("/create_post", vapi.Create)
 			r.Get("/index", vapi.Index)
 			r.Put("/", vapi.PutHandler)
 		})
 	})
 	r.HandleFunc("/static/{type}/{file}", staticRouter)
-	r.Route("/vue", vapi.Router)
+	//r.Route("/vue", vapi.Router)
 	r.Route("/api", API.Router)
 	err := http.ListenAndServe(":1111", r)
 	if err != nil {

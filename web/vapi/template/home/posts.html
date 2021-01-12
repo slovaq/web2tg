@@ -165,7 +165,24 @@
             inst() {
                 app.modVisible = true;
             },
-            AxiosSend() {
+            AxiosSend(message,date,city,repeat) {
+                axios.get(`/auth/create_post?message=${message}&date=${date}&city=${city}&repeat=${repeat}`)
+                .then(function (response) {
+                    // handle success
+                    console.log(response);
+                    if (response.data.Error!=null){
+                        console.log(response.data.Error);
+                   
+                    } else{
+                
+                   
+                    }
+                    
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                });
 
                 app.modVisible = false
             },
@@ -179,7 +196,8 @@
                 
                 if (this.errors.length == 0) {
                     console.log("reg ok")
-                    app.modVisible = false
+                    AxiosSend(+this.message,this.date,this.city,this.repeat) 
+                   // app.modVisible = false
                 } else {
 
                     console.log(this.errors)

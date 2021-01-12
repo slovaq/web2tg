@@ -117,9 +117,3 @@ const app = new Vue({
     }
 
 })
-instance = new dtsel.DTS('input[name="dateTimePicker"]', {
-    dateFormat: "yyyy-mm-dd",
-    timeFormat: "HH:MM:SS",
-    showTime: true,
-    showDate: true
-})
