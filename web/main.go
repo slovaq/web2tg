@@ -36,10 +36,11 @@ func index(writer http.ResponseWriter, _ *http.Request) {
 	var records []DAL.Record
 	var cities []DAL.City
 	var users []DAL.User
+	var ClientConfig []DAL.ClientConfig
 	DB.Find(&records) // select * from Records to &record
 	DB.Find(&cities)  // select * from Records to &record
 	DB.Find(&users)   // select * from Records to &record
-
+	DB.Find(&ClientConfig)
 	tmpl, err := template.ParseFiles("templates/index.html", "templates/base.html")
 	if err != nil {
 		_, err := writer.Write([]byte(err.Error()))
@@ -50,10 +51,11 @@ func index(writer http.ResponseWriter, _ *http.Request) {
 	}
 
 	var structData = struct {
-		Records []DAL.Record
-		Users   []DAL.User
-		Cities  []DAL.City
-	}{Records: records, Users: users, Cities: cities}
+		Records      []DAL.Record
+		Users        []DAL.User
+		Cities       []DAL.City
+		ClientConfig []DAL.ClientConfig
+	}{Records: records, Users: users, Cities: cities, ClientConfig: ClientConfig}
 	err = tmpl.Execute(writer, structData)
 	if err != nil {
 		_, err := writer.Write([]byte(err.Error()))
@@ -89,6 +91,8 @@ func init() {
 	err = DB.AutoMigrate(&DAL.User{})
 	chk(err)
 	err = DB.AutoMigrate(&DAL.City{})
+	chk(err)
+	err = DB.AutoMigrate(&DAL.ClientConfig{})
 	chk(err)
 }
 func reg(w http.ResponseWriter, r *http.Request) {

@@ -21,3 +21,8 @@ type User struct {
 	Login    string `gorm:"unique"`
 	Password string
 }
+type ClientConfig struct {
+	Login    string
+	ChatLink string
+	BotToken string
+}

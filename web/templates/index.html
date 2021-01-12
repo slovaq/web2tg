@@ -63,5 +63,24 @@
         </tr>
         {{ end }}
     </table>
+    <h1>Конфиг</h1>
+    <table>
+        <tr>
+            <td> Login</td>
+            <td> Chat Link</td>
+            <td> Bot Token</td>
+        </tr>
+        {{ range .ClientConfig }}
+        <tr>
+            <td> {{ .Login }}</td>
+            <td> {{ .ChatLink }} </td>
+            <td> {{ .BotToken }} </td>
+        </tr>
+        {{ else }}
+        <tr>
+            <td colspan="3">Юзеров нет</td>
+        </tr>
+        {{ end }}
+    </table>
 </body>
 {{ template "base_footer"}}
