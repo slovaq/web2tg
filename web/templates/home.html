@@ -1,22 +1,147 @@
-{{ template "header"}}
+<!doctype html>
+<html lang="ru">
+
 <head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
     <title>Error</title>
 </head>
+<style>
+    table,
+    tr,
+    td {
+        padding: 2px;
+        border: 1px solid black;
+    }
+</style>
+
 <body>
 
     <div id="app">
-        
+
         <div class="modal-mask" style="background-color: rgba(0, 0, 0, 0)">
             <div class="modal-wrapper">
+
                 <div class="modal-container" style="width: 400px;height: 400px;">
-                    <center>Hello, {{ .User}}!</center>
-                    <button onclick=" app.removeLog()"  style="width: 340px;" class="btn btn-lg btn-success"
-                    value="return to login page!">log Out</button>
-                   
+                    Hello, [[.User]]! 
+                    <div id='list-wrapper' v-if="posts.length > 0">
+
+                        <table >
+                           
+                            <tr>
+                              <th>login</th>
+                              <th>ChatLink</th>
+                              <th>BotToken </th>
+                              <th>City </th>
+                              <th>Button </th>
+                            </tr>
+                         
+                         
+                            <tr v-for="post in posts" >
+                              
+                                 <td>{{ post.login }}</td> 
+                               <td>{{ post.ChatLink }}</td> 
+                               <td>{{ post.BotToken }}</td>  
+                               <td>{{ post.City }}</td>  
+                               <td> <button onclick=" app.removeLog()" class="btn btn-lg btn-success"
+                                value="return to login page!">edit</button></td>  
+                            </tr>
+                         
+                        </table>
+                    </div>
+                    <div id='list-wrapper' v-else>
+                        <table>
+
+                            <tr>
+                                <td> Login</td>
+                                <td> Chat Link</td>
+                                <td> Bot Token</td>
+                                <td> City</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3">Юзеров нет</td>
+                            </tr>
+
+                        </table>
+                    </div>
+                 
+                    <button onclick=" app.removeLog()" style="width: 340px;" class="btn btn-lg btn-success"
+                        value="return to login page!">log Out</button>
+
                 </div>
             </div>
         </div>
     </div>
 </body>
-{{ template "footer"}}
+<script src="/static/js/compressed.js"></script>
+
+
+<script>
+
+
+    const app = new Vue({
+        el: '#app',
+        data: {
+            posts: [
+                { login: "test", ChatLink: "ChatLink", BotToken: "Bot Token", City: "City" },
+                { login: "test", ChatLink: "ChatLink", BotToken: "Bot Token", City: "City" }
+            ],
+            shoppingItems: [
+      {name: 'apple', price: '10'},
+      {name: 'orange', price: '12'}
+    ]
+
+        },
+        methods: {
+            removeLog() {
+                $cookies.remove("login")
+                $cookies.remove("password")
+                location.href = '/reg'
+            },
+            axiosLog() {
+                console.log("send")
+                axios.get(`/api/user_get?login=${this.login}&password=${this.passF}`)
+                    .then(function (response) {
+                        // handle success
+                        console.log(response);
+                        if (response.data.Error != null) {
+                            console.log(response.data.Error);
+                            $cookies.remove("login")
+                            $cookies.remove("password")
+                            app.SuccFalse = false
+                            app.SuccFalseMessage = response.data.Error
+                        } else {
+                            console.log("this.login: " + app.login + " this.passF: " + app.passF)
+                            $cookies.set("login", app.login, { expires: "30d" });
+                            $cookies.set("password", app.passF, { expires: "30d" });
+                        }
+
+                    })
+                    .catch(function (error) {
+                        // handle error
+                        console.log(error);
+                    });
+
+            },
+        }
+
+    })
+
+
+
+</script>
+
+<link rel="stylesheet" type="text/css" href="/static/css/sandbox.css" />
+<!-- template for the modal component -->
+<link rel="stylesheet" href="/static/css/styles.css">
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/vue-cookies@1.5.12/vue-cookies.js"></script>
+
 </html>

@@ -2,6 +2,7 @@ package vapi
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"text/template"
@@ -36,17 +37,20 @@ func GetHandler(w http.ResponseWriter, r *http.Request) {
 	obj := Data{
 		User: decodedlogin,
 	}
-	tmpl, err := template.ParseFiles("templates/home.html", "templates/base.html")
+
+	fmt.Printf("Hello, %s!\n", decodedlogin)
+	dat, err := ioutil.ReadFile("templates/home.html")
 	if err != nil {
-		_, err := w.Write([]byte(err.Error()))
-		if err != nil {
-			fmt.Printf("error in index() with text: %s \n", err.Error())
-		}
-		return
+		fmt.Println(err)
 	}
+	fmt.Print(string(dat))
+	tmpl, err := template.New("").Delims("[[", "]]").Parse(string(dat))
+	//	fmt.Fprintf(w, "[login]  %s", obj)
 	tmpl.Execute(w, obj)
-	//	pet := chi.URLParam(r, "req")
-	//fmt.Fprintf(w, "Hello, %s!", login.Value)
+}
+
+type Infos struct {
+	Title, Content string
 }
 
 func PutHandler(w http.ResponseWriter, r *http.Request) {

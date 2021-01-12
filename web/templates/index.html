@@ -69,12 +69,14 @@
             <td> Login</td>
             <td> Chat Link</td>
             <td> Bot Token</td>
+            <td> City</td>
         </tr>
         {{ range .ClientConfig }}
         <tr>
             <td> {{ .Login }}</td>
             <td> {{ .ChatLink }} </td>
             <td> {{ .BotToken }} </td>
+            <td> {{ .City}} </td>
         </tr>
         {{ else }}
         <tr>
