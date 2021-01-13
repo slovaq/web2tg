@@ -144,7 +144,7 @@ func profile(w http.ResponseWriter, r *http.Request) {
 func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
-
+	go listen()
 	r.HandleFunc("/", index)
 	r.HandleFunc("/profile", profile)
 	r.HandleFunc("/reg", reg)
