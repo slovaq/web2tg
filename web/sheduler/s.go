@@ -9,6 +9,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/fatih/color"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 )
@@ -35,55 +36,71 @@ func (s Posts) Swap(i, j int) {
 var wg sync.WaitGroup
 
 func read(message string) {
-	fmt.Printf("read message> %s", message)
+	d := color.New(color.FgCyan, color.Bold)
+	y := color.New(color.FgYellow, color.Bold)
+	y.Printf("read message> ")
+	d.Printf("%s\n", message)
 }
 func check(box *Posts) {
 	defer wg.Done()
 	for {
+		for {
+			if block == true {
+				block = false
+				//	fmt.Printf("block>check>false\n")
+				sort.Sort(box)
+				sc := append([]Post{}, *box...)
+				//	fmt.Println("checker lenght>", len(sc))
+				if len(sc) > 0 {
+					currentTime := time.Now()
+					//fmt.Println(currentTime.Format(time.RFC3339))
 
-		//fmt.Println("checker>", box)
+					//fmt.Println(currentTime.Unix())
 
-		sc := append([]Post{}, *box...)
-		//	fmt.Println("checker lenght>", len(sc))
-		if len(sc) > 0 {
-			currentTime := time.Now()
-			//fmt.Println(currentTime.Format(time.RFC3339))
+					dia := sc[0].Time - currentTime.Unix()
 
-			//fmt.Println(currentTime.Unix())
+					//fmt.Println("unixTimeUTC>", unixTimeUTC)
+					if dia > 0 {
 
-			dia := sc[0].Time - currentTime.Unix()
+					} else {
+						unixTimeUTC := time.Unix(sc[0].Time, 0)
+						fmt.Printf("check>\n\tcurrent time: %s\n\tcurrent time unix: %d\n\tmessage time: %s\n\tmessage timestamp: %d\n\tdia: %d\n",
+							currentTime.Format(time.RFC3339),
+							currentTime.Unix(),
+							unixTimeUTC,
+							sc[0].Time,
+							dia)
+						//time.Sleep(1 * time.Millisecond)
+						//if (sc[0].Time-currentTime.Unix())<
 
-			//fmt.Println("unixTimeUTC>", unixTimeUTC)
-			if dia > 0 {
+						go read(sc[0].Message)
+						if len(sc) == 1 {
+							*box = []Post{}
+						} else {
+							copy(*box, sc[1:])
+						}
 
-			} else {
-				unixTimeUTC := time.Unix(sc[0].Time, 0)
-				fmt.Printf("check>\n\tcurrent time: %s\n\tcurrent time unix: %d\n\tmessage time: %s\n\tmessage timestamp: %d\n\tdia: %d\n",
-					currentTime.Format(time.RFC3339),
-					currentTime.Unix(),
-					unixTimeUTC,
-					sc[0].Time,
-					dia)
-				//time.Sleep(1 * time.Millisecond)
-				//if (sc[0].Time-currentTime.Unix())<
+					}
 
-				go read(sc[0].Message)
-				if len(sc) == 1 {
-					*box = []Post{}
 				} else {
-					copy(*box, sc[1:])
+
+					*box = []Post{}
+					//	fmt.Println("cp>", box)
+
 				}
 
+				block = true
+				//		fmt.Printf("block>check>true\n")
+				time.Sleep(100 * time.Millisecond)
+				//		fmt.Println(">break")
+				break
+
+			} else {
+				time.Sleep(20 * time.Millisecond)
 			}
-
-		} else {
-
-			*box = []Post{}
-			//	fmt.Println("cp>", box)
-
 		}
+		//fmt.Println("checker>", box)
 
-		time.Sleep(1 * time.Second)
 	}
 }
 func (box *Posts) add() {
@@ -91,7 +108,7 @@ func (box *Posts) add() {
 	for {
 		r := rand.Intn(10)
 		box.appendToItself("message "+strconv.Itoa(r), 24)
-		sort.Sort(box)
+
 		time.Sleep(5 * time.Second)
 	}
 }
@@ -99,6 +116,8 @@ func (h *Posts) appendToItself(message string, time int64) {
 	z := Post{message, time}
 	*h = append(*h, z)
 }
+
+var block bool
 
 func (box *Posts) httpAdd(w http.ResponseWriter, r *http.Request) {
 
@@ -117,25 +136,38 @@ func (box *Posts) httpAdd(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println(t.Unix())
 	timestamp := t.Unix()
 	fmt.Printf("add> message: %s |full time: %s |timestamp: %d\n", message, fulltime, timestamp)
-	box.appendToItself(message, timestamp)
-	sort.Sort(box)
+	for {
+		if block == true {
+			block = false
+			//fmt.Printf("block>httpAdd>false\n")
+			box.appendToItself(message, timestamp)
+			block = true
+			//	fmt.Printf("block>httpAdd>true\n")
+			time.Sleep(100 * time.Millisecond)
+			break
+		} else {
+			//	fmt.Printf("block>httpAdd>sleep\n")
+			r := rand.Intn(10)
+			time.Sleep(time.Duration(2+r) * time.Millisecond)
+		}
+	}
+
+	//sort.Sort(box)
 	fmt.Fprintln(w, "ok")
 
 }
 func main() {
 	rand.Seed(time.Now().UnixNano())
 	fmt.Println("start")
-
+	block = true
 	box := Posts{}
 	wg.Add(1)
-	//go box.add()
-	time.Sleep(1 * time.Second)
 	go check(&box)
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
 	r.HandleFunc("/add", box.httpAdd) ///add?message=test&date=2021-01-14&time=13:42:10
-	http.ListenAndServe(":3000", r)
+	http.ListenAndServe(":3001", r)
 	wg.Wait()
 
 }
