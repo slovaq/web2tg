@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	main2 "github.com/slovaq/web2tg/web/sheduler"
 	"html/template"
 	"log"
 	"net/http"
@@ -144,7 +145,7 @@ func profile(w http.ResponseWriter, r *http.Request) {
 func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
-	go listen()
+	go main2.listen()
 	r.HandleFunc("/", index)
 	r.HandleFunc("/profile", profile)
 	r.HandleFunc("/reg", reg)

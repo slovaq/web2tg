@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
+	"os"
 	"sort"
 	"strconv"
 	"sync"
@@ -30,6 +31,7 @@ func (s Posts) Less(i, j int) bool {
 }
 
 func (s Posts) Swap(i, j int) {
+
 	s[i], s[j] = s[j], s[i]
 }
 
@@ -70,9 +72,8 @@ func check(box *Posts) {
 							unixTimeUTC,
 							sc[0].Time,
 							dia)
-						//time.Sleep(1 * time.Millisecond)
-						//if (sc[0].Time-currentTime.Unix())<
 
+						go sendMessage(os.Getenv("TOKEN"), sc[0].Message, -404429873)
 						go read(sc[0].Message)
 						if len(sc) == 1 {
 							*box = []Post{}
@@ -150,8 +151,6 @@ func (box *Posts) httpAdd(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	//fmt.Println(t.Format(time.RFC3339))
-	//fmt.Println(t.Unix())
 	timestamp := t.Unix()
 	fmt.Printf("add> message: %s |full time: %s |timestamp: %d\n", message, fulltime, timestamp)
 	box.NohttpAdd(message, timestamp)
@@ -165,6 +164,9 @@ func main() {
 	block = true
 	box := Posts{}
 	wg.Add(1)
+
+	box.NohttpAdd(fmt.Sprintf("text %q ", 1), 1610651500)
+
 	go check(&box)
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
