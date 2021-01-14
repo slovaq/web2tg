@@ -119,6 +119,24 @@ func (h *Posts) appendToItself(message string, time int64) {
 
 var block bool
 
+func (box *Posts) NohttpAdd(message string, timestamp int64) {
+	for {
+		if block == true {
+			block = false
+			//fmt.Printf("block>httpAdd>false\n")
+			box.appendToItself(message, timestamp)
+			block = true
+			//	fmt.Printf("block>httpAdd>true\n")
+			time.Sleep(100 * time.Millisecond)
+			break
+		} else {
+			//	fmt.Printf("block>httpAdd>sleep\n")
+			r := rand.Intn(10)
+			time.Sleep(time.Duration(2+r) * time.Millisecond)
+		}
+	}
+
+}
 func (box *Posts) httpAdd(w http.ResponseWriter, r *http.Request) {
 
 	message := r.FormValue("message")
@@ -136,22 +154,7 @@ func (box *Posts) httpAdd(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println(t.Unix())
 	timestamp := t.Unix()
 	fmt.Printf("add> message: %s |full time: %s |timestamp: %d\n", message, fulltime, timestamp)
-	for {
-		if block == true {
-			block = false
-			//fmt.Printf("block>httpAdd>false\n")
-			box.appendToItself(message, timestamp)
-			block = true
-			//	fmt.Printf("block>httpAdd>true\n")
-			time.Sleep(100 * time.Millisecond)
-			break
-		} else {
-			//	fmt.Printf("block>httpAdd>sleep\n")
-			r := rand.Intn(10)
-			time.Sleep(time.Duration(2+r) * time.Millisecond)
-		}
-	}
-
+	box.NohttpAdd(message, timestamp)
 	//sort.Sort(box)
 	fmt.Fprintln(w, "ok")
 
