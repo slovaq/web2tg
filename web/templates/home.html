@@ -19,7 +19,62 @@
         border: 1px solid black;
     }
 </style>
+<style>
+    table {
+font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+font-size: 14px;
+border-radius: 10px;
+border-spacing: 0;
+text-align: center;
+}
+th {
+background:#4F4F4F;
+color: white;
+text-shadow: 0 1px 1px #2D2020;
+padding: 10px ;
+}
+th, td {
+border-style: solid;
+border-width: 0 1px 1px 0;
+border-color: white;
+}
+th:first-child, td:first-child {
+text-align: left;
+}
+th:first-child {
+border-top-left-radius: 10px;
+}
+th:last-child {
+border-top-right-radius: 10px;
+border-right: none;
+}
+td {
+padding: 10px ;
+background: #f2f0ee;
+color: black;
 
+}
+tr:last-child td:first-child {
+border-radius: 0 0 0 10px;
+}
+tr:last-child td:last-child {
+border-radius: 0 0 10px 0;
+}
+tr td:last-child {
+border-right: none;
+}
+.break {
+  width: 100px;
+ 
+  word-wrap: break-word;
+}
+.centre{
+    padding-top: 10px;
+    margin-left: auto;
+                            margin-right: auto;
+
+}
+</style>
 <body>
 
     <div id="app">
@@ -28,7 +83,7 @@
         <div v-if="modVisible">
             <div class="modal-mask">
                 <div class="modal-wrapper">
-                    <div class="modal-container">
+                    <div class="modal-container" style="width: 400px;height: 400px;">
                         <form @submit.prevent="subHandler">
                             <vue-ctk-date-time-picker v-model="date" :range="false">
                             </vue-ctk-date-time-picker>
@@ -73,19 +128,19 @@
             <div class="modal-mask" style="background-color: rgba(0, 0, 0, 0)">
             
                 <div class="modal-wrapper">
-    
+   
                     <div class="modal-container" style="width: 400px;height: 400px;">
-                        Hello, [[.User]]! 
+                   
                         <div id='list-wrapper' v-if="posts.length > 0">
     
-                            <table >
+                            <table style="margin-left: auto;
+                            margin-right: auto;">
                                
                                 <tr>
                                   <th>login</th>
                                   <th>ChatLink</th>
                                   <th>BotToken </th>
                                   <th>City </th>
-                                  <th>Button </th>
                                 </tr>
                              
                              
@@ -93,13 +148,13 @@
                                   
                                      <td>{{ post.login }}</td> 
                                    <td>{{ post.ChatLink }}</td> 
-                                   <td>{{ post.BotToken }}</td>  
+                                   <td ><div class="break">{{ post.BotToken }}</div></td>  
                                    <td>{{ post.City }}</td>  
-                                   <td> <button onclick=" app.modVisible=true" class="btn btn-lg btn-success"
-                                    value="return to login page!">edit</button></td>  
+                        
                                 </tr>
                              
                             </table>
+
                         </div>
                         <div id='list-wrapper' v-else>
                             <table>
@@ -117,9 +172,14 @@
     
                             </table>
                         </div>
-                     
-                        <button onclick=" app.removeLog()" style="width: 340px;" class="btn btn-lg btn-success"
-                            value="return to login page!">log Out</button>
+                        <div class="centre">
+
+                            <button onclick=" app.modVisible=true" class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
+                            value="return to login page!">изменить информацию</button>
+                <button onclick=" app.removeLog()" class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
+                    value="return to login page!">выйти из аккаунта</button>
+                        </div>
+                   
     
                     </div>
                 </div>
@@ -132,7 +192,7 @@
 </body>
 <script src="/static/js/compressed.js"></script>
 
-
+<link rel="stylesheet" href="/static/css/uikit.min.css" />
 <script>
 
 
@@ -141,7 +201,8 @@
         data: {
             posts: [
               //  { login: "test", ChatLink: "ChatLink", BotToken: "Bot Token", City: "City" },
-                { login: "test", ChatLink: "ChatLink", BotToken: "Bot Token", City: "City" }
+                { login: "[[.User]]", ChatLink: "t.me/bottestla", BotToken: "123456:ABCDEF1234ghIklzyx57W2v1u123ew11", City: "Moscow" },
+                { login: "[[.User]]", ChatLink: "t.me/bottestla", BotToken: "123456:ABCDEF1234ghIklzyx57W2v1u123ew11", City: "Moscow" }
             ],
             modVisible:false,
 

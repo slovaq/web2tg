@@ -1,4 +1,4 @@
-package main
+package sheduler
 
 import (
 	"fmt"
@@ -158,7 +158,7 @@ func (box *Posts) httpAdd(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "ok")
 
 }
-func main() {
+func mainx() {
 	rand.Seed(time.Now().UnixNano())
 	fmt.Println("start")
 	block = true
