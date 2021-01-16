@@ -12,11 +12,10 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/slovaq/web2tg/web/API"
-	DAL "github.com/slovaq/web2tg/web/DAL"
+	"github.com/slovaq/web2tg/web/DAL"
 	"github.com/slovaq/web2tg/web/vapi"
 )
 
-var DB = DAL.DB
 var debug bool
 
 func init() {
@@ -37,10 +36,10 @@ func index(writer http.ResponseWriter, _ *http.Request) {
 	var cities []DAL.City
 	var users []DAL.User
 	var ClientConfig []DAL.ClientConfig
-	DB.Find(&records) // select * from Records to &record
-	DB.Find(&cities)  // select * from Records to &record
-	DB.Find(&users)   // select * from Records to &record
-	DB.Find(&ClientConfig)
+	DAL.DB.Find(&records) // select * from Records to &record
+	DAL.DB.Find(&cities)  // select * from Records to &record
+	DAL.DB.Find(&users)   // select * from Records to &record
+	DAL.DB.Find(&ClientConfig)
 	tmpl, err := template.ParseFiles("templates/index.html", "templates/base.html")
 	if err != nil {
 		_, err := writer.Write([]byte(err.Error()))
@@ -86,13 +85,13 @@ func staticRouter(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, path)
 }
 func init() {
-	err := DB.AutoMigrate(&DAL.Record{})
+	err := DAL.DB.AutoMigrate(&DAL.Record{})
 	chk(err)
-	err = DB.AutoMigrate(&DAL.User{})
+	err = DAL.DB.AutoMigrate(&DAL.User{})
 	chk(err)
-	err = DB.AutoMigrate(&DAL.City{})
+	err = DAL.DB.AutoMigrate(&DAL.City{})
 	chk(err)
-	err = DB.AutoMigrate(&DAL.ClientConfig{})
+	err = DAL.DB.AutoMigrate(&DAL.ClientConfig{})
 	chk(err)
 }
 func reg(w http.ResponseWriter, r *http.Request) {
@@ -117,13 +116,15 @@ var noCacheHeaders = map[string]string{
 
 func profile(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("templates/profile.html", "templates/base.html")
-
+	if err != nil {
+		fmt.Printf("error in profile() with text: %s \n", err.Error())
+	}
 	var records []DAL.Record
 	var cities []DAL.City
 	var users []DAL.User
-	DB.Find(&records) // select * from Records to &record
-	DB.Find(&cities)  // select * from Records to &record
-	DB.Find(&users)   // select * from Records to &record
+	DAL.DB.Find(&records) // select * from Records to &record
+	DAL.DB.Find(&cities)  // select * from Records to &record
+	DAL.DB.Find(&users)   // select * from Records to &record
 
 	var structData = struct {
 		Records []DAL.Record
@@ -160,6 +161,11 @@ func main() {
 	r.HandleFunc("/static/{type}/{file}", staticRouter)
 	//r.Route("/vue", vapi.Router)
 	r.Route("/api", API.Router)
+	r.HandleFunc("/about", func(writer http.ResponseWriter, request *http.Request) {
+		writer.Write([]byte("<html><head><title>Hello, my friend!</title></head><body>" +
+			"<img src=/static/ttf/egg.png>" +
+			"</body></html>"))
+	})
 	err := http.ListenAndServe(":1111", r)
 	if err != nil {
 		fmt.Printf("Cant start server with error %s \n Exiting..", err)

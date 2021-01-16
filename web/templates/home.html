@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <title>Error</title>
@@ -21,174 +21,174 @@
 </style>
 <style>
     table {
-font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-font-size: 14px;
-border-radius: 10px;
-border-spacing: 0;
-text-align: center;
-}
-th {
-background:#4F4F4F;
-color: white;
-text-shadow: 0 1px 1px #2D2020;
-padding: 10px ;
-}
-th, td {
-border-style: solid;
-border-width: 0 1px 1px 0;
-border-color: white;
-}
-th:first-child, td:first-child {
-text-align: left;
-}
-th:first-child {
-border-top-left-radius: 10px;
-}
-th:last-child {
-border-top-right-radius: 10px;
-border-right: none;
-}
-td {
-padding: 10px ;
-background: #f2f0ee;
-color: black;
+        font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+        font-size: 14px;
+        border-radius: 10px;
+        border-spacing: 0;
+        text-align: center;
+    }
+    th {
+        background:#4F4F4F;
+        color: white;
+        text-shadow: 0 1px 1px #2D2020;
+        padding: 10px ;
+    }
+    th, td {
+        border-style: solid;
+        border-width: 0 1px 1px 0;
+        border-color: white;
+    }
+    th:first-child, td:first-child {
+        text-align: left;
+    }
+    th:first-child {
+        border-top-left-radius: 10px;
+    }
+    th:last-child {
+        border-top-right-radius: 10px;
+        border-right: none;
+    }
+    td {
+        padding: 10px ;
+        background: #f2f0ee;
+        color: black;
 
-}
-tr:last-child td:first-child {
-border-radius: 0 0 0 10px;
-}
-tr:last-child td:last-child {
-border-radius: 0 0 10px 0;
-}
-tr td:last-child {
-border-right: none;
-}
-.break {
-  width: 100px;
- 
-  word-wrap: break-word;
-}
-.centre{
-    padding-top: 10px;
-    margin-left: auto;
-                            margin-right: auto;
+    }
+    tr:last-child td:first-child {
+        border-radius: 0 0 0 10px;
+    }
+    tr:last-child td:last-child {
+        border-radius: 0 0 10px 0;
+    }
+    tr td:last-child {
+        border-right: none;
+    }
+    .break {
+        width: 100px;
 
-}
+        word-wrap: break-word;
+    }
+    .centre{
+        padding-top: 10px;
+        margin-left: auto;
+        margin-right: auto;
+
+    }
 </style>
 <body>
 
-    <div id="app">
-       
+<div id="app">
 
-        <div v-if="modVisible">
-            <div class="modal-mask">
-                <div class="modal-wrapper">
-                    <div class="modal-container" style="width: 400px;height: 400px;">
-                        <form @submit.prevent="subHandler">
-                            <vue-ctk-date-time-picker v-model="date" :range="false">
-                            </vue-ctk-date-time-picker>
-                            <input type="text" value="" placeholder="сообщение"  v-model="message" class="form-control">
-                            <select v-model="city">
-                              
-                                <option value="Москва">Москва</option>
-                             
-                              </select>
-                            <div>
-                                <div style="padding-top: 10px;padding-bottom: 10px;">
-                                    <select v-model="repeat" class=" select  select-block  select-primary ">
-                                        <optgroup label="Единоразово">
-                                            <option value="one">Один раз</option>
-                                        </optgroup>
-                                        <optgroup label="Систематически">
-                                            <option value="1">Каждый час</option>
-                                            <option value="2">Ежедневно</option>
-                                            <option value="3">Еженедельно</option>
-                                            <option value="4">Ежемесячно</option>
-                                        </optgroup>
-                                    </select>
-                                </div>
 
+    <div v-if="modVisible">
+        <div class="modal-mask">
+            <div class="modal-wrapper">
+                <div class="modal-container" style="width: 400px;height: 400px;">
+                    <form @submit.prevent="subHandler">
+                        <vue-ctk-date-time-picker v-model="date" :range="false">
+                        </vue-ctk-date-time-picker>
+                        <input type="text" value="" placeholder="сообщение"  v-model="message" class="form-control">
+                        <select v-model="city">
+
+                            <option value="Москва">Москва</option>
+
+                        </select>
+                        <div>
+                            <div style="padding-top: 10px;padding-bottom: 10px;">
+                                <select v-model="repeat" class=" select  select-block  select-primary ">
+                                    <optgroup label="Единоразово">
+                                        <option value="one">Один раз</option>
+                                    </optgroup>
+                                    <optgroup label="Систематически">
+                                        <option value="1">Каждый час</option>
+                                        <option value="2">Ежедневно</option>
+                                        <option value="3">Еженедельно</option>
+                                        <option value="4">Ежемесячно</option>
+                                    </optgroup>
+                                </select>
                             </div>
-                            <div style="padding-left: 30px;">
-                                <button v-on:click="modVisible=false" class="btn btn-lg btn-danger"
+
+                        </div>
+                        <div style="padding-left: 30px;">
+                            <button v-on:click="modVisible=false" class="btn btn-lg btn-danger"
                                     style="width: 150px;">cancel</button>
-                         
-                                <button type="submit"  class="btn btn-lg btn-success"
+
+                            <button type="submit"  class="btn btn-lg btn-success"
                                     style="width: 150px;">ok</button>
-                            </div>
-                        </form>
-
-                    </div>
+                        </div>
+                    </form>
 
                 </div>
+
             </div>
         </div>
-        <div v-else>
+    </div>
+    <div v-else>
 
-            <div class="modal-mask" style="background-color: rgba(0, 0, 0, 0)">
-            
-                <div class="modal-wrapper">
-   
-                    <div class="modal-container" style="width: 400px;height: 400px;">
-                   
-                        <div id='list-wrapper' v-if="posts.length > 0">
-    
-                            <table style="margin-left: auto;
+        <div class="modal-mask" style="background-color: rgba(0, 0, 0, 0)">
+
+            <div class="modal-wrapper">
+
+                <div class="modal-container" style="width: 400px;height: 400px;">
+
+                    <div id='list-wrapper' v-if="posts.length > 0">
+
+                        <table style="margin-left: auto;
                             margin-right: auto;">
-                               
-                                <tr>
-                                  <th>login</th>
-                                  <th>ChatLink</th>
-                                  <th>BotToken </th>
-                                  <th>City </th>
-                                </tr>
-                             
-                             
-                                <tr v-for="post in posts" >
-                                  
-                                     <td>{{ post.login }}</td> 
-                                   <td>{{ post.ChatLink }}</td> 
-                                   <td ><div class="break">{{ post.BotToken }}</div></td>  
-                                   <td>{{ post.City }}</td>  
-                        
-                                </tr>
-                             
-                            </table>
 
-                        </div>
-                        <div id='list-wrapper' v-else>
-                            <table>
-    
-                                <tr>
-                                    <td> Login</td>
-                                    <td> Chat Link</td>
-                                    <td> Bot Token</td>
-                                    <td> City</td>
-                                </tr>
-    
-                                <tr>
-                                    <td colspan="3">Юзеров нет</td>
-                                </tr>
-    
-                            </table>
-                        </div>
-                        <div class="centre">
+                            <tr>
+                                <th>login</th>
+                                <th>ChatLink</th>
+                                <th>BotToken </th>
+                                <th>City </th>
+                            </tr>
 
-                            <button onclick=" app.modVisible=true" class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
-                            value="return to login page!">изменить информацию</button>
-                <button onclick=" app.removeLog()" class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
-                    value="return to login page!">выйти из аккаунта</button>
-                        </div>
-                   
-    
+
+                            <tr v-for="post in posts" >
+
+                                <td>{{ post.login }}</td>
+                                <td>{{ post.ChatLink }}</td>
+                                <td ><div class="break">{{ post.BotToken }}</div></td>
+                                <td>{{ post.City }}</td>
+
+                            </tr>
+
+                        </table>
+
                     </div>
+                    <div id='list-wrapper' v-else>
+                        <table>
+
+                            <tr>
+                                <td> Login</td>
+                                <td> Chat Link</td>
+                                <td> Bot Token</td>
+                                <td> City</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3">Юзеров нет</td>
+                            </tr>
+
+                        </table>
+                    </div>
+                    <div class="centre">
+
+                        <button onclick=" app.modVisible=true" class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
+                                value="return to login page!">изменить информацию</button>
+                        <button onclick=" app.removeLog()" class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
+                                value="return to login page!">выйти из аккаунта</button>
+                    </div>
+
+
                 </div>
             </div>
-
         </div>
-
 
     </div>
+
+
+</div>
 </body>
 <script src="/static/js/compressed.js"></script>
 
@@ -200,7 +200,7 @@ border-right: none;
         el: '#app',
         data: {
             posts: [
-              //  { login: "test", ChatLink: "ChatLink", BotToken: "Bot Token", City: "City" },
+                //  { login: "test", ChatLink: "ChatLink", BotToken: "Bot Token", City: "City" },
                 { login: "[[.User]]", ChatLink: "t.me/bottestla", BotToken: "123456:ABCDEF1234ghIklzyx57W2v1u123ew11", City: "Moscow" },
                 { login: "[[.User]]", ChatLink: "t.me/bottestla", BotToken: "123456:ABCDEF1234ghIklzyx57W2v1u123ew11", City: "Moscow" }
             ],
