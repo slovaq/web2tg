@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <title>Error</title>
@@ -27,159 +27,260 @@
         border-spacing: 0;
         text-align: center;
     }
+
     th {
-        background:#4F4F4F;
+        background: #4F4F4F;
         color: white;
         text-shadow: 0 1px 1px #2D2020;
-        padding: 10px ;
+        padding: 10px;
     }
-    th, td {
+
+    th,
+    td {
         border-style: solid;
         border-width: 0 1px 1px 0;
         border-color: white;
     }
-    th:first-child, td:first-child {
+
+    th:first-child,
+    td:first-child {
         text-align: left;
     }
+
     th:first-child {
         border-top-left-radius: 10px;
     }
+
     th:last-child {
         border-top-right-radius: 10px;
         border-right: none;
     }
+
     td {
-     
+
         background: #f2f0ee;
         color: black;
 
     }
+
     tr:last-child td:first-child {
         border-radius: 0 0 0 10px;
     }
+
     tr:last-child td:last-child {
         border-radius: 0 0 10px 0;
     }
+
     tr td:last-child {
         border-right: none;
     }
+
     .break {
         max-width: 100px;
 
         word-wrap: break-word;
     }
-    .centre{
+
+    .centre {
         padding-top: 10px;
         margin-left: auto;
         margin-right: auto;
 
     }
 </style>
+
 <body>
 
-<div id="app">
+    <div id="app">
+
+        <div v-if="regVisible">
+            <div class="modal-mask">
+                <div class="modal-wrapper">
+                    <div class="modal-container" style="width: 400px;height: 400px;">
+                        <form @submit.prevent="subHandler">
+
+                            <fieldset class="uk-fieldset">
+
+                                <legend class="uk-legend">Добавление записи</legend>
+
+                                <div class="uk-margin">
+                                    <input class="uk-input" type="text" :placeholder='placeholder["0"].login'>
+                                </div>
+                                <div class="uk-margin">
+                                    <input class="uk-input" type="text" :placeholder='placeholder["0"].ChatLink'>
+                                </div>
+                                <div class="uk-margin">
+                                    <input class="uk-input" type="text" :placeholder='placeholder["0"].BotToken'>
+                                </div>
+                                <div class="uk-margin">
+                                    <select class="uk-select">
+                                        <option>{{placeholder["0"].City}}</option>
+                                    </select>
+                                </div>
 
 
-    <div v-if="modVisible">
-        <div class="modal-mask">
-            <div class="modal-wrapper">
-                <div class="modal-container" style="width: 400px;height: 400px;">
-                    <form @submit.prevent="subHandler">
-                        
-                        <div class="centre">
-                            <button type="submit" class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
-                            value="return to login page!">ok</button>
-                            <button v-on:click="modVisible=false" class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
+
+                            </fieldset>
+
+                            <div class="centre">
+
+                                <button type="submit"
+                                    class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
+                                    value="return to login page!">ok</button>
+                                <button v-on:click="modVisible=false"
+                                    class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
                                     value="return to login page!">cancel</button>
-                           
-                        </div>
-                    </form>
+
+                            </div>
+                        </form>
+
+                    </div>
 
                 </div>
-
             </div>
         </div>
-    </div>
-    <div v-else>
+        <div v-else>
+            <div v-if="modVisible">
+                <div class="modal-mask">
+                    <div class="modal-wrapper">
+                        <div class="modal-container" style="width: 400px;height: 400px;">
+                            <form @submit.prevent="subHandler">
 
-        <div class="modal-mask" style="background-color: rgba(0, 0, 0, 0)">
+                                <fieldset class="uk-fieldset">
 
-            <div class="modal-wrapper">
+                                    <legend class="uk-legend">Legend</legend>
 
-                <div class="modal-container" style="width: 450px;height: 400px;">
+                                    <div class="uk-margin">
+                                        <input class="uk-input" type="text" :placeholder='placeholder["0"].login'>
+                                    </div>
+                                    <div class="uk-margin">
+                                        <input class="uk-input" type="text" :placeholder='placeholder["0"].ChatLink'>
+                                    </div>
+                                    <div class="uk-margin">
+                                        <input class="uk-input" type="text" :placeholder='placeholder["0"].BotToken'>
+                                    </div>
+                                    <div class="uk-margin">
+                                        <select class="uk-select">
+                                            <option>{{placeholder["0"].City}}</option>
+                                        </select>
+                                    </div>
 
-                    <div id='list-wrapper' v-if="posts.length > 0">
 
-                        <table style="width:450px;margin-left: auto;
+
+                                </fieldset>
+
+                                <div class="centre">
+
+                                    <button type="submit"
+                                        class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
+                                        value="return to login page!">ok</button>
+                                    <button v-on:click="modVisible=false"
+                                        class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
+                                        value="return to login page!">cancel</button>
+
+                                </div>
+                            </form>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div v-else>
+
+                <div class="modal-mask" style="background-color: rgba(0, 0, 0, 0)">
+
+                    <div class="modal-wrapper">
+
+                        <div class="modal-container" style="width: 450px;height: 400px;">
+
+                            <div id='list-wrapper' v-if="posts.length > 0">
+
+                                <table style="width:450px;margin-left: auto;
                             margin-right: auto;">
 
-                            <tr>
-                                <th>login</th>
-                                <th>ChatLink</th>
-                                <th>BotToken </th>
-                                <th>City </th>
-                                <th>Button </th>
-                            </tr>
+                                    <tr>
+                                        <th>login</th>
+                                        <th>ChatLink</th>
+                                        <th>BotToken </th>
+                                        <th>City </th>
+                                        <th>Button </th>
+                                    </tr>
 
 
-                            <tr v-for="post in posts" >
+                                    <tr v-for="post in posts">
 
-                                <td><div class="break">{{ post.login }}</div></td>
-                                <td><div class="break">{{ post.ChatLink }}</div></td>
-                                <td ><div class="break">{{ post.BotToken }}</div></td>
-                                <td><div class="break">{{ post.City }}</div></td>
-                                <td> <button onclick=" app.modVisible=true" class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom" style="font-size: 2rem;padding:0 1px;"
-                                    value="return to login page!"> 	
-                                    &#9998;</button></td>
-                            </tr>
+                                        <td>
+                                            <div class="break">{{ post.login }}</div>
+                                        </td>
+                                        <td>
+                                            <div class="break">{{ post.ChatLink }}</div>
+                                        </td>
+                                        <td>
+                                            <div class="break">{{ post.BotToken }}</div>
+                                        </td>
+                                        <td>
+                                            <div class="break">{{ post.City }}</div>
+                                        </td>
+                                        <td> <button onclick=" app.modVisible=true"
+                                                class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
+                                                style="font-size: 2rem;padding:0 1px;" value="return to login page!">
+                                                &#9998;</button></td>
+                                    </tr>
 
-                        </table>
+                                </table>
 
+                            </div>
+                            <div id='list-wrapper' v-else>
+                                <table style="width:450px;margin-left: auto;
+                            margin-right: auto;">
+
+                                    <tr>
+                                        <td> Login</td>
+                                        <td> Chat Link</td>
+                                        <td> Bot Token</td>
+                                        <td> City</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="3">нет записей</td>
+                                    </tr>
+
+                                </table>
+                                <button onclick=" app.regVisible=true"
+                                    class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
+                                    style="padding:0 1px;" value="return to login page!">
+                                    добавить запись</button>
+                            </div>
+                            <div class="centre">
+
+                                <button class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
+                                    value="return to login page!">на главную страницу</button>
+                                <button onclick=" app.removeLog()"
+                                    class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
+                                    value="return to login page!">выйти из аккаунта</button>
+                            </div>
+
+
+                        </div>
                     </div>
-                    <div id='list-wrapper' v-else>
-                        <table>
-
-                            <tr>
-                                <td> Login</td>
-                                <td> Chat Link</td>
-                                <td> Bot Token</td>
-                                <td> City</td>
-                            </tr>
-
-                            <tr>
-                                <td colspan="3">Юзеров нет</td>
-                            </tr>
-
-                        </table>
-                    </div>
-                    <div class="centre">
-
-                        <button onclick=" app.modVisible=true" class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
-                                value="return to login page!">изменить информацию</button>
-                        <button onclick=" app.removeLog()" class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
-                                value="return to login page!">выйти из аккаунта</button>
-                    </div>
-
-
                 </div>
+
             </div>
         </div>
 
     </div>
-
-
-</div>
 </body>
 <script src="/static/js/compressed.js"></script>
 
 <link rel="stylesheet" href="/static/css/uikit.min.css" />
 <style>
-    
-    .uk-button-default{
+    .uk-button-default {
 
         border: 1px solid #c4c4c4;
     }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
 
 
@@ -187,12 +288,44 @@
         el: '#app',
         data: {
             posts: [
-                //  { login: "test", ChatLink: "ChatLink", BotToken: "Bot Token", City: "City" },
-                { login: "[[.User]]", ChatLink: "t.me/bottestla", BotToken: "123456:ABCDEF1234ghIklzyx57W2v1u123ew11", City: "Moscow" },
-               
             ],
-            modVisible:false,
+            placeholder: [
+                //  { login: "test", ChatLink: "ChatLink", BotToken: "Bot Token", City: "City" },
+                { login: "mail", ChatLink: "t.me/chat", BotToken: "123456:ABCDEF1234ghIklzyx57W2v1u123ew11", City: "City" },
 
+            ],
+            modVisible: false,
+            regVisible:false,
+
+        },
+        created() {
+
+            console.log("send")
+            axios.get(`/auth/get_config`)
+                .then(function (response) {
+                    // handle success
+                    console.log(response);
+                    if (response.data.Error != null) {
+                        console.log(response.data.Error);
+
+                    } else {
+                        console.log("created ok")
+                        console.log(decodeURIComponent(response.data["0"].Login))
+                        app.posts = [{
+                            login: decodeURIComponent(response.data["0"].Login), ChatLink: response.data["0"].ChatLink,
+                            BotToken: response.data["0"].BotToken, City: response.data["0"].City
+                        }]
+                        app.placeholder = [{
+                            login: decodeURIComponent(response.data["0"].Login), ChatLink: response.data["0"].ChatLink,
+                            BotToken: response.data["0"].BotToken, City: response.data["0"].City
+                        }]
+                    }
+
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                });
         },
         methods: {
             removeLog() {
@@ -200,31 +333,7 @@
                 $cookies.remove("password")
                 location.href = '/reg'
             },
-            axiosLog() {
-                console.log("send")
-                axios.get(`/api/user_get?login=${this.login}&password=${this.passF}`)
-                    .then(function (response) {
-                        // handle success
-                        console.log(response);
-                        if (response.data.Error != null) {
-                            console.log(response.data.Error);
-                            $cookies.remove("login")
-                            $cookies.remove("password")
-                            app.SuccFalse = false
-                            app.SuccFalseMessage = response.data.Error
-                        } else {
-                            console.log("this.login: " + app.login + " this.passF: " + app.passF)
-                            $cookies.set("login", app.login, { expires: "30d" });
-                            $cookies.set("password", app.passF, { expires: "30d" });
-                        }
 
-                    })
-                    .catch(function (error) {
-                        // handle error
-                        console.log(error);
-                    });
-
-            },
         }
 
     })
@@ -237,7 +346,7 @@
 <!-- template for the modal component -->
 <link rel="stylesheet" href="/static/css/styles.css">
 
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 <script src="https://unpkg.com/vue-cookies@1.5.12/vue-cookies.js"></script>
 
 </html>

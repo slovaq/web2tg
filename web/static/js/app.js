@@ -38,8 +38,12 @@ const app = new Vue({
                         app.SuccFalseMessage=response.data.Error
                     } else{
                         console.log("this.login: " + app.login + " this.passF: " + app.passF )
-                        $cookies.set("login", app.login,{ expires: "30d" } );
-                        $cookies.set("password", app.passF,{ expires: "30d" } );
+                       // $cookies.set("login", app.login,{ expires: "30d" } );
+                       // $cookies.set("password", app.passF,{ expires: "30d" } );
+                        console.log("this.login set: " + app.login + " this.passF: " + app.passF)
+                        document.cookie = "login=" +app.login+ ";path=/";
+                     //   document.cookie = "loginx=" +app.login+ ";path=/";
+                        document.cookie = "password=" +app.passF+ ";path=/";
                     }
                     
                 })
@@ -57,6 +61,7 @@ const app = new Vue({
                     console.log(response);
                     $cookies.set("login", app.email,{ expires: "30d" } );
                     $cookies.set("password", app.passF,{ expires: "30d" } );
+                    
                 })
                 .catch(function (error) {
                     // handle error
