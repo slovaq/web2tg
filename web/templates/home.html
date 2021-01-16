@@ -49,7 +49,7 @@
         border-right: none;
     }
     td {
-        padding: 10px ;
+     
         background: #f2f0ee;
         color: black;
 
@@ -64,7 +64,7 @@
         border-right: none;
     }
     .break {
-        width: 100px;
+        max-width: 100px;
 
         word-wrap: break-word;
     }
@@ -85,36 +85,13 @@
             <div class="modal-wrapper">
                 <div class="modal-container" style="width: 400px;height: 400px;">
                     <form @submit.prevent="subHandler">
-                        <vue-ctk-date-time-picker v-model="date" :range="false">
-                        </vue-ctk-date-time-picker>
-                        <input type="text" value="" placeholder="сообщение"  v-model="message" class="form-control">
-                        <select v-model="city">
-
-                            <option value="Москва">Москва</option>
-
-                        </select>
-                        <div>
-                            <div style="padding-top: 10px;padding-bottom: 10px;">
-                                <select v-model="repeat" class=" select  select-block  select-primary ">
-                                    <optgroup label="Единоразово">
-                                        <option value="one">Один раз</option>
-                                    </optgroup>
-                                    <optgroup label="Систематически">
-                                        <option value="1">Каждый час</option>
-                                        <option value="2">Ежедневно</option>
-                                        <option value="3">Еженедельно</option>
-                                        <option value="4">Ежемесячно</option>
-                                    </optgroup>
-                                </select>
-                            </div>
-
-                        </div>
-                        <div style="padding-left: 30px;">
-                            <button v-on:click="modVisible=false" class="btn btn-lg btn-danger"
-                                    style="width: 150px;">cancel</button>
-
-                            <button type="submit"  class="btn btn-lg btn-success"
-                                    style="width: 150px;">ok</button>
+                        
+                        <div class="centre">
+                            <button type="submit" class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
+                            value="return to login page!">ok</button>
+                            <button v-on:click="modVisible=false" class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
+                                    value="return to login page!">cancel</button>
+                           
                         </div>
                     </form>
 
@@ -129,11 +106,11 @@
 
             <div class="modal-wrapper">
 
-                <div class="modal-container" style="width: 400px;height: 400px;">
+                <div class="modal-container" style="width: 450px;height: 400px;">
 
                     <div id='list-wrapper' v-if="posts.length > 0">
 
-                        <table style="margin-left: auto;
+                        <table style="width:450px;margin-left: auto;
                             margin-right: auto;">
 
                             <tr>
@@ -141,16 +118,19 @@
                                 <th>ChatLink</th>
                                 <th>BotToken </th>
                                 <th>City </th>
+                                <th>Button </th>
                             </tr>
 
 
                             <tr v-for="post in posts" >
 
-                                <td>{{ post.login }}</td>
-                                <td>{{ post.ChatLink }}</td>
+                                <td><div class="break">{{ post.login }}</div></td>
+                                <td><div class="break">{{ post.ChatLink }}</div></td>
                                 <td ><div class="break">{{ post.BotToken }}</div></td>
-                                <td>{{ post.City }}</td>
-
+                                <td><div class="break">{{ post.City }}</div></td>
+                                <td> <button onclick=" app.modVisible=true" class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom" style="font-size: 2rem;padding:0 1px;"
+                                    value="return to login page!"> 	
+                                    &#9998;</button></td>
                             </tr>
 
                         </table>
@@ -193,6 +173,13 @@
 <script src="/static/js/compressed.js"></script>
 
 <link rel="stylesheet" href="/static/css/uikit.min.css" />
+<style>
+    
+    .uk-button-default{
+
+        border: 1px solid #c4c4c4;
+    }
+</style>
 <script>
 
 
@@ -202,7 +189,7 @@
             posts: [
                 //  { login: "test", ChatLink: "ChatLink", BotToken: "Bot Token", City: "City" },
                 { login: "[[.User]]", ChatLink: "t.me/bottestla", BotToken: "123456:ABCDEF1234ghIklzyx57W2v1u123ew11", City: "Moscow" },
-                { login: "[[.User]]", ChatLink: "t.me/bottestla", BotToken: "123456:ABCDEF1234ghIklzyx57W2v1u123ew11", City: "Moscow" }
+               
             ],
             modVisible:false,
 
