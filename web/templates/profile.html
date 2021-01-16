@@ -8,12 +8,18 @@
     <div id="app">
 
         <link rel="stylesheet" href="/static/css/dtsel.css" />
-    
+        <form action="/api/city_create" uk-grid class="uk-grid-small">
+            <div class="uk-width-1-1">
+                <input name="chat_id" placeholder="ID Чата" type="text">
+                <input name="name" placeholder="Название города" type="text">
+                <button type="submit">Создать</button>
+            </div>
+        </form>
         <form class="uk-grid-small" uk-grid action="/api/record_create">
             <div class="uk-width-1-1">
                 <input name="dateTimePicker" placeholder="10\20\04 23:59" />
-                
-                <button type="submit">Отправить</button>
+                <button type="submit">Создать</button>
+
             </div>
             <div class="uk-width-1-4">
                 <textarea class="uk-textarea" name="text" id="" cols="15" rows="5"></textarea>

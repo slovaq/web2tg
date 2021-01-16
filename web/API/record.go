@@ -91,12 +91,12 @@ func RecordCreate(writer http.ResponseWriter, request *http.Request) {
 	}
 	//layout := "2006-01-02T15:04:05.000Z"
 	dateTimePicker := request.FormValue("dateTimePicker")
-	//fmt.Println(dateTimePicker)
-	dt := strings.Split(dateTimePicker, ", ")
+	fmt.Println(dateTimePicker)
+	dt := strings.Split(dateTimePicker, " ")
 	//form := "2006-01-02T15:04:05"
-	tm := dt[0] + "T" + dt[1]
+	tm := dt[0] + "T" + dt[1] + "Z" // from MST to Moscow time zone
 	//	fmt.Println(tm)
-	date, err = time.Parse("2006-01-02T15:04:05", tm)
+	date, err = time.Parse(time.RFC3339, tm)
 	if err != nil {
 		chk(&result, writer, err)
 		return

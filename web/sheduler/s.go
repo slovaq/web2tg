@@ -158,13 +158,12 @@ func (box *Posts) httpAdd(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "ok")
 
 }
-func mainx() {
+func Mainx() {
 	rand.Seed(time.Now().UnixNano())
 	fmt.Println("start")
 	block = true
 	box := Posts{}
 	wg.Add(1)
-
 	box.NohttpAdd(fmt.Sprintf("text %q ", 1), 1610651500)
 
 	go check(&box)

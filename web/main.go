@@ -2,18 +2,18 @@ package main
 
 import (
 	"fmt"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
+	"github.com/slovaq/web2tg/web/API"
+	"github.com/slovaq/web2tg/web/DAL"
+	scheduler "github.com/slovaq/web2tg/web/sheduler"
+	"github.com/slovaq/web2tg/web/vapi"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"runtime"
 	"time"
-
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
-	"github.com/slovaq/web2tg/web/API"
-	"github.com/slovaq/web2tg/web/DAL"
-	"github.com/slovaq/web2tg/web/vapi"
 )
 
 var debug bool
@@ -144,6 +144,7 @@ func profile(w http.ResponseWriter, r *http.Request) {
 }
 func main() {
 	r := chi.NewRouter()
+	go scheduler.Mainx()
 	r.Use(middleware.Logger)
 	//	go sheduler.Listen()
 	r.HandleFunc("/", index)
