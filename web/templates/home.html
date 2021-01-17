@@ -97,28 +97,28 @@
             <div class="modal-mask">
                 <div class="modal-wrapper">
                     <div class="modal-container" style="width: 400px;height: 400px;">
-                        <form @submit.prevent="subHandler">
+                        <form @submit.prevent="createHandler">
 
                             <fieldset class="uk-fieldset">
 
                                 <legend class="uk-legend">Добавление записи</legend>
 
+                                <!--   <div class="uk-margin">
+                                    <input class="uk-input" type="text" :placeholder='login'>
+                                </div>-->
                                 <div class="uk-margin">
-                                    <input class="uk-input" type="text" :placeholder='placeholder["0"].login'>
+                                    <input class="uk-input" type="text" :placeholder='placeholder["0"].ChatLink'
+                                        v-model='createdata["0"].ChatLink'>
                                 </div>
                                 <div class="uk-margin">
-                                    <input class="uk-input" type="text" :placeholder='placeholder["0"].ChatLink'>
+                                    <input class="uk-input" type="text" :placeholder='placeholder["0"].BotToken'
+                                        v-model='createdata["0"].BotToken'>
                                 </div>
-                                <div class="uk-margin">
-                                    <input class="uk-input" type="text" :placeholder='placeholder["0"].BotToken'>
-                                </div>
-                                <div class="uk-margin">
+                                <!--    <div class="uk-margin">
                                     <select class="uk-select">
                                         <option>{{placeholder["0"].City}}</option>
                                     </select>
-                                </div>
-
-
+                                </div>-->
 
                             </fieldset>
 
@@ -127,7 +127,7 @@
                                 <button type="submit"
                                     class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
                                     value="return to login page!">ok</button>
-                                <button v-on:click="modVisible=false"
+                                <button v-on:click="regVisible=false"
                                     class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
                                     value="return to login page!">cancel</button>
 
@@ -144,26 +144,25 @@
                 <div class="modal-mask">
                     <div class="modal-wrapper">
                         <div class="modal-container" style="width: 400px;height: 400px;">
-                            <form @submit.prevent="subHandler">
+                            <form @submit.prevent="updateHandler">
 
                                 <fieldset class="uk-fieldset">
 
-                                    <legend class="uk-legend">Legend</legend>
+                                    <legend class="uk-legend">Обновление записи</legend>
 
-                                    <div class="uk-margin">
+                                    <!--  <div class="uk-margin">
                                         <input class="uk-input" type="text" :placeholder='placeholder["0"].login'>
                                     </div>
+                                  -->
                                     <div class="uk-margin">
-                                        <input class="uk-input" type="text" :placeholder='placeholder["0"].ChatLink'>
+                                        <input class="uk-input" type="text" :placeholder='placeholder["0"].ChatLink'
+                                            v-model='updatedata["0"].ChatLink'>
                                     </div>
                                     <div class="uk-margin">
-                                        <input class="uk-input" type="text" :placeholder='placeholder["0"].BotToken'>
+                                        <input class="uk-input" type="text" :placeholder='placeholder["0"].BotToken'
+                                            v-model='updatedata["0"].BotToken'>
                                     </div>
-                                    <div class="uk-margin">
-                                        <select class="uk-select">
-                                            <option>{{placeholder["0"].City}}</option>
-                                        </select>
-                                    </div>
+
 
 
 
@@ -243,7 +242,7 @@
                                     </tr>
 
                                     <tr>
-                                        <td colspan="3">нет записей</td>
+                                        <td colspan="4">нет записей</td>
                                     </tr>
 
                                 </table>
@@ -254,8 +253,8 @@
                             </div>
                             <div class="centre">
 
-                                <button class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
-                                    value="return to login page!">на главную страницу</button>
+                                <button onclick='location.href="/auth/index"' class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
+                                    value="return to login page!">к постам</button>
                                 <button onclick=" app.removeLog()"
                                     class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
                                     value="return to login page!">выйти из аккаунта</button>
@@ -287,6 +286,7 @@
     const app = new Vue({
         el: '#app',
         data: {
+            login: '[[.User]]',
             posts: [
             ],
             placeholder: [
@@ -294,8 +294,18 @@
                 { login: "mail", ChatLink: "t.me/chat", BotToken: "123456:ABCDEF1234ghIklzyx57W2v1u123ew11", City: "City" },
 
             ],
+            updatedata: [
+                //  { login: "test", ChatLink: "ChatLink", BotToken: "Bot Token", City: "City" },
+                { login: "mail", ChatLink: "t.me/chat", BotToken: "123456:ABCDEF1234ghIklzyx57W2v1u123ew11", City: "City" },
+
+            ],
+            createdata: [
+                //  { login: "test", ChatLink: "ChatLink", BotToken: "Bot Token", City: "City" },
+                { login: "mail", ChatLink: "t.me/chat", BotToken: "123456:ABCDEF1234ghIklzyx57W2v1u123ew11", City: "City" },
+
+            ],
             modVisible: false,
-            regVisible:false,
+            regVisible: false,
 
         },
         created() {
@@ -319,6 +329,10 @@
                             login: decodeURIComponent(response.data["0"].Login), ChatLink: response.data["0"].ChatLink,
                             BotToken: response.data["0"].BotToken, City: response.data["0"].City
                         }]
+                        app.updatedata = [{
+                            login: decodeURIComponent(response.data["0"].Login), ChatLink: response.data["0"].ChatLink,
+                            BotToken: response.data["0"].BotToken, City: response.data["0"].City
+                        }]
                     }
 
                 })
@@ -328,12 +342,87 @@
                 });
         },
         methods: {
+            createConfig() {
+
+
+            },
             removeLog() {
                 $cookies.remove("login")
                 $cookies.remove("password")
                 location.href = '/reg'
             },
+            updateHandler() {
 
+                this.errors = [];
+                console.log("ChatLink: " + this.updatedata["0"].ChatLink + " BotToken: " + this.updatedata["0"].BotToken)
+                axios.get(`/auth/create_config?chatLink=${this.updatedata["0"].ChatLink}&token=${this.updatedata["0"].BotToken}&city=city`)
+                    .then(function (response) {
+                        // handle success
+                        console.log(response);
+                        if (response.data.Error != null) {
+                            console.log(response.data.Error);
+
+                        } else {
+                            console.log("created ok")
+                            console.log(decodeURIComponent(response.data.User.Login))
+                            app.posts = [{
+                                login: decodeURIComponent(response.data.User.Login), ChatLink: response.data.User.ChatLink,
+                                BotToken: response.data.User.BotToken, City: response.data.User.City
+                            }]
+                            app.placeholder = [{
+                                login: decodeURIComponent(response.data.User.Login), ChatLink: response.data.User.ChatLink,
+                                BotToken: response.data.User.BotToken, City: response.data.User.City
+                            }]
+                            app.updatedata = [{
+                                login: decodeURIComponent(response.data.User.Login), ChatLink: response.data.User.ChatLink,
+                                BotToken: response.data.User.BotToken, City: response.data.User.City
+                            }]
+                        }
+
+
+                    })
+                    .catch(function (error) {
+                        // handle error
+                        console.log(error);
+                    });
+                    app.modVisible= false
+            },
+            createHandler() {
+
+                this.errors = [];
+                console.log("ChatLink: " + this.createdata["0"].ChatLink + " BotToken: " + this.createdata["0"].BotToken)
+                console.log("send")
+                axios.get(`/auth/create_config?chatLink=${this.createdata["0"].ChatLink}&token=${this.createdata["0"].BotToken}&city=city`)
+                    .then(function (response) {
+                        // handle success
+                        console.log(response);
+                        if (response.data.Error != null) {
+                            console.log(response.data.Error);
+
+                        } else {
+                            console.log("created ok")
+                            console.log(decodeURIComponent(response.data.User.Login))
+                            app.posts = [{
+                                login: decodeURIComponent(response.data.User.Login), ChatLink: response.data.User.ChatLink,
+                                BotToken: response.data.User.BotToken, City: response.data.User.City
+                            }]
+                            app.placeholder = [{
+                                login: decodeURIComponent(response.data.User.Login), ChatLink: response.data.User.ChatLink,
+                                BotToken: response.data.User.BotToken, City: response.data.User.City
+                            }]
+                            app.updatedata = [{
+                                login: decodeURIComponent(response.data.User.Login), ChatLink: response.data.User.ChatLink,
+                                BotToken: response.data.User.BotToken, City: response.data.User.City
+                            }]
+                        }
+
+                    })
+                    .catch(function (error) {
+                        // handle error
+                        console.log(error);
+                    });
+                app.regVisible = false
+            },
         }
 
     })
