@@ -163,7 +163,7 @@ func main() {
 			r.Put("/", vapi.PutHandler)
 			r.Get("/record_get", vapi.RecordGet)
 			r.Get("/record_create", vapi.RecordCreate)
-
+			r.Get("/record_delete", vapi.RecordDelete)
 		})
 	})
 	r.HandleFunc("/static/{type}/{file}", staticRouter)

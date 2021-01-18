@@ -82,16 +82,19 @@
                              
                               </select>-->
                             <div>
+
+
+                                
                                 <div style="padding-top: 10px;padding-bottom: 10px;">
                                     <select v-model="repeat" class=" select  select-block  select-primary ">
                                         <optgroup label="Единоразово">
                                             <option value="one">Один раз</option>
                                         </optgroup>
                                         <optgroup label="Систематически">
-                                            <option value="1">Каждый час</option>
-                                            <option value="2">Ежедневно</option>
-                                            <option value="3">Еженедельно</option>
-                                            <option value="4">Ежемесячно</option>
+                                            <option value="hour">Каждый час</option>
+                                            <option value="day">Ежедневно</option>
+                                            <option value="everyweek">Еженедельно</option>
+                                            <option value="month">Ежемесячно</option>
                                         </optgroup>
                                     </select>
                                 </div>
@@ -187,6 +190,24 @@
             },
             deletepost(id) {
                 console.log("delete>",id)
+                axios.get(`/auth/record_delete?id=${id}`)
+                .then(function (response) {
+                    // handle success
+                    console.log(response);
+                    if (response.data.Error != null) {
+                        console.log(response.data.Error);
+
+                    } else {
+                        console.log("deleted> ok")
+                        app.updatePosts()
+                    
+                    }
+
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                });
             },
             updatePosts(){
                 console.log("updatePosts> send")
@@ -213,7 +234,7 @@
             },
             AxiosSend(message, date, city, repeat) {
                 console.log("AxiosSend> message:" + message + " date: " + date + " city: " + city + " repeat: " + repeat)
-                axios.get(`/auth/record_create?message=${message}&date=${date}&city=city&repeat=${repeat}`)
+                axios.get(`/auth/record_create?message=${message}&date=${date}&city=city&period=${repeat}`)
                     .then(function (response) {
                         // handle success
                         console.log(response);

@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -192,12 +193,31 @@ func RecordCreate(w http.ResponseWriter, r *http.Request) {
 	//token := r.FormValue("text")
 	//	date := r.FormValue("date")
 	//time := r.FormValue("time")
-	dateTimePicker := r.FormValue("dateTimePicker")
+	//	dateTimePicker := r.FormValue("dateTimePicker")
+	dateTimePicker := r.FormValue("date")
+
 	fmt.Println(dateTimePicker)
 	dt := strings.Split(dateTimePicker, " ")
+	layout1 := "03:04PM"
+	layout2 := "15:04"
+
 	//form := "2006-01-02T15:04:05"
 	date := dt[0]
-	time := dt[1]
+	if dt[2] == "pm" {
+		dt[2] = "PM"
+	}
+	if dt[2] == "am" {
+		dt[2] = "AM"
+	}
+	posttime := dt[1] + dt[2]
+	t, err := time.Parse(layout1, posttime)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(t.Format(layout1))
+	fmt.Println(t.Format(layout2))
+	normalTime := t.Format(layout2)
 	//	tm := dt[0] + "T" + dt[1] + "Z" // from MST to Moscow time zone
 	//	fmt.Println(tm)
 	//	date, err := time.Parse(time.RFC3339, tm)
@@ -219,7 +239,7 @@ func RecordCreate(w http.ResponseWriter, r *http.Request) {
 		Message: message,
 		City:    city,
 		Date:    date,
-		Time:    time,
+		Time:    normalTime,
 		Id:      0,
 		Period:  period,
 		Status:  "created",
@@ -229,6 +249,32 @@ func RecordCreate(w http.ResponseWriter, r *http.Request) {
 		fmt.Errorf("conf with login %s is exists", login)
 	}
 	json.NewEncoder(w).Encode(conf)
+}
+func RecordDelete(w http.ResponseWriter, r *http.Request) {
+	log.Println(">vapi RecordDelete")
+	logix, err := r.Cookie("login")
+	if err != nil {
+		fmt.Printf("[login] error %s\n", err.Error())
+
+		//fmt.Fprintf(w, "[login] error %s", err)
+		http.Redirect(w, r, "/reg", 301)
+		return
+
+	} else {
+		fmt.Println(logix.Value)
+	}
+	id := r.FormValue("id")
+	login := logix.Value
+	//var posts []VapiRecord
+
+	DB.Where("id = ? and user=?", id, login).Delete(&VapiRecord{})
+
+	w.Header().Set("Content-Type", "application/json")
+	//	data := &CreateConfData{
+	//		User:   user,
+	//		Status: status,
+	//	}
+	json.NewEncoder(w).Encode("{'status':'ok'}")
 }
 func RecordGet(w http.ResponseWriter, r *http.Request) {
 	log.Println(">vapi RecordGet")
