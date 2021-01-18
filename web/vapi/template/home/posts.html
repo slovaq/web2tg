@@ -75,12 +75,12 @@
                         <form @submit.prevent="subHandler">
                             <vue-ctk-date-time-picker v-model="date" :range="false">
                             </vue-ctk-date-time-picker>
-                            <input type="text" value="" placeholder="сообщение"  v-model="message" class="form-control">
-                            <select v-model="city">
+                            <input type="text" value="" placeholder="сообщение" v-model="message" class="form-control">
+                            <!--  <select v-model="city">
                               
                                 <option value="Москва">Москва</option>
                              
-                              </select>
+                              </select>-->
                             <div>
                                 <div style="padding-top: 10px;padding-bottom: 10px;">
                                     <select v-model="repeat" class=" select  select-block  select-primary ">
@@ -100,9 +100,8 @@
                             <div style="padding-left: 30px;">
                                 <button v-on:click="modVisible=false" class="btn btn-lg btn-danger"
                                     style="width: 150px;">cancel</button>
-                         
-                                <button type="submit"  class="btn btn-lg btn-success"
-                                    style="width: 150px;">ok</button>
+
+                                <button type="submit" class="btn btn-lg btn-success" style="width: 150px;">ok</button>
                         </form>
 
                     </div>
@@ -114,7 +113,7 @@
     <div style="padding-left: 30px;">
         <button v-on:click="inst()" class="btn btn-lg btn-success" style="width: 150px;">Create
             posts</button>
-        <a href="#fakelink" class="btn btn-lg btn-inverse" style="width: 150px;">Update posts</a>
+        <button  v-on:click="updatePosts()"  class="btn btn-lg btn-inverse" style="width: 150px;">Update posts</a>
 
     </div>
 
@@ -124,10 +123,9 @@
             <div class="mainContainer">
                 <div v-for="item in items" :key="item.message">
                     <div style="padding-left: 20px;padding-top: 20px;padding-right: 20px;">
-                        <div class="uk-card uk-card-default uk-card-body">
-                            <h3 class="uk-card-title">{{item.date}}</h3>
-                            <p>Lorem ipsum <a href="#">dolor</a> sit amet, consectetur adipiscing elit, sed do
-                                eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        <div class="uk-card uk-card-default " style="padding: 10px 10px;">
+                            <div>Date: {{item.Date}} {{item.Time}} Period: {{item.Period}} ID: {{item.Id}}</div>
+                            <div>{{item.Message}}</div>
                         </div>
                     </div>
                 </div>
@@ -144,60 +142,107 @@
     href="https://cdn.jsdelivr.net/npm/vue-ctk-date-time-picker@2.0.6/dist/vue-ctk-date-time-picker.css">
 <script src="https://cdn.jsdelivr.net/npm/vue-ctk-date-time-picker@2.0.6/dist/vue-ctk-date-time-picker.umd.min.js"
     charset="utf-8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
     Vue.component('vue-ctk-date-time-picker', window['vue-ctk-date-time-picker']);
     var app = new Vue({
         el: '#app',
         data: {
             date: null,
-            city: 'Москва',
-            repeat:"one",
+            city: 'city',
+            repeat: "one",
             login: null,
             message: null,
             modVisible: false,
             value: null,
             passT: null,
-            items: [{ date: "lol" },
-            { date: 22 }
-            ]
+            items: [ ]
         },
+        created() {
+            console.log("send")
+            axios.get(`/auth/record_get`)
+                .then(function (response) {
+                    // handle success
+                    console.log(response);
+                    if (response.data.Error != null) {
+                        console.log(response.data.Error);
+
+                    } else {
+                        console.log("created ok")
+                        console.log(decodeURIComponent(response.data))
+                        app.items = response.data
+                    
+                    }
+
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                });
+},
         methods: {
             inst() {
                 app.modVisible = true;
             },
-            AxiosSend(message,date,city,repeat) {
-                axios.get(`/auth/create_post?message=${message}&date=${date}&city=${city}&repeat=${repeat}`)
+            updatePosts(){
+                console.log("updatePosts> send")
+            axios.get(`/auth/record_get`)
                 .then(function (response) {
                     // handle success
                     console.log(response);
-                    if (response.data.Error!=null){
+                    if (response.data.Error != null) {
                         console.log(response.data.Error);
-                   
-                    } else{
-                
-                   
-                    }
+
+                    } else {
+                        console.log("created ok")
+                        console.log(decodeURIComponent(response.data))
+                        app.items = response.data
                     
+                    }
+
                 })
                 .catch(function (error) {
                     // handle error
                     console.log(error);
                 });
 
+            },
+            AxiosSend(message, date, city, repeat) {
+                console.log("AxiosSend> message:" + message + " date: " + date + " city: " + city + " repeat: " + repeat)
+                axios.get(`/auth/record_create?message=${message}&date=${date}&city=city&repeat=${repeat}`)
+                    .then(function (response) {
+                        // handle success
+                        console.log(response);
+                        if (response.data.Error != null) {
+                            console.log(response.data.Error);
+
+                        } else {
+
+                            console.log("AxiosSend>ok");
+                        }
+
+                    })
+                    .catch(function (error) {
+                        // handle error
+                        console.log(error);
+                    });
+                    app.updatePosts()
+                    this.message=""
+                    this.date=null
                 app.modVisible = false
             },
             subHandler() {
                 this.errors = [];
-                console.log( " message:"+this.message+ " date: "+this.date+ " city: "+this.city+ " repeat: "+this.repeat)
+                console.log(" message:" + this.message + " date: " + this.date + " city: " + this.city + " repeat: " + this.repeat)
                 if (!this.message) {
                     this.errors.push('введите сообщение');
                 }
-                
-                
+
+
                 if (this.errors.length == 0) {
                     console.log("reg ok")
-                    AxiosSend(+this.message,this.date,this.city,this.repeat) 
-                   // app.modVisible = false
+                    app.AxiosSend(this.message, this.date, this.city, this.repeat)
+                    // app.modVisible = false
                 } else {
 
                     console.log(this.errors)

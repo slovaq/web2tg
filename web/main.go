@@ -2,18 +2,19 @@ package main
 
 import (
 	"fmt"
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
-	"github.com/slovaq/web2tg/web/API"
-	"github.com/slovaq/web2tg/web/DAL"
-	scheduler "github.com/slovaq/web2tg/web/sheduler"
-	"github.com/slovaq/web2tg/web/vapi"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"runtime"
 	"time"
+
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
+	"github.com/slovaq/web2tg/web/API"
+	"github.com/slovaq/web2tg/web/DAL"
+	scheduler "github.com/slovaq/web2tg/web/sheduler"
+	"github.com/slovaq/web2tg/web/vapi"
 )
 
 var debug bool
@@ -93,6 +94,8 @@ func init() {
 	chk(err)
 	err = DAL.DB.AutoMigrate(&DAL.ClientConfig{})
 	chk(err)
+	err = DAL.DB.AutoMigrate(&vapi.VapiRecord{})
+	chk(err)
 }
 func reg(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("templates/reg.html", "templates/base.html")
@@ -155,8 +158,12 @@ func main() {
 			r.Get("/", vapi.GetHandler)
 			r.Get("/create_config", vapi.CreateConf) // /auth/create_config?chatLink=@alalgdfgfdga&token=botfathertokenegbcgbcg&city=test
 			r.Get("/get_config", vapi.GetConf)
+			r.Get("/get_post", vapi.GetPost)
 			r.Get("/index", vapi.Index)
 			r.Put("/", vapi.PutHandler)
+			r.Get("/record_get", vapi.RecordGet)
+			r.Get("/record_create", vapi.RecordCreate)
+
 		})
 	})
 	r.HandleFunc("/static/{type}/{file}", staticRouter)
