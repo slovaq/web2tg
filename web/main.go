@@ -13,7 +13,7 @@ import (
 	"github.com/go-chi/chi/middleware"
 	"github.com/slovaq/web2tg/web/API"
 	"github.com/slovaq/web2tg/web/DAL"
-	scheduler "github.com/slovaq/web2tg/web/sheduler"
+
 	"github.com/slovaq/web2tg/web/vapi"
 )
 
@@ -145,9 +145,14 @@ func profile(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+type UpdatePost struct {
+	Status bool
+}
+
 func main() {
 	r := chi.NewRouter()
-	go scheduler.Mainx()
+	go vapi.InitX()
 	r.Use(middleware.Logger)
 	//	go sheduler.Listen()
 	r.HandleFunc("/", index)

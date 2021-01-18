@@ -248,6 +248,8 @@ func RecordCreate(w http.ResponseWriter, r *http.Request) {
 	if result := DB.Create(&conf); result.Error != nil {
 		fmt.Errorf("conf with login %s is exists", login)
 	}
+	z = 1
+	fmt.Println("z>", z)
 	json.NewEncoder(w).Encode(conf)
 }
 func RecordDelete(w http.ResponseWriter, r *http.Request) {
@@ -274,6 +276,7 @@ func RecordDelete(w http.ResponseWriter, r *http.Request) {
 	//		User:   user,
 	//		Status: status,
 	//	}
+	z = 1
 	json.NewEncoder(w).Encode("{'status':'ok'}")
 }
 
