@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"sort"
 	"strings"
 	"time"
 
@@ -275,6 +276,39 @@ func RecordDelete(w http.ResponseWriter, r *http.Request) {
 	//	}
 	json.NewEncoder(w).Encode("{'status':'ok'}")
 }
+
+type PostSorter []VapiRecord
+
+func (a PostSorter) Len() int      { return len(a) }
+func (a PostSorter) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
+func (a PostSorter) Less(i, j int) bool {
+	RFC3339local := "2006-01-02T15:04:05Z"
+	//	aid := a[i].Date + "T" + a[i].Time
+	aitm := a[i].Date + "T" + a[i].Time + ":00Z" // from MST to Moscow time zone
+	//	fmt.Println(tm)
+	aitmdate, err := time.Parse(RFC3339local, aitm)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Printf("Time: %d-%02d-%02d %02d:%02d:%02d-00:00\n",
+		aitmdate.Year(), aitmdate.Month(), aitmdate.Day(),
+		aitmdate.Hour(), aitmdate.Minute(), aitmdate.Second())
+	fmt.Println(aitmdate.Unix())
+
+	ajtm := a[j].Date + "T" + a[j].Time + ":00Z" // from MST to Moscow time zone
+	//	fmt.Println(tm)
+	ajtmdate, err := time.Parse(RFC3339local, ajtm)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Printf("Time: %d-%02d-%02d %02d:%02d:%02d-00:00\n",
+		ajtmdate.Year(), ajtmdate.Month(), ajtmdate.Day(),
+		ajtmdate.Hour(), ajtmdate.Minute(), ajtmdate.Second())
+	fmt.Println(ajtmdate.Unix())
+	return aitmdate.Unix() < ajtmdate.Unix()
+
+}
+
 func RecordGet(w http.ResponseWriter, r *http.Request) {
 	log.Println(">vapi RecordGet")
 	logix, err := r.Cookie("login")
@@ -301,5 +335,9 @@ func RecordGet(w http.ResponseWriter, r *http.Request) {
 	//		User:   user,
 	//		Status: status,
 	//	}
+	log.Println("unsorted:", posts)
+	sort.Sort(PostSorter(posts))
+	log.Println("by axis:", posts)
+
 	json.NewEncoder(w).Encode(posts)
 }
