@@ -2,6 +2,8 @@ package sheduler
 
 import (
 	"fmt"
+	"github.com/slovaq/web2tg/web/DAL"
+	"github.com/slovaq/web2tg/web/vapi"
 	"math/rand"
 	"net/http"
 	"os"
@@ -118,7 +120,12 @@ func (h *Posts) appendToItself(message string, time int64) {
 	*h = append(*h, z)
 }
 
-var block bool
+var (
+	layout                   = "2021-01-18 17:53"
+	dateWhenSelectedLastTime time.Time
+	records                  []vapi.VapiRecord
+	block                    bool
+)
 
 func (box *Posts) NohttpAdd(message string, timestamp int64) {
 	for {
@@ -161,10 +168,20 @@ func (box *Posts) httpAdd(w http.ResponseWriter, r *http.Request) {
 func Mainx() {
 	rand.Seed(time.Now().UnixNano())
 	fmt.Println("start")
+
 	block = true
+	DAL.DB.Take(&records)
+	dateWhenSelectedLastTime = time.Now()
+	date, err := time.Parse(layout, records[0].Date+" "+records[0].Time)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(records[0].Date + " " + records[0].Time)
+	fmt.Println(date)
+
 	box := Posts{}
 	wg.Add(1)
-	box.NohttpAdd(fmt.Sprintf("text %q ", 1), 1610651500)
+	box.NohttpAdd(fmt.Sprintf("Работаем!"), 1610651500)
 
 	go check(&box)
 	r := chi.NewRouter()

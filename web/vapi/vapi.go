@@ -172,7 +172,7 @@ type VapiRecord struct {
 	Message string
 	City    string
 	Date    string
-	Id      int
+	Id      int `gorm:"primarykey"`
 	Time    string
 	Status  string
 	Period  string
@@ -240,7 +240,6 @@ func RecordCreate(w http.ResponseWriter, r *http.Request) {
 		City:    city,
 		Date:    date,
 		Time:    normalTime,
-		Id:      0,
 		Period:  period,
 		Status:  "created",
 	}
