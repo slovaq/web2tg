@@ -73,7 +73,7 @@
                 <div class="modal-wrapper">
                     <div class="modal-container">
                         <form @submit.prevent="subHandler">
-                            <vue-ctk-date-time-picker v-model="date" :range="false">
+                            <vue-ctk-date-time-picker     locale="fr" v-model="date" :range="false">
                             </vue-ctk-date-time-picker>
                          <div style="padding-top: 4px;">   <input type="text" value=""  placeholder="сообщение" v-model="message" class="form-control"></div>
                             <!--  <select v-model="city">
@@ -148,7 +148,8 @@
     charset="utf-8"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-    Vue.component('vue-ctk-date-time-picker', window['vue-ctk-date-time-picker']);
+    Vue.component('vue-ctk-date-time-picker', window['vue-ctk-date-time-picker'],
+   );
     var app = new Vue({
         el: '#app',
         data: {
@@ -160,6 +161,7 @@
             modVisible: false,
             value: null,
             passT: null,
+            locale: 'fr',
             items: [ ]
         },
         created() {
