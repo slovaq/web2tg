@@ -75,7 +75,7 @@
                         <form @submit.prevent="subHandler">
                             <vue-ctk-date-time-picker v-model="date" :range="false">
                             </vue-ctk-date-time-picker>
-                            <input type="text" value="" placeholder="сообщение" v-model="message" class="form-control">
+                         <div style="padding-top: 4px;">   <input type="text" value=""  placeholder="сообщение" v-model="message" class="form-control"></div>
                             <!--  <select v-model="city">
                               
                                 <option value="Москва">Москва</option>
@@ -124,7 +124,8 @@
                 <div v-for="item in items" :key="item.message">
                     <div style="padding-left: 20px;padding-top: 20px;padding-right: 20px;">
                         <div class="uk-card uk-card-default " style="padding: 10px 10px;">
-                            <div>Date: {{item.Date}} {{item.Time}} Period: {{item.Period}} ID: {{item.Id}}</div>
+                            <div>Date: {{item.Date}} {{item.Time}} Period: {{item.Period}} ID: {{item.Id}}  <button v-on:click="deletepost(item.Id)" class="uk-button uk-button-default" style="padding: 0px 4px;font-size: .875rem;
+                                line-height: 30px;">Удалить</button></div>
                             <div>{{item.Message}}</div>
                         </div>
                     </div>
@@ -183,6 +184,9 @@
         methods: {
             inst() {
                 app.modVisible = true;
+            },
+            deletepost(id) {
+                console.log("delete>",id)
             },
             updatePosts(){
                 console.log("updatePosts> send")
