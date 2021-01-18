@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <title>Error</title>
@@ -91,45 +91,91 @@
 
 <body>
 
-    <div id="app">
+<div id="app">
 
-        <div v-if="regVisible">
+    <div v-if="regVisible">
+        <div class="modal-mask">
+            <div class="modal-wrapper">
+                <div class="modal-container" style="width: 400px;height: 400px;">
+                    <form @submit.prevent="createHandler">
+
+                        <fieldset class="uk-fieldset">
+
+                            <legend class="uk-legend">Добавление записи</legend>
+
+                            <!--   <div class="uk-margin">
+                                <input class="uk-input" type="text" :placeholder='login'>
+                            </div>-->
+                            <div class="uk-margin">
+                                <input class="uk-input" type="text" :placeholder='placeholder["0"].ChatLink'
+                                       v-model='createdata["0"].ChatLink'>
+                            </div>
+                            <div class="uk-margin">
+                                <input class="uk-input" type="text" :placeholder='placeholder["0"].BotToken'
+                                       v-model='createdata["0"].BotToken'>
+                            </div>
+                            <!--    <div class="uk-margin">
+                                <select class="uk-select">
+                                    <option>{{placeholder["0"].City}}</option>
+                                </select>
+                            </div>-->
+
+                        </fieldset>
+
+                        <div class="centre">
+
+                            <button type="submit"
+                                    class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
+                                    value="return to login page!">ok</button>
+                            <button v-on:click="regVisible=false"
+                                    class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
+                                    value="return to login page!">cancel</button>
+
+                        </div>
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div v-else>
+        <div v-if="modVisible">
             <div class="modal-mask">
                 <div class="modal-wrapper">
                     <div class="modal-container" style="width: 400px;height: 400px;">
-                        <form @submit.prevent="createHandler">
+                        <form @submit.prevent="updateHandler">
 
                             <fieldset class="uk-fieldset">
 
-                                <legend class="uk-legend">Добавление записи</legend>
+                                <legend class="uk-legend">Обновление записи</legend>
 
-                                <!--   <div class="uk-margin">
-                                    <input class="uk-input" type="text" :placeholder='login'>
-                                </div>-->
+                                <!--  <div class="uk-margin">
+                                    <input class="uk-input" type="text" :placeholder='placeholder["0"].login'>
+                                </div>
+                              -->
                                 <div class="uk-margin">
                                     <input class="uk-input" type="text" :placeholder='placeholder["0"].ChatLink'
-                                        v-model='createdata["0"].ChatLink'>
+                                           v-model='updatedata["0"].ChatLink'>
                                 </div>
                                 <div class="uk-margin">
                                     <input class="uk-input" type="text" :placeholder='placeholder["0"].BotToken'
-                                        v-model='createdata["0"].BotToken'>
+                                           v-model='updatedata["0"].BotToken'>
                                 </div>
-                                <!--    <div class="uk-margin">
-                                    <select class="uk-select">
-                                        <option>{{placeholder["0"].City}}</option>
-                                    </select>
-                                </div>-->
+
+
+
 
                             </fieldset>
 
                             <div class="centre">
 
                                 <button type="submit"
-                                    class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
-                                    value="return to login page!">ok</button>
-                                <button v-on:click="regVisible=false"
-                                    class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
-                                    value="return to login page!">cancel</button>
+                                        class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
+                                        value="return to login page!">ok</button>
+                                <button v-on:click="modVisible=false"
+                                        class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
+                                        value="return to login page!">cancel</button>
 
                             </div>
                         </form>
@@ -140,135 +186,89 @@
             </div>
         </div>
         <div v-else>
-            <div v-if="modVisible">
-                <div class="modal-mask">
-                    <div class="modal-wrapper">
-                        <div class="modal-container" style="width: 400px;height: 400px;">
-                            <form @submit.prevent="updateHandler">
 
-                                <fieldset class="uk-fieldset">
+            <div class="modal-mask" style="background-color: rgba(0, 0, 0, 0)">
 
-                                    <legend class="uk-legend">Обновление записи</legend>
+                <div class="modal-wrapper">
 
-                                    <!--  <div class="uk-margin">
-                                        <input class="uk-input" type="text" :placeholder='placeholder["0"].login'>
-                                    </div>
-                                  -->
-                                    <div class="uk-margin">
-                                        <input class="uk-input" type="text" :placeholder='placeholder["0"].ChatLink'
-                                            v-model='updatedata["0"].ChatLink'>
-                                    </div>
-                                    <div class="uk-margin">
-                                        <input class="uk-input" type="text" :placeholder='placeholder["0"].BotToken'
-                                            v-model='updatedata["0"].BotToken'>
-                                    </div>
+                    <div class="modal-container" style="width: 450px;height: 400px;">
+
+                        <div id='list-wrapper' v-if="posts.length > 0">
+
+                            <table style="width:450px;margin-left: auto;
+                            margin-right: auto;">
+
+                                <tr>
+                                    <th>login</th>
+                                    <th>ChatLink</th>
+                                    <th>BotToken </th>
+                                    <th>City </th>
+                                    <th>Button </th>
+                                </tr>
 
 
+                                <tr v-for="post in posts">
 
+                                    <td>
+                                        <div class="break">{{ post.login }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="break">{{ post.ChatLink }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="break">{{ post.BotToken }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="break">{{ post.City }}</div>
+                                    </td>
+                                    <td> <button onclick=" app.modVisible=true"
+                                                 class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
+                                                 style="font-size: 2rem;padding:0 1px;" value="return to login page!">
+                                        &#9998;</button></td>
+                                </tr>
 
-                                </fieldset>
-
-                                <div class="centre">
-
-                                    <button type="submit"
-                                        class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
-                                        value="return to login page!">ok</button>
-                                    <button v-on:click="modVisible=false"
-                                        class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
-                                        value="return to login page!">cancel</button>
-
-                                </div>
-                            </form>
+                            </table>
 
                         </div>
-
-                    </div>
-                </div>
-            </div>
-            <div v-else>
-
-                <div class="modal-mask" style="background-color: rgba(0, 0, 0, 0)">
-
-                    <div class="modal-wrapper">
-
-                        <div class="modal-container" style="width: 450px;height: 400px;">
-
-                            <div id='list-wrapper' v-if="posts.length > 0">
-
-                                <table style="width:450px;margin-left: auto;
+                        <div id='list-wrapper' v-else>
+                            <table style="width:450px;margin-left: auto;
                             margin-right: auto;">
 
-                                    <tr>
-                                        <th>login</th>
-                                        <th>ChatLink</th>
-                                        <th>BotToken </th>
-                                        <th>City </th>
-                                        <th>Button </th>
-                                    </tr>
+                                <tr>
+                                    <td> Login</td>
+                                    <td> Chat Link</td>
+                                    <td> Bot Token</td>
+                                    <td> City</td>
+                                </tr>
 
+                                <tr>
+                                    <td colspan="4">нет записей</td>
+                                </tr>
 
-                                    <tr v-for="post in posts">
-
-                                        <td>
-                                            <div class="break">{{ post.login }}</div>
-                                        </td>
-                                        <td>
-                                            <div class="break">{{ post.ChatLink }}</div>
-                                        </td>
-                                        <td>
-                                            <div class="break">{{ post.BotToken }}</div>
-                                        </td>
-                                        <td>
-                                            <div class="break">{{ post.City }}</div>
-                                        </td>
-                                        <td> <button onclick=" app.modVisible=true"
-                                                class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
-                                                style="font-size: 2rem;padding:0 1px;" value="return to login page!">
-                                                &#9998;</button></td>
-                                    </tr>
-
-                                </table>
-
-                            </div>
-                            <div id='list-wrapper' v-else>
-                                <table style="width:450px;margin-left: auto;
-                            margin-right: auto;">
-
-                                    <tr>
-                                        <td> Login</td>
-                                        <td> Chat Link</td>
-                                        <td> Bot Token</td>
-                                        <td> City</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td colspan="4">нет записей</td>
-                                    </tr>
-
-                                </table>
-                                <button onclick=" app.regVisible=true"
+                            </table>
+                            <button onclick=" app.regVisible=true"
                                     class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
                                     style="padding:0 1px;" value="return to login page!">
-                                    добавить запись</button>
-                            </div>
-                            <div class="centre">
+                                добавить запись</button>
+                        </div>
+                        <div class="centre">
 
-                                <button onclick='location.href="/auth/index"' class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
+                            <button onclick='location.href="/auth/index"' class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
                                     value="return to login page!">к постам</button>
-                                <button onclick=" app.removeLog()"
+                            <button onclick=" app.removeLog()"
                                     class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
                                     value="return to login page!">выйти из аккаунта</button>
-                            </div>
-
-
                         </div>
+
+
                     </div>
                 </div>
-
             </div>
-        </div>
 
+        </div>
     </div>
+
+</div>
 </body>
 <script src="/static/js/compressed.js"></script>
 
@@ -385,7 +385,7 @@
                         // handle error
                         console.log(error);
                     });
-                    app.modVisible= false
+                app.modVisible= false
             },
             createHandler() {
 
