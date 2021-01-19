@@ -96,6 +96,11 @@ func init() {
 	chk(err)
 	err = DAL.DB.AutoMigrate(&vapi.VapiRecord{})
 	chk(err)
+	err = DAL.DB.AutoMigrate(&vapi.ClientConfig{})
+	chk(err)
+	err = DAL.DB.AutoMigrate(&vapi.Link{})
+	chk(err)
+
 }
 func reg(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("templates/reg.html", "templates/base.html")

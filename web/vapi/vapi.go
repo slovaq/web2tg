@@ -8,27 +8,7 @@ import (
 	"sort"
 	"strings"
 	"time"
-
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 )
-
-type Post struct {
-	Date string
-	Body string
-}
-type Posts struct {
-	Count int
-	Data  []Post
-}
-type ClientConfig struct {
-	Login    string
-	City     string
-	ChatLink string
-	BotToken string
-}
-
-var DB, _ = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 
 func CreateConfig(login string, city string, chatLink string, token string) (*ClientConfig, string, error) {
 	conf := ClientConfig{
@@ -38,19 +18,7 @@ func CreateConfig(login string, city string, chatLink string, token string) (*Cl
 		BotToken: token,
 	}
 	fmt.Printf("login> %s\n\tcity> %s\n\tchatLink> %s\n\ttoken> %s\n", login, city, chatLink, token)
-	//var user ClientConfig
 	var user []ClientConfig
-	//DB.Raws("select * from client_configs").Scan(&conf)
-	//rows, _ := DB.Raw("select * from client_configs where login = ?", conf.Login).Rows()
-	//defer rows.Close()
-	//	for rows.Next() {
-
-	//		var us ClientConfig
-	//		rows.Scan(&us)
-	//	user = append(user, us)
-	//		fmt.Println(us)
-	//		// do something
-	//	}
 	DB.Where("city = ? and login = ?", city, login).Find(&user)
 	fmt.Println(user)
 	if len(user) == 0 {
