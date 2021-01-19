@@ -45,7 +45,7 @@ func read(post PostS) {
 	y := color.New(color.FgYellow, color.Bold)
 	y.Printf("read message> ")
 	d.Printf("%s %d %s %s\n", post.Message, post.Id, post.Token, post.Url)
-	//sendMessage(post.Token, post.Message, post.Url)
+	sendMessage(post.Token, post.Url, post.Message)
 	DB.Where("id = ? and user=?", post.Id, post.User).Delete(&VapiRecord{})
 
 }
