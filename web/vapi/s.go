@@ -251,9 +251,11 @@ func Val() {
 	z = 1
 	fmt.Println("val> z=1")
 }
+
 func InitX() {
 	rand.Seed(time.Now().UnixNano())
 	fmt.Println("start")
+	go checkBots()
 	//	RFC3339local := "2021-01-14T13:47:10+03:00"
 	block = true
 	DAL.DB.Take(&records)
