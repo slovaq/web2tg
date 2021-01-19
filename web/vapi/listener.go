@@ -19,6 +19,8 @@ func sendMessage(token string, url string, text string) {
 	var links []Link
 	DAL.DB.Where("user_link = ?", url).Find(&links)
 	fmt.Printf("%s\n\ttoken: %s \n\tlink: %s \n\tmessage> %s\n", red("sendMessage>"), g(token), yellow(url), b(text))
+	fmt.Println("len links:", len(links))
+	fmt.Println("links:", links)
 	iurl := fmt.Sprintf(apiString, token, links[0].ChatID, text)
 	fmt.Println("iurl>", iurl)
 	_, err := http.Get(iurl)
