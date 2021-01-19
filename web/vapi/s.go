@@ -257,27 +257,29 @@ func InitX() {
 	//	RFC3339local := "2021-01-14T13:47:10+03:00"
 	block = true
 	DAL.DB.Take(&records)
+	if len(records) != 0 {
 
-	dateWhenSelectedLastTime = time.Now()
-	fmt.Printf("records[0].Date> %s|records[0].Time > %s\n ", records[0].Date, records[0].Time)
-	fulltime := records[0].Date + "T" + records[0].Time + ":00+03:00"
-	//	tm := records[0].Date + "T" + records[0].Time + ":00+03:00" // from MST to Moscow time zone
-	//	fmt.Println(tm)
-	t, err := time.Parse(time.RFC3339, fulltime)
-	if err != nil {
-		fmt.Println(err)
+		dateWhenSelectedLastTime = time.Now()
+		fmt.Printf("records[0].Date> %s|records[0].Time > %s\n ", records[0].Date, records[0].Time)
+		fulltime := records[0].Date + "T" + records[0].Time + ":00+03:00"
+		//	tm := records[0].Date + "T" + records[0].Time + ":00+03:00" // from MST to Moscow time zone
+		//	fmt.Println(tm)
+		t, err := time.Parse(time.RFC3339, fulltime)
+		if err != nil {
+			fmt.Println(err)
+		}
+		timestamp := t.Unix()
+		fmt.Printf("Time: %d-%02d-%02d %02d:%02d:%02d\n\ttimestamp>%d\n",
+			t.Year(), t.Month(), t.Day(),
+			t.Hour(), t.Minute(), t.Second(), timestamp)
+		fmt.Printf("message:%s timestamp:%d\n", records[0].Message, timestamp)
 	}
-	timestamp := t.Unix()
-	fmt.Printf("Time: %d-%02d-%02d %02d:%02d:%02d\n\ttimestamp>%d\n",
-		t.Year(), t.Month(), t.Day(),
-		t.Hour(), t.Minute(), t.Second(), timestamp)
 
+	//go box.chkDB()
 	box := PostsS{}
 	wg.Add(1)
 	go check(&box)
 	//box.NohttpAdd(fmt.Sprintf("Работаем V!"), timestamp, "971062635:AAGez0zTvZbOlxIqHHVrGF5gnX0mp17nfKs", "https://t.me/joinchat/GBscMQKZaDWZNqBZ",3)
-	fmt.Printf("message:%s timestamp:%d\n", records[0].Message, timestamp)
-	//go box.chkDB()
 
 	z = 0
 	for {
