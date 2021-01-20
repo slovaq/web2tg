@@ -12,30 +12,30 @@ import (
 	"github.com/slovaq/web2tg/web/DAL"
 )
 
-func CheckLink(msg string) (string, error) {
-	yellow := color.New(color.FgYellow).SprintFunc()
-	//red := color.New(color.FgRed).SprintFunc()
-	g := color.New(color.FgGreen, color.Bold).SprintFunc()
+var (
+	yellowPrint = color.New(color.FgYellow).SprintFunc()
+	redPrint    = color.New(color.FgRed).SprintFunc()
+	greenPrint  = color.New(color.FgGreen, color.Bold).SprintFunc()
+	bluePrint   = color.New(color.FgBlue, color.Bold).SprintFunc()
+)
 
-	//	fmt.Printf("%s %s %s\n", red("error>"), g("botAwait>"), yellow(err))
-	fmt.Printf("%s %s \n", yellow("CheckLink>"), g("msg"))
+func CheckLink(msg string) (string, error) {
+
+	fmt.Printf("%s %s \n", yellowPrint("CheckLink>"), greenPrint("msg"))
 	if (strings.Contains(msg, "@")) != true && (strings.Contains(msg, "t.me")) != true || msg == "" {
 		errMsg := "Не указана ссылка на чат. Требуется ссылка формата `t.me/joinchat/RWltlc4VqhWRzezx` или `@link`"
 		err1 := errors.New(errMsg)
 		return errMsg, err1
+
 	}
 	return "", nil
 }
 func botAwait(token string) {
-	//	red := color.New(color.FgRed, color.Bold)
-	yellow := color.New(color.FgYellow).SprintFunc()
-	red := color.New(color.FgRed).SprintFunc()
-	g := color.New(color.FgGreen, color.Bold).SprintFunc()
-	b := color.New(color.FgBlue, color.Bold).SprintFunc()
+
 	bot, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
-		fmt.Printf("%s %s %s\n", red("error>"), g("botAwait>"), yellow(err))
-		//	red.Printf("  %s\n")
+		fmt.Printf("%s %s %s\n", redPrint("error>"), greenPrint("botAwait>"), yellowPrint(err))
+
 	}
 
 	bot.Debug = false
@@ -94,36 +94,10 @@ func botAwait(token string) {
 					bot.Send(msg)
 					break
 				}
-				//if args == "" {
-				//	msg.Text = "Не указана ссылка на чат. Требуется ссылка формата `t.me/joinchat/RWltlc4VqhWRzezx`"
-				//}
-
-				//------------------------------------------------
-				/*
-					var user []ClientConfig
-					DB.Where("city = ? and login = ?", city, login).Find(&user)
-					fmt.Println(user)
-					if len(user) == 0 {
-						if result := DB.Create(&conf); result.Error != nil {
-							return nil, "", fmt.Errorf("conf %s with login %s is exists", login, chatLink)
-						}
-						return &conf, "create", nil
-					}
-					rconf := ClientConfig{
-						Login:    login,
-						City:     city,
-						ChatLink: chatLink,
-						BotToken: token,
-					}
-					DB.Model(&rconf).Where("city = ? and login = ?", city, login).Updates(rconf)
-					//DB.Model(&ClientConfig{}).Where("login = ?", user[0].Login).Update("name", "hello")
-					return &rconf, "update", nil
-				*/
-				//------------------------------------------------
 
 				var links []Link
 				DAL.DB.Where("chat_id = ?", message.Chat.ID).Find(&links)
-				fmt.Printf("%s %s link: %s\n", red("botAwait>"), g("find link>"), yellow(link))
+				fmt.Printf("%s %s link: %s\n", redPrint("botAwait>"), greenPrint("find link>"), yellowPrint(link))
 				link = Link{
 					UserLink: args,
 					ChatID:   message.Chat.ID,
@@ -132,7 +106,7 @@ func botAwait(token string) {
 					msg.Text = "Чат еще не привязан. Привязываем."
 					final, _ := bot.Send(msg)
 					if result := DB.Create(&link); result.Error != nil {
-						fmt.Printf("%s  %s  %d is exists\n", red("error>"), args, uint64(message.Chat.ID))
+						fmt.Printf("%s  %s  %d is exists\n", redPrint("error>"), args, uint64(message.Chat.ID))
 						msg.Text = "Произошла ошибка при привязке. Попробуйте еще раз или обратитесь к системному администратору!"
 					} else {
 						bot.DeleteMessage(tgbotapi.DeleteMessageConfig{
@@ -151,39 +125,11 @@ func botAwait(token string) {
 					break
 				}
 
-				//------------------------------------------------
-				//DAL.DB.Where("chat_id = ?", message.Chat.ID).First(&link)
-				///if len(link) != 0 {
-
-				//}
-				fmt.Printf("%s link: %s\n", g("botAwait>"), yellow(link))
-				/*	if (Link{} == link) {
-						msg.Text = "Чат еще не привязан. Привязываем."
-						final, _ := bot.Send(msg)
-
-						link = Link{
-							UserLink: args,
-							ChatID:   message.Chat.ID,
-						}
-						DAL.DB.Create(&link)
-						bot.DeleteMessage(tgbotapi.DeleteMessageConfig{
-							ChannelUsername: message.Chat.UserName,
-							ChatID:          message.Chat.ID,
-							MessageID:       final.MessageID,
-						})
-						msg.Text = "Чат теперь привязан! Проверить можно по команде /check"
-					}
-					bot.Send(msg)
-				*/
 			}
 		}
 
-		//log.Printf("[%s] %s\n", update.Message.From.UserName, update.Message.Text)
-		fmt.Printf("%s %s %s %s\n", red("message>"), yellow(message.Chat.ID), b(message.From.UserName+">"), g(message.Text))
-		//	msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
-		//msg.ReplyToMessageID = update.Message.MessageID
+		fmt.Printf("%s %s %s %s\n", redPrint("message>"), yellowPrint(message.Chat.ID), bluePrint(message.From.UserName+">"), greenPrint(message.Text))
 
-		//bot.Send(msg)
 	}
 }
 func userIsAdmin(member tgbotapi.User, members []tgbotapi.ChatMember) bool {
