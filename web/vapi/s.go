@@ -9,9 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/slovaq/web2tg/web/DAL"
-
 	"github.com/fatih/color"
+	"github.com/slovaq/web2tg/web/DAL"
 )
 
 type PostS struct {
@@ -277,11 +276,9 @@ func InitX() {
 		fmt.Printf("message:%s timestamp:%d\n", records[0].Message, timestamp)
 	}
 
-	//go box.chkDB()
 	box := PostsS{}
 	wg.Add(1)
 	go check(&box)
-	//box.NohttpAdd(fmt.Sprintf("Работаем V!"), timestamp, "971062635:AAGez0zTvZbOlxIqHHVrGF5gnX0mp17nfKs", "https://t.me/joinchat/GBscMQKZaDWZNqBZ",3)
 
 	z = 0
 	for {
@@ -293,13 +290,5 @@ func InitX() {
 			time.Sleep(5 * time.Second)
 		}
 	}
-	//box.NohttpAdd(records[0].Message, timestamp)
-
-	//r := chi.NewRouter()
-	//	r.Use(middleware.Logger)
-
-	//	r.HandleFunc("/add", box.httpAdd) ///add?message=test&date=2021-01-14&time=13:42:10
-	//	http.ListenAndServe(":3001", r)
-	//	wg.Wait()
 
 }

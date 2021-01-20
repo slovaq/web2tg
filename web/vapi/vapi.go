@@ -34,14 +34,8 @@ func CreateConfig(login string, city string, chatLink string, token string) (*Cl
 		BotToken: token,
 	}
 	DB.Model(&rconf).Where("city = ? and login = ?", city, login).Updates(rconf)
-	//DB.Model(&ClientConfig{}).Where("login = ?", user[0].Login).Update("name", "hello")
 	return &rconf, "update", nil
 
-	//	if result := DB.Create(&conf); result.Error != nil {
-	//		return nil, fmt.Errorf("conf %s with login %s is exists", login, chatLink)
-	//	}
-
-	//return &conf, nil
 }
 
 type CreateConfData struct {
@@ -55,7 +49,6 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("[login] error %s\n", err.Error())
 
-		//fmt.Fprintf(w, "[login] error %s", err)
 		http.Redirect(w, r, "/reg", 301)
 		return
 
@@ -71,10 +64,7 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	//	data := &CreateConfData{
-	//		User:   user,
-	//		Status: status,
-	//	}
+
 	json.NewEncoder(w).Encode(user)
 }
 func GetConf(w http.ResponseWriter, r *http.Request) {
@@ -83,7 +73,6 @@ func GetConf(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("[login] error %s\n", err.Error())
 
-		//fmt.Fprintf(w, "[login] error %s", err)
 		http.Redirect(w, r, "/reg", 301)
 		return
 
@@ -99,10 +88,6 @@ func GetConf(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	//	data := &CreateConfData{
-	//		User:   user,
-	//		Status: status,
-	//	}
 	json.NewEncoder(w).Encode(user)
 }
 func CreateConf(w http.ResponseWriter, r *http.Request) {
@@ -110,8 +95,6 @@ func CreateConf(w http.ResponseWriter, r *http.Request) {
 	logix, err := r.Cookie("login")
 	if err != nil {
 		fmt.Printf("[login] error %s\n", err.Error())
-
-		//fmt.Fprintf(w, "[login] error %s", err)
 		http.Redirect(w, r, "/reg", 301)
 		return
 
@@ -136,17 +119,6 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "v index")
 }
 
-type VapiRecord struct {
-	User    string
-	Message string
-	City    string
-	Date    string
-	Id      int `gorm:"primarykey"`
-	Time    string
-	Status  string
-	Period  string
-}
-
 func RecordCreate(w http.ResponseWriter, r *http.Request) {
 	log.Println(">vapi RecordCreate")
 	logix, err := r.Cookie("login")
@@ -159,10 +131,6 @@ func RecordCreate(w http.ResponseWriter, r *http.Request) {
 	}
 	login := logix.Value
 	city := r.FormValue("city")
-	//token := r.FormValue("text")
-	//	date := r.FormValue("date")
-	//time := r.FormValue("time")
-	//	dateTimePicker := r.FormValue("dateTimePicker")
 	dateTimePicker := r.FormValue("date")
 
 	fmt.Println(dateTimePicker)
@@ -170,7 +138,6 @@ func RecordCreate(w http.ResponseWriter, r *http.Request) {
 	layout1 := "03:04PM"
 	layout2 := "15:04"
 
-	//form := "2006-01-02T15:04:05"
 	date := dt[0]
 	if dt[2] == "pm" {
 		dt[2] = "PM"
@@ -187,22 +154,8 @@ func RecordCreate(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(t.Format(layout1))
 	fmt.Println(t.Format(layout2))
 	normalTime := t.Format(layout2)
-	//	tm := dt[0] + "T" + dt[1] + "Z" // from MST to Moscow time zone
-	//	fmt.Println(tm)
-	//	date, err := time.Parse(time.RFC3339, tm)
-	//	if err != nil {
-	//		fmt.Printf("[login] error %s\n", err.Error())
-	//	}
-	//	datetime := fmt.Sprintf("Time: %d-%02d-%02d %02d:%02d:%02d-00:00\n",
-	//		date.Year(), date.Month(), date.Day(),
-	//		date.Hour(), date.Minute(), date.Second())
-	//	fmt.Println(datetime)
-	//timer_date := request.FormValue("date")
 	message := r.FormValue("message")
 	period := r.FormValue("period")
-	//	data := Record{
-
-	//}
 	conf := VapiRecord{
 		User:    login,
 		Message: message,
@@ -226,7 +179,6 @@ func RecordDelete(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("[login] error %s\n", err.Error())
 
-		//fmt.Fprintf(w, "[login] error %s", err)
 		http.Redirect(w, r, "/reg", 301)
 		return
 
@@ -235,15 +187,10 @@ func RecordDelete(w http.ResponseWriter, r *http.Request) {
 	}
 	id := r.FormValue("id")
 	login := logix.Value
-	//var posts []VapiRecord
 
 	DB.Where("id = ? and user=?", id, login).Delete(&VapiRecord{})
 
 	w.Header().Set("Content-Type", "application/json")
-	//	data := &CreateConfData{
-	//		User:   user,
-	//		Status: status,
-	//	}
 	z = 1
 	json.NewEncoder(w).Encode("{'status':'ok'}")
 }
@@ -254,9 +201,7 @@ func (a PostSorter) Len() int      { return len(a) }
 func (a PostSorter) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
 func (a PostSorter) Less(i, j int) bool {
 	RFC3339local := "2006-01-02T15:04:05Z"
-	//	aid := a[i].Date + "T" + a[i].Time
 	aitm := a[i].Date + "T" + a[i].Time + ":00Z" // from MST to Moscow time zone
-	//	fmt.Println(tm)
 	aitmdate, err := time.Parse(RFC3339local, aitm)
 	if err != nil {
 		fmt.Println(err)
@@ -267,7 +212,6 @@ func (a PostSorter) Less(i, j int) bool {
 	fmt.Println(aitmdate.Unix())
 
 	ajtm := a[j].Date + "T" + a[j].Time + ":00Z" // from MST to Moscow time zone
-	//	fmt.Println(tm)
 	ajtmdate, err := time.Parse(RFC3339local, ajtm)
 	if err != nil {
 		fmt.Println(err)

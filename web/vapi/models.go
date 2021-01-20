@@ -18,4 +18,15 @@ type ClientConfig struct {
 	BotToken string
 }
 
+type VapiRecord struct {
+	User    string
+	Message string
+	City    string
+	Date    string
+	Id      int `gorm:"primarykey"`
+	Time    string
+	Status  string
+	Period  string
+}
+
 var DB, _ = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
