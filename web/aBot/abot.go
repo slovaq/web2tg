@@ -5,23 +5,12 @@ import (
 	"net/http"
 
 	"github.com/BurntSushi/toml"
-	"github.com/fatih/color"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
-type Config struct {
-	Token      string
-	UpdateTime int
-}
-
-type SNBot struct {
-	cfg *Config
-	bot *tgbotapi.BotAPI
-	upd tgbotapi.UpdatesChannel
-}
-
+//New (cfg *Config) (*SNBot, error)
 func New(cfg *Config) (*SNBot, error) {
 	bot, err := tgbotapi.NewBotAPI(cfg.Token)
 	if err != nil {
@@ -40,22 +29,6 @@ func New(cfg *Config) (*SNBot, error) {
 	}, nil
 }
 
-type tomlConfig struct {
-	Token string
-}
-
-var (
-	yellow = color.New(color.FgYellow).SprintFunc()
-	red    = color.New(color.FgRed).SprintFunc()
-	g      = color.New(color.FgGreen, color.Bold).SprintFunc()
-	b      = color.New(color.FgBlue, color.Bold).SprintFunc()
-)
-var token string
-
-type Update struct {
-	UpdateToken chan string
-}
-
 func (Update Update) edit(w http.ResponseWriter, r *http.Request) {
 	token = r.FormValue("token")
 	fmt.Printf("%s %s %s\n", yellow("edit>"), b("token>"), g(token))
@@ -66,9 +39,6 @@ func (Update Update) edit(w http.ResponseWriter, r *http.Request) {
 	}()
 
 }
-
-var C *SNBot
-var Skip bool
 
 func main() {
 	Updatetoken := make(chan string)
@@ -151,6 +121,8 @@ func main() {
 	}
 
 }
+
+//Send Send(chatID int64, msg string) send Message to chat by id
 func (s *SNBot) Send(chatID int64, msg string) {
 	m := tgbotapi.NewMessage(chatID, msg)
 	_, _ = s.bot.Send(m)
