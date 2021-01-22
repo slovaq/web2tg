@@ -174,7 +174,6 @@ func RecordCreate(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(conf)
 }
 func RecordDelete(w http.ResponseWriter, r *http.Request) {
-	log.Println(">vapi RecordDelete")
 	logix, err := r.Cookie("login")
 	if err != nil {
 		fmt.Printf("[login] error %s\n", err.Error())
