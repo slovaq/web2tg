@@ -35,7 +35,8 @@ type IntRange struct {
 func (ir *IntRange) NextRandom(r *rand.Rand) int {
 	return r.Intn(ir.max-ir.min+1) + ir.min
 }
-func (box *Boxs) DBCheck() {
+
+func (box *Boxs) dBCheck() {
 	var user []ClientConfig
 	DB.Where("").Find(&user)
 	boxT := Boxs{}
@@ -44,11 +45,7 @@ func (box *Boxs) DBCheck() {
 	for v := 0; v < len(posts); v++ {
 		for d := 0; d < len(user); d++ {
 			if user[d].Login == posts[v].User {
-				//fmt.Printf("user:%s %s %s %s\n", user[d].Login, user[d].City, user[d].BotToken, user[d].ChatLink)
-				//	fmt.Printf("posts:%s %s %s %s %d\n", posts[v].User, posts[v].Message, posts[v].Date, posts[v].Time, posts[v].Id)
 				fulltime := posts[v].Date + "T" + posts[v].Time + ":00+03:00"
-				//	tm := records[0].Date + "T" + records[0].Time + ":00+03:00" // from MST to Moscow time zone
-				//	fmt.Println(tm)
 				t, err := time.Parse(time.RFC3339, fulltime)
 				if err != nil {
 					fmt.Println(err)
@@ -57,7 +54,6 @@ func (box *Boxs) DBCheck() {
 				boxT.appendToItself(posts[v].Message, timestamp, user[d].BotToken, user[d].ChatLink, posts[v].Id, user[d].Login)
 			}
 		}
-
 	}
 	m.Lock()
 	*box = boxT
@@ -68,7 +64,7 @@ func (box *Boxs) checkDateCounter() {
 	for {
 		select {
 		case <-checkDate:
-			box.DBCheck()
+			box.dBCheck()
 		}
 	}
 }
@@ -107,7 +103,6 @@ func (box *Boxs) check(f chan bool) {
 			if (bx[0].Time - dt) < 0 {
 				v := true
 				f <- v
-
 			}
 		}
 		m.Unlock()
@@ -115,27 +110,12 @@ func (box *Boxs) check(f chan bool) {
 	}
 }
 
-func (box *Boxs) write(f chan bool) {
-	for {
-		r := rand.New(rand.NewSource(55))
-		ir := IntRange{0, 30}
-		m.Lock()
-		bx := append(Boxs{}, *box...)
-		dt := (time.Now().Local().Unix()) + int64(ir.NextRandom(r))
-		unixTimeUTC := time.Unix(dt, 0)
-		unitTimeInRFC3339 := unixTimeUTC.Format(time.RFC3339)
-		fmc.Printfln("#rbt write> #gbtdate: #ybt%s", unitTimeInRFC3339)
-		bx = append(bx, Box{Time: dt})
-		*box = bx
-		m.Unlock()
-		time.Sleep(time.Duration(5) * time.Second)
-	}
-}
-func (h *Boxs) appendToItself(message string, time int64, token string, url string, id int, user string) {
+func (box *Boxs) appendToItself(message string, time int64, token string, url string, id int, user string) {
 	z := Box{message, time, token, url, id, user}
-	*h = append(*h, z)
+	*box = append(*box, z)
 }
 
+//Add (message string, timestamp int64, token string, url string, id int, user string)
 func (box *Boxs) Add(message string, timestamp int64, token string, url string, id int, user string) {
 	m.Lock()
 	box.appendToItself(message, timestamp, token, url, id, user)

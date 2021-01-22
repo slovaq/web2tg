@@ -1,0 +1,16 @@
+func (box *Boxs) write(f chan bool) {
+	for {
+		r := rand.New(rand.NewSource(55))
+		ir := IntRange{0, 30}
+		m.Lock()
+		bx := append(Boxs{}, *box...)
+		dt := (time.Now().Local().Unix()) + int64(ir.NextRandom(r))
+		unixTimeUTC := time.Unix(dt, 0)
+		unitTimeInRFC3339 := unixTimeUTC.Format(time.RFC3339)
+		fmc.Printfln("#rbt write> #gbtdate: #ybt%s", unitTimeInRFC3339)
+		bx = append(bx, Box{Time: dt})
+		*box = bx
+		m.Unlock()
+		time.Sleep(time.Duration(5) * time.Second)
+	}
+}
