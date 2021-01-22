@@ -17,6 +17,7 @@ var (
 	bluePrint   = color.New(color.FgBlue, color.Bold).SprintFunc()
 )
 
+//CheckLink (msg string) (string, error)
 func CheckLink(msg string) (string, error) {
 
 	fmt.Printf("%s %s \n", yellowPrint("CheckLink>"), greenPrint("msg"))

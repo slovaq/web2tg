@@ -126,9 +126,10 @@ func RecordCreate(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("[login] error %s\n", err.Error())
 		http.Redirect(w, r, "/reg", 301)
 		return
-	} else {
-		fmt.Println(logix.Value)
 	}
+
+	fmt.Println(logix.Value)
+
 	login := logix.Value
 	city := r.FormValue("city")
 	dateTimePicker := r.FormValue("date")
@@ -162,15 +163,15 @@ func RecordCreate(w http.ResponseWriter, r *http.Request) {
 		City:    city,
 		Date:    date,
 		Time:    normalTime,
-		Period:  period,
 		Status:  "created",
+		Period:  period,
 	}
 	fmt.Printf("login> %s\n\tcity> %s\n\t\n", login, city)
 	if result := DB.Create(&conf); result.Error != nil {
-		fmt.Errorf("conf with login %s is exists", login)
+		fmt.Printf("conf with login %s is exists", login)
 	}
-	z = 1
-	fmt.Println("z>", z)
+	f := true
+	checkDate <- f
 	json.NewEncoder(w).Encode(conf)
 }
 func RecordDelete(w http.ResponseWriter, r *http.Request) {
@@ -181,48 +182,21 @@ func RecordDelete(w http.ResponseWriter, r *http.Request) {
 
 		http.Redirect(w, r, "/reg", 301)
 		return
-
-	} else {
-		fmt.Println(logix.Value)
 	}
+	fmt.Println(logix.Value)
+
 	id := r.FormValue("id")
 	login := logix.Value
 
 	DB.Where("id = ? and user=?", id, login).Delete(&VapiRecord{})
 
 	w.Header().Set("Content-Type", "application/json")
-	z = 1
+	f := true
+	checkDate <- f
 	json.NewEncoder(w).Encode("{'status':'ok'}")
 }
 
 type PostSorter []VapiRecord
-
-func (a PostSorter) Len() int      { return len(a) }
-func (a PostSorter) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
-func (a PostSorter) Less(i, j int) bool {
-	RFC3339local := "2006-01-02T15:04:05Z"
-	aitm := a[i].Date + "T" + a[i].Time + ":00Z" // from MST to Moscow time zone
-	aitmdate, err := time.Parse(RFC3339local, aitm)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Printf("Time: %d-%02d-%02d %02d:%02d:%02d-00:00\n",
-		aitmdate.Year(), aitmdate.Month(), aitmdate.Day(),
-		aitmdate.Hour(), aitmdate.Minute(), aitmdate.Second())
-	fmt.Println(aitmdate.Unix())
-
-	ajtm := a[j].Date + "T" + a[j].Time + ":00Z" // from MST to Moscow time zone
-	ajtmdate, err := time.Parse(RFC3339local, ajtm)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Printf("Time: %d-%02d-%02d %02d:%02d:%02d-00:00\n",
-		ajtmdate.Year(), ajtmdate.Month(), ajtmdate.Day(),
-		ajtmdate.Hour(), ajtmdate.Minute(), ajtmdate.Second())
-	fmt.Println(ajtmdate.Unix())
-	return aitmdate.Unix() < ajtmdate.Unix()
-
-}
 
 func RecordGet(w http.ResponseWriter, r *http.Request) {
 	log.Println(">vapi RecordGet")
@@ -234,9 +208,9 @@ func RecordGet(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/reg", 301)
 		return
 
-	} else {
-		fmt.Println(logix.Value)
 	}
+
+	fmt.Println(logix.Value)
 	login := logix.Value
 	var posts []VapiRecord
 	DB.Where("status = \"created\" and user=?", login).Find(&posts)

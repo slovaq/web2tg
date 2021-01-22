@@ -157,7 +157,7 @@ type UpdatePost struct {
 
 func main() {
 	r := chi.NewRouter()
-	go vapi.InitX()
+	go vapi.Initrc()
 	r.Use(middleware.Logger)
 	//	go sheduler.Listen()
 	r.HandleFunc("/", index)
