@@ -8,6 +8,8 @@ import (
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/mallvielfrass/coloredPrint/fmc"
 )
 
 //CreateConfig (login string, city string, chatLink string, token string) (*ClientConfig, string, error)
@@ -169,9 +171,7 @@ func RecordCreate(w http.ResponseWriter, r *http.Request) {
 	if result := DB.Create(&conf); result.Error != nil {
 		fmt.Printf("conf with login %s is exists", login)
 	}
-	f := true
-	checkDate <- f
-
+	checkDate <- "c"
 	json.NewEncoder(w).Encode(conf)
 }
 
@@ -192,9 +192,11 @@ func RecordDelete(w http.ResponseWriter, r *http.Request) {
 	DB.Where("id = ? and user=?", id, login).Delete(&VapiRecord{})
 
 	w.Header().Set("Content-Type", "application/json")
-	f := true
-	checkDate <- f
-	json.NewEncoder(w).Encode("{'status':'ok'}")
+	fmc.Println("#gbt delete ok!")
+
+	checkDate <- "c"
+	json.NewEncoder(w).Encode("{\"status\":\"ok\"}")
+
 }
 
 //PostSorter []VapiRecord

@@ -183,10 +183,11 @@
                 axios.get(`/auth/record_delete?id=${id}`)
                     .then(function (response) {
                         // handle success
+                        console.log("deleted> N")
                         console.log(response);
                         if (response.data.Error != null) {
                             console.log(response.data.Error);
-
+                            console.log("deleted> N")
                         } else {
                             console.log("deleted> ok")
                             app.updatePosts()
@@ -196,6 +197,7 @@
                     })
                     .catch(function (error) {
                         // handle error
+                        console.log("deleted> N")
                         console.log(error);
                     });
             },
@@ -209,7 +211,7 @@
                             console.log(response.data.Error);
 
                         } else {
-                            console.log("created ok")
+                            console.log("updatePosts> created ok")
                             console.log(decodeURIComponent(response.data))
                             app.items = response.data
 

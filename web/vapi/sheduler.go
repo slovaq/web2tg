@@ -14,7 +14,7 @@ import (
 var (
 	m         sync.Mutex
 	d         int
-	checkDate chan bool
+	checkDate chan string
 	checkInit chan bool
 	layout    = "2021-01-18 17:53"
 	records   []VapiRecord
@@ -69,8 +69,11 @@ func (box *Boxs) dBCheck() {
 }
 func (box *Boxs) checkDateCounter() {
 	for {
+		fmc.Printfln("#gbtcheckDateCounter")
+		time.Sleep(time.Duration(1) * time.Second)
 		select {
-		case <-checkDate:
+		case _ = <-checkDate:
+			fmc.Printfln("#gbtcheck date")
 			box.dBCheck()
 		}
 	}
@@ -160,7 +163,8 @@ func Initrc() {
 	//box.add(2)
 	f := make(chan bool)
 	go box.check(f)
+	go box.checkDateCounter()
 	go box.read(f)
 	go initBot()
-	box.checkDateCounter()
+
 }
