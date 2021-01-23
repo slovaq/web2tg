@@ -2,20 +2,15 @@ package vapi
 
 import (
 	"fmt"
-	"net/http"
 
 	"github.com/BurntSushi/toml"
-	"github.com/fatih/color"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	"github.com/mallvielfrass/coloredPrint/fmc"
 	"github.com/slovaq/web2tg/web/DAL"
 )
 
 var (
-	yellow = color.New(color.FgYellow).SprintFunc()
-	red    = color.New(color.FgRed).SprintFunc()
-	g      = color.New(color.FgGreen, color.Bold).SprintFunc()
-	b      = color.New(color.FgBlue, color.Bold).SprintFunc()
-	token  = ""
+	token = ""
 	//C *SNBot
 	C *SNBot
 	//Skip bool
@@ -41,17 +36,6 @@ func New(cfg *Config) (*SNBot, error) {
 	}, nil
 }
 
-func (Update Update) edit(w http.ResponseWriter, r *http.Request) {
-	token = r.FormValue("token")
-	//fmt.Printf("%s %s %s\n", yellow("edit>"), b("token>"), g(token))
-	w.Write([]byte(token))
-	go func() {
-		Update.UpdateToken <- token
-
-	}()
-
-}
-
 func runBot() {
 
 	Updatetoken := make(chan string)
@@ -74,9 +58,9 @@ func runBot() {
 		case tok := <-Updatetoken:
 
 			if C.bot.Token == tok {
-				fmt.Printf("%s %s\n", red("skip Token>"), g(tok))
+				fmc.Printfln("#rbtskip Token> #gbt%s", tok)
 			} else {
-				fmt.Printf("%s %s\n", b("change Token>"), g(tok))
+				fmc.Printfln("#rbtchange Token> #gbt%s", tok)
 				C.bot.StopReceivingUpdates()
 				s := &Config{
 					Token:      tok,
@@ -86,7 +70,8 @@ func runBot() {
 			}
 
 		case update := <-C.upd:
-			fmt.Printf("%s %s %s %s\n", red("message>"), yellow(update.Message.Chat.ID, ">"), b(update.Message.From.UserName+">"), g(update.Message.Text))
+			fmc.Printfln("#rbt message>#ybt %d>#btt %s> #gbt%s", update.Message.Chat.ID, update.Message.From.UserName, update.Message.Text)
+			//fmt.Printf("%s %s %s %s\n")
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
 			msg.ReplyToMessageID = update.Message.MessageID
 			C.Send(update.Message.Chat.ID, update.Message.Text)

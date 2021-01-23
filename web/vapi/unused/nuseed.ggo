@@ -27,3 +27,16 @@ func (box *Boxs) write(f chan bool) {
 	//curl "http://localhost:3000/edit?token=697389856:AAFxgMjR6yMMjHek1KfNaXrikRYNkZmuJww"
 	//	fmt.Println("listen:3000")
 	//	go http.ListenAndServe(":3000", r)
+
+
+
+	func (Update Update) edit(w http.ResponseWriter, r *http.Request) {
+	token = r.FormValue("token")
+	//fmt.Printf("%s %s %s\n", yellow("edit>"), b("token>"), g(token))
+	w.Write([]byte(token))
+	go func() {
+		Update.UpdateToken <- token
+
+	}()
+
+}
