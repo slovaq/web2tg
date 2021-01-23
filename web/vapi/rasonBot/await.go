@@ -52,11 +52,11 @@ func botAwait(token string) {
 		message := update.Message
 		switch update.Message.Command() {
 		case "id":
-			return_chatid(bot, message)
+			returnChatid(bot, message)
 		case "check":
-			check_chat(bot, message)
+			checkChat(bot, message)
 		case "link":
-			link_chat(bot, message)
+			linkChat(bot, message)
 		}
 
 		fmt.Printf("%s %s %s %s\n", redPrint("message>"), yellowPrint(message.Chat.ID), bluePrint(message.From.UserName+">"), greenPrint(message.Text))

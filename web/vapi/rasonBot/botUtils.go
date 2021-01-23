@@ -2,16 +2,17 @@ package vapi
 
 import (
 	"fmt"
+	"strconv"
+
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/slovaq/web2tg/web/DAL"
-	"strconv"
 )
 
-func return_chatid(bot *tgbotapi.BotAPI, message *tgbotapi.Message) {
+func returnChatid(bot *tgbotapi.BotAPI, message *tgbotapi.Message) {
 	msg := tgbotapi.NewMessage(message.Chat.ID, "ID Чата"+strconv.FormatInt(message.Chat.ID, 10))
 	bot.Send(msg)
 }
-func check_chat(bot *tgbotapi.BotAPI, message *tgbotapi.Message) {
+func checkChat(bot *tgbotapi.BotAPI, message *tgbotapi.Message) {
 	var link Link
 	msg := tgbotapi.NewMessage(message.Chat.ID, "")
 	msg.ParseMode = tgbotapi.ModeMarkdown
@@ -24,7 +25,7 @@ func check_chat(bot *tgbotapi.BotAPI, message *tgbotapi.Message) {
 	bot.Send(msg)
 
 }
-func link_chat(bot *tgbotapi.BotAPI, message *tgbotapi.Message) {
+func linkChat(bot *tgbotapi.BotAPI, message *tgbotapi.Message) {
 	var link Link
 	msg := tgbotapi.NewMessage(message.Chat.ID, "Линка привязана. ")
 	msg.ParseMode = tgbotapi.ModeMarkdown
@@ -70,11 +71,11 @@ func link_chat(bot *tgbotapi.BotAPI, message *tgbotapi.Message) {
 		}
 		bot.Send(msg)
 		return
-	} else {
-		DB.Model(&link).Where("chat_id = ?", message.Chat.ID).Updates(link)
-		msg.Text = "Ссылка обновлена! Проверить можно по команде /check"
-		bot.Send(msg)
-		return
 	}
+
+	DB.Model(&link).Where("chat_id = ?", message.Chat.ID).Updates(link)
+	msg.Text = "Ссылка обновлена! Проверить можно по команде /check"
+	bot.Send(msg)
+	return
 
 }

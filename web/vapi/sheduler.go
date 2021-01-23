@@ -18,20 +18,25 @@ var (
 	records   []VapiRecord
 )
 
+//Box Message string, Time int64, Token string, URL string, ID int, User string
 type Box struct {
 	Message string
 	Time    int64
 	Token   string
-	Url     string
-	Id      int
+	URL     string
+	ID      int
 	User    string
 }
+
+//Boxs []Box
 type Boxs []Box
+
+//IntRange struct {min, max int}
 type IntRange struct {
 	min, max int
 }
 
-// get next random value within the interval including min and max
+//NextRandom get next random value within the interval including min and max
 func (ir *IntRange) NextRandom(r *rand.Rand) int {
 	return r.Intn(ir.max-ir.min+1) + ir.min
 }
@@ -51,7 +56,7 @@ func (box *Boxs) dBCheck() {
 					fmt.Println(err)
 				}
 				timestamp := t.Unix()
-				boxT.appendToItself(posts[v].Message, timestamp, user[d].BotToken, user[d].ChatLink, posts[v].Id, user[d].Login)
+				boxT.appendToItself(posts[v].Message, timestamp, user[d].BotToken, user[d].ChatLink, posts[v].ID, user[d].Login)
 			}
 		}
 	}
@@ -122,6 +127,8 @@ func (box *Boxs) Add(message string, timestamp int64, token string, url string, 
 	m.Unlock()
 
 }
+
+//Initrc  start sheduler module
 func Initrc() {
 	rand.Seed(time.Now().UnixNano())
 	box := Boxs{}

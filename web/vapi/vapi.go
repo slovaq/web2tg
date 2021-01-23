@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+//CreateConfig (login string, city string, chatLink string, token string) (*ClientConfig, string, error)
 func CreateConfig(login string, city string, chatLink string, token string) (*ClientConfig, string, error) {
 	conf := ClientConfig{
 		Login:    login,
@@ -38,23 +39,17 @@ func CreateConfig(login string, city string, chatLink string, token string) (*Cl
 
 }
 
-type CreateConfData struct {
-	User   *ClientConfig
-	Status string
-}
-
+//GetPost (w http.ResponseWriter, r *http.Request)
 func GetPost(w http.ResponseWriter, r *http.Request) {
 	log.Println(">vapi get post")
 	logix, err := r.Cookie("login")
 	if err != nil {
 		fmt.Printf("[login] error %s\n", err.Error())
-
 		http.Redirect(w, r, "/reg", 301)
 		return
-
-	} else {
-		fmt.Println(logix.Value)
 	}
+	fmt.Println(logix.Value)
+
 	login := logix.Value
 	var user []ClientConfig
 	DB.Where("login = ?", login).Find(&user)
@@ -67,18 +62,18 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(user)
 }
+
+//GetConf (w http.ResponseWriter, r *http.Request)
 func GetConf(w http.ResponseWriter, r *http.Request) {
 	log.Println(">vapi get conf ")
 	logix, err := r.Cookie("login")
 	if err != nil {
 		fmt.Printf("[login] error %s\n", err.Error())
-
 		http.Redirect(w, r, "/reg", 301)
 		return
-
-	} else {
-		fmt.Println(logix.Value)
 	}
+	fmt.Println(logix.Value)
+
 	login := logix.Value
 	var user []ClientConfig
 	DB.Where("login = ?", login).Find(&user)
@@ -90,6 +85,8 @@ func GetConf(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(user)
 }
+
+//CreateConf (w http.ResponseWriter, r *http.Request)
 func CreateConf(w http.ResponseWriter, r *http.Request) {
 	log.Println(">vapi create")
 	logix, err := r.Cookie("login")
@@ -98,9 +95,9 @@ func CreateConf(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/reg", 301)
 		return
 
-	} else {
-		fmt.Println(logix.Value)
 	}
+
+	fmt.Println(logix.Value)
 	login := logix.Value
 	chatLink := r.FormValue("chatLink")
 	token := r.FormValue("token")
@@ -113,12 +110,15 @@ func CreateConf(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(data)
 }
+
+//Index (w http.ResponseWriter, r *http.Request)
 func Index(w http.ResponseWriter, r *http.Request) {
 	log.Println(">vapi index")
 	http.ServeFile(w, r, "vapi/template/home/posts.html")
-	fmt.Fprintf(w, "v index")
+	//fmt.Fprintf(w, "v index")
 }
 
+//RecordCreate (w http.ResponseWriter, r *http.Request)
 func RecordCreate(w http.ResponseWriter, r *http.Request) {
 	log.Println(">vapi RecordCreate")
 	logix, err := r.Cookie("login")
@@ -129,11 +129,9 @@ func RecordCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Println(logix.Value)
-
 	login := logix.Value
 	city := r.FormValue("city")
 	dateTimePicker := r.FormValue("date")
-
 	fmt.Println(dateTimePicker)
 	dt := strings.Split(dateTimePicker, " ")
 	layout1 := "03:04PM"
@@ -174,6 +172,8 @@ func RecordCreate(w http.ResponseWriter, r *http.Request) {
 	checkDate <- f
 	json.NewEncoder(w).Encode(conf)
 }
+
+//RecordDelete (w http.ResponseWriter, r *http.Request)
 func RecordDelete(w http.ResponseWriter, r *http.Request) {
 	logix, err := r.Cookie("login")
 	if err != nil {
@@ -195,15 +195,15 @@ func RecordDelete(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode("{'status':'ok'}")
 }
 
+//PostSorter []VapiRecord
 type PostSorter []VapiRecord
 
+//RecordGet (w http.ResponseWriter, r *http.Request)
 func RecordGet(w http.ResponseWriter, r *http.Request) {
 	log.Println(">vapi RecordGet")
 	logix, err := r.Cookie("login")
 	if err != nil {
 		fmt.Printf("[login] error %s\n", err.Error())
-
-		//fmt.Fprintf(w, "[login] error %s", err)
 		http.Redirect(w, r, "/reg", 301)
 		return
 
@@ -219,13 +219,9 @@ func RecordGet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	//	data := &CreateConfData{
-	//		User:   user,
-	//		Status: status,
-	//	}
-	log.Println("unsorted:", posts)
+	//	log.Println("unsorted:", posts)
 	sort.Sort(PostSorter(posts))
-	log.Println("by axis:", posts)
+	//	log.Println("by axis:", posts)
 
 	json.NewEncoder(w).Encode(posts)
 }

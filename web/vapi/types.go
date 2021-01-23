@@ -1,9 +1,12 @@
 package vapi
 
 import (
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
+
+var DB, _ = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 
 type Link struct {
 	ID       int `gorm:"primaryKey"`
@@ -23,10 +26,33 @@ type VapiRecord struct {
 	Message string
 	City    string
 	Date    string
-	Id      int `gorm:"primarykey"`
+	ID      int `gorm:"primarykey"`
 	Time    string
 	Status  string
 	Period  string
 }
+type CreateConfData struct {
+	User   *ClientConfig
+	Status string
+}
+type tomlConfig struct {
+	Token string
+}
 
-var DB, _ = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+//Update struct{UpdateToken chan string}
+type Update struct {
+	UpdateToken chan string
+}
+
+//Config struct {Token string, UpdateTime int}
+type Config struct {
+	Token      string
+	UpdateTime int
+}
+
+//SNBot struct { cfg *Config, bot *tgbotapi.BotAPI, upd tgbotapi.UpdatesChannel}
+type SNBot struct {
+	cfg *Config
+	bot *tgbotapi.BotAPI
+	upd tgbotapi.UpdatesChannel
+}
