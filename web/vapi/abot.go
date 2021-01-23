@@ -71,7 +71,6 @@ func runBot() {
 
 		case update := <-C.upd:
 			fmc.Printfln("#rbt message>#ybt %d>#btt %s> #gbt%s", update.Message.Chat.ID, update.Message.From.UserName, update.Message.Text)
-			//fmt.Printf("%s %s %s %s\n")
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
 			msg.ReplyToMessageID = update.Message.MessageID
 			C.Send(update.Message.Chat.ID, update.Message.Text)
