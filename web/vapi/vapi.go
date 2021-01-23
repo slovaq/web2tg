@@ -108,6 +108,7 @@ func CreateConf(w http.ResponseWriter, r *http.Request) {
 		User:   user,
 		Status: status,
 	}
+	Updatetoken <- "f"
 	json.NewEncoder(w).Encode(data)
 }
 
@@ -170,6 +171,7 @@ func RecordCreate(w http.ResponseWriter, r *http.Request) {
 	}
 	f := true
 	checkDate <- f
+
 	json.NewEncoder(w).Encode(conf)
 }
 

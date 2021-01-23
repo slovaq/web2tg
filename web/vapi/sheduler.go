@@ -8,12 +8,14 @@ import (
 	"time"
 
 	"github.com/mallvielfrass/coloredPrint/fmc"
+	"github.com/slovaq/web2tg/web/DAL"
 )
 
 var (
 	m         sync.Mutex
 	d         int
 	checkDate chan bool
+	checkInit chan bool
 	layout    = "2021-01-18 17:53"
 	records   []VapiRecord
 )
@@ -127,6 +129,29 @@ func (box *Boxs) Add(message string, timestamp int64, token string, url string, 
 	m.Unlock()
 
 }
+func initBot() {
+	var user []DAL.ClientConfig
+	DB.Where("").Find(&user)
+	initV := 0
+	if len(user) != 0 {
+
+		fmc.Printfln("user:%s", user[0].BotToken)
+	} else {
+
+		for {
+			select {
+			case <-checkInit:
+				if initV == 0 {
+					go runBot()
+					initV = 1
+				} else {
+					Updatetoken <- "t"
+				}
+			}
+		}
+	}
+
+}
 
 //Initrc  start sheduler module
 func Initrc() {
@@ -136,6 +161,6 @@ func Initrc() {
 	f := make(chan bool)
 	go box.check(f)
 	go box.read(f)
-
+	go initBot()
 	box.checkDateCounter()
 }
