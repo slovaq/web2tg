@@ -3,3 +3,5 @@ web/test.db
 
 !*.*
 authmiddle
+web/authmiddle
+web/test.db
