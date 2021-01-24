@@ -110,7 +110,7 @@ func CreateConf(w http.ResponseWriter, r *http.Request) {
 		User:   user,
 		Status: status,
 	}
-	Updatetoken <- "f"
+	checkInit <- true
 	json.NewEncoder(w).Encode(data)
 }
 
@@ -122,7 +122,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 }
 
 //RecordCreate (w http.ResponseWriter, r *http.Request)
-func RecordCreate(w http.ResponseWriter, r *http.Request) {
+func (upd *UpdateStorage) RecordCreate(w http.ResponseWriter, r *http.Request) {
 	log.Println(">vapi RecordCreate")
 	logix, err := r.Cookie("login")
 	if err != nil {
@@ -131,11 +131,12 @@ func RecordCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(logix.Value)
 	login := logix.Value
 	city := r.FormValue("city")
+	message := r.FormValue("message")
+	period := r.FormValue("period")
 	dateTimePicker := r.FormValue("date")
-	fmt.Println(dateTimePicker)
+
 	dt := strings.Split(dateTimePicker, " ")
 	layout1 := "03:04PM"
 	layout2 := "15:04"
@@ -153,11 +154,7 @@ func RecordCreate(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(t.Format(layout1))
-	fmt.Println(t.Format(layout2))
 	normalTime := t.Format(layout2)
-	message := r.FormValue("message")
-	period := r.FormValue("period")
 	conf := VapiRecord{
 		User:    login,
 		Message: message,
@@ -167,16 +164,16 @@ func RecordCreate(w http.ResponseWriter, r *http.Request) {
 		Status:  "created",
 		Period:  period,
 	}
-	fmt.Printf("login> %s\n\tcity> %s\n\t\n", login, city)
 	if result := DB.Create(&conf); result.Error != nil {
 		fmt.Printf("conf with login %s is exists", login)
 	}
-	checkDate <- "c"
+	fmc.Printfln("#rbtRecordCreate> #bbt%s> #gbt%s", login, dateTimePicker)
+	upd.ReadRecord <- true
 	json.NewEncoder(w).Encode(conf)
 }
 
 //RecordDelete (w http.ResponseWriter, r *http.Request)
-func RecordDelete(w http.ResponseWriter, r *http.Request) {
+func (upd *UpdateStorage) RecordDelete(w http.ResponseWriter, r *http.Request) {
 	logix, err := r.Cookie("login")
 	if err != nil {
 		fmt.Printf("[login] error %s\n", err.Error())
@@ -194,7 +191,7 @@ func RecordDelete(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	fmc.Println("#gbt delete ok!")
 
-	checkDate <- "c"
+	upd.ReadRecord <- true
 	json.NewEncoder(w).Encode("{\"status\":\"ok\"}")
 
 }

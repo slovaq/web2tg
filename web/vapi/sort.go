@@ -5,19 +5,6 @@ import (
 	"time"
 )
 
-func (s Boxs) Len() int {
-	return len(s)
-}
-
-func (s Boxs) Less(i, j int) bool {
-	return s[i].Time < s[j].Time
-}
-
-func (s Boxs) Swap(i, j int) {
-
-	s[i], s[j] = s[j], s[i]
-}
-
 func (a PostSorter) Len() int      { return len(a) }
 func (a PostSorter) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
 func (a PostSorter) Less(i, j int) bool {

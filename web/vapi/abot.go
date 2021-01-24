@@ -11,7 +11,8 @@ var (
 	//C *SNBot
 	C *SNBot
 	//Skip bool
-	Skip        bool
+	Skip bool
+
 	Updatetoken chan string
 )
 
@@ -35,7 +36,7 @@ func New(cfg *Config) (*SNBot, error) {
 }
 
 func runBot() {
-	fmc.Println("#rbtrun bot>")
+	fmc.Println("#rbtrun bot> run")
 
 	var user []DAL.ClientConfig
 	DB.Where("").Find(&user)
@@ -45,7 +46,7 @@ func runBot() {
 	//}
 	//	token = config.Token
 	s := &Config{
-		Token:      token,
+		Token:      user[0].BotToken,
 		UpdateTime: 60,
 	}
 

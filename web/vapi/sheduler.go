@@ -14,7 +14,7 @@ import (
 var (
 	m         sync.Mutex
 	d         int
-	checkDate chan string
+	CheckDate chan bool
 	checkInit chan bool
 	layout    = "2021-01-18 17:53"
 	records   []VapiRecord
@@ -43,7 +43,9 @@ func (ir *IntRange) NextRandom(r *rand.Rand) int {
 	return r.Intn(ir.max-ir.min+1) + ir.min
 }
 
-func (box *Boxs) dBCheck() {
+func (upd *UpdateStorage) dBCheck() {
+	fmc.Printfln("#gbtDBCheck")
+	m.Lock()
 	var user []ClientConfig
 	DB.Where("").Find(&user)
 	boxT := Boxs{}
@@ -62,57 +64,105 @@ func (box *Boxs) dBCheck() {
 			}
 		}
 	}
-	m.Lock()
-	*box = boxT
+
+	*&upd.Box = boxT
 	m.Unlock()
 
 }
-func (box *Boxs) checkDateCounter() {
+
+type UpdateStorage struct {
+	UpdateRecord chan bool
+	UpdateConfig chan string
+	ReadRecord   chan bool
+	ReadConfig   chan string
+	Box          []Box
+}
+
+func InitChannel(UpdateRecord chan bool, UpdateConfig chan string, ReadRecord chan bool, ReadConfig chan string, Box Boxs) *UpdateStorage {
+	return &UpdateStorage{
+		UpdateRecord: UpdateRecord,
+		UpdateConfig: UpdateConfig,
+		ReadRecord:   ReadRecord,
+		ReadConfig:   ReadConfig,
+		Box:          Box,
+	}
+}
+func (upd *UpdateStorage) checkDateCounter() {
 	for {
-		fmc.Printfln("#gbtcheckDateCounter")
+		//fmc.Printfln("#gbtcheckDateCounter")
 		time.Sleep(time.Duration(1) * time.Second)
 		select {
-		case _ = <-checkDate:
-			fmc.Printfln("#gbtcheck date")
-			box.dBCheck()
+		case <-upd.ReadRecord:
+			fmc.Printfln("#gbtcheck date> #rbtDBcheck")
+			upd.dBCheck()
+			//	upd.UpdateRecord <- true
 		}
 	}
 }
 func (box *Boxs) add(item int64) {
 	*box = append(*box, Box{Time: item})
 }
-func (box *Boxs) read(f chan bool) {
+func (upd *UpdateStorage) ManageMessage(f Box) {
+	unixTimeUTC := time.Unix(f.Time, 0)
+	unitTimeInRFC3339 := unixTimeUTC.Format(time.RFC3339)
+	fmc.Printfln("#rbt read> #bbt Time: #gbt %s", unitTimeInRFC3339)
+	//var posts []VapiRecord
+	//	DB.Where("status = 'created'").Find()
+	DB.Table("vapi_records").Where("id = ?", f.ID).Updates(VapiRecord{Status: "deleted"})
+
+}
+func (upd *UpdateStorage) read() {
 	for {
 		select {
-		case <-f:
+		case <-upd.UpdateRecord:
 			m.Lock()
-			sort.Sort(box)
-			bx := append(Boxs{}, *box...)
-			unixTimeUTC := time.Unix(bx[0].Time, 0)
-			unitTimeInRFC3339 := unixTimeUTC.Format(time.RFC3339)
-			fmc.Printfln("#rbt read> #bbt Time: #gbt %s", unitTimeInRFC3339)
+			//sort.Sort(box)
+			fmt.Println("boxlen: ", upd.Box)
+			bx := append(Boxs{}, upd.Box...)
+			sort.Sort(bx)
+			//	bx := append(Boxs{}, *box...)
+			upd.ManageMessage(bx[0])
 			if len(bx) == 1 {
-				*box = Boxs{}
+				upd.Box = Boxs{}
 			} else {
 				if 1 < len(bx) {
-					*box = bx[1:]
+					upd.Box = bx[1:]
 				}
 			}
 			m.Unlock()
 		}
 	}
 }
-func (box *Boxs) check(f chan bool) {
+
+func (box Boxs) Len() int {
+	return len(box)
+}
+
+func (box Boxs) Less(i, j int) bool {
+	return box[i].Time < box[j].Time
+	//return false
+}
+
+func (box Boxs) Swap(i, j int) {
+
+	box[i], box[j] = box[j], box[i]
+}
+
+func (upd *UpdateStorage) Check() {
+	fmc.Printfln("#rbt Run> #gbtCheck")
 	for {
 		m.Lock()
-		//fmc.Printfln("#rbt check lock")
-		sort.Sort(box)
-		bx := append(Boxs{}, *box...)
+		fmc.Printfln("#rbt check lock")
+		//sort.Sort(upd.Box)
+		bx := append(Boxs{}, upd.Box...)
+		sort.Sort(bx)
+		fmt.Println(len(bx))
 		if 0 < len(bx) {
 			dt := time.Now().Local().Unix()
+			fmc.Printfln("#rbt check> #gbtbx[0]: %d, realTime:%d", bx[0].Time, dt)
 			if (bx[0].Time - dt) < 0 {
 				v := true
-				f <- v
+				upd.UpdateRecord <- v
 			}
 		}
 		m.Unlock()
@@ -133,18 +183,28 @@ func (box *Boxs) Add(message string, timestamp int64, token string, url string, 
 
 }
 func initBot() {
+	fmc.Println("#rbtinitBot")
 	var user []DAL.ClientConfig
 	DB.Where("").Find(&user)
 	initV := 0
+	//fmt.Println("init>user>", user[0].BotToken)
 	if len(user) != 0 {
 
 		fmc.Printfln("user:%s", user[0].BotToken)
+		if initV == 0 {
+			fmc.Println("#rbtinitBot>Run bot>")
+			go runBot()
+			initV = 1
+		} else {
+			Updatetoken <- "t"
+		}
 	} else {
 
 		for {
 			select {
 			case <-checkInit:
 				if initV == 0 {
+					fmc.Println("#rbtinitBot>Run bot>")
 					go runBot()
 					initV = 1
 				} else {
@@ -157,14 +217,15 @@ func initBot() {
 }
 
 //Initrc  start sheduler module
-func Initrc() {
+func (upd *UpdateStorage) Initrc() {
 	rand.Seed(time.Now().UnixNano())
-	box := Boxs{}
+	fmc.Printfln("#rbt Run> #gbtInnitrc")
 	//box.add(2)
-	f := make(chan bool)
-	go box.check(f)
-	go box.checkDateCounter()
-	go box.read(f)
-	go initBot()
+	//	f := make(chan bool)
+	go upd.Check()
+	go upd.checkDateCounter()
+	go upd.read()
+	upd.ReadRecord <- true
+	//	go initBot()
 
 }

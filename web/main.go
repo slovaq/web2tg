@@ -19,9 +19,6 @@ import (
 
 var debug bool
 
-func init() {
-	debug = os.Getenv("DEBUG") != ""
-}
 func chk(err error) {
 	if err != nil {
 		pc, fn, line, _ := runtime.Caller(1)
@@ -86,6 +83,7 @@ func staticRouter(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, path)
 }
 func init() {
+	debug = os.Getenv("DEBUG") != ""
 	err := DAL.DB.AutoMigrate(&DAL.Record{})
 	chk(err)
 	err = DAL.DB.AutoMigrate(&DAL.User{})
@@ -154,10 +152,29 @@ func profile(w http.ResponseWriter, r *http.Request) {
 type UpdatePost struct {
 	Status bool
 }
+type Box struct {
+	Message string
+	Time    int64
+	Token   string
+	URL     string
+	ID      int
+	User    string
+}
+
+//Boxs []Box
+type Boxs []Box
 
 func main() {
 	r := chi.NewRouter()
-	go vapi.Initrc()
+	UpdateRecord := make(chan bool)
+	UpdateConfig := make(chan string)
+	ReadRecord := make(chan bool)
+	ReadConfig := make(chan string)
+	box := vapi.Boxs{}
+	upd := vapi.InitChannel(UpdateRecord, UpdateConfig, ReadRecord, ReadConfig, box)
+
+	go upd.Initrc()
+
 	r.Use(middleware.Logger)
 	//	go sheduler.Listen()
 	r.HandleFunc("/", index)
@@ -172,8 +189,8 @@ func main() {
 			r.Get("/index", vapi.Index)
 			r.Put("/", vapi.PutHandler)
 			r.Get("/record_get", vapi.RecordGet)
-			r.Get("/record_create", vapi.RecordCreate)
-			r.Get("/record_delete", vapi.RecordDelete)
+			r.Get("/record_create", upd.RecordCreate)
+			r.Get("/record_delete", upd.RecordDelete)
 		})
 	})
 	r.HandleFunc("/static/{type}/{file}", staticRouter)
