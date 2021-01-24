@@ -8,6 +8,14 @@ import (
 	"github.com/slovaq/web2tg/web/DAL"
 )
 
+func userIsAdmin(member *tgbotapi.User, members []tgbotapi.ChatMember) bool {
+	for _, admin := range members {
+		if member == *admin.User {
+			return true
+		}
+	}
+	return false
+}
 func returnChatid(bot *tgbotapi.BotAPI, message *tgbotapi.Message) {
 	msg := tgbotapi.NewMessage(message.Chat.ID, "ID Чата"+strconv.FormatInt(message.Chat.ID, 10))
 	bot.Send(msg)
@@ -25,6 +33,7 @@ func checkChat(bot *tgbotapi.BotAPI, message *tgbotapi.Message) {
 	bot.Send(msg)
 
 }
+
 func linkChat(bot *tgbotapi.BotAPI, message *tgbotapi.Message) {
 	var link Link
 	msg := tgbotapi.NewMessage(message.Chat.ID, "Линка привязана. ")

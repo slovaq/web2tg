@@ -108,6 +108,11 @@ func (upd *UpdateStorage) ManageMessage(f Box) {
 	fmc.Printfln("#rbt read> #bbt Time: #gbt %s", unitTimeInRFC3339)
 	//var posts []VapiRecord
 	//	DB.Where("status = 'created'").Find()
+	msg := MessageTG{
+		Message: f.Message,
+		ChatID:  f.URL,
+	}
+	MessageTGChannel <- msg
 	DB.Table("vapi_records").Where("id = ?", f.ID).Updates(VapiRecord{Status: "deleted"})
 
 }
@@ -152,14 +157,14 @@ func (upd *UpdateStorage) Check() {
 	fmc.Printfln("#rbt Run> #gbtCheck")
 	for {
 		m.Lock()
-		fmc.Printfln("#rbt check lock")
+		//fmc.Printfln("#rbt check lock")
 		//sort.Sort(upd.Box)
 		bx := append(Boxs{}, upd.Box...)
 		sort.Sort(bx)
-		fmt.Println(len(bx))
+		//	fmt.Println(len(bx))
 		if 0 < len(bx) {
 			dt := time.Now().Local().Unix()
-			fmc.Printfln("#rbt check> #gbtbx[0]: %d, realTime:%d", bx[0].Time, dt)
+			//		fmc.Printfln("#rbt check> #gbtbx[0]: %d, realTime:%d", bx[0].Time, dt)
 			if (bx[0].Time - dt) < 0 {
 				v := true
 				upd.UpdateRecord <- v
@@ -226,6 +231,7 @@ func (upd *UpdateStorage) Initrc() {
 	go upd.checkDateCounter()
 	go upd.read()
 	upd.ReadRecord <- true
-	//	go initBot()
+
+	go initBot()
 
 }
