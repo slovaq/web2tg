@@ -124,7 +124,7 @@ func (upd *UpdateStorage) read() {
 		case <-upd.UpdateRecord:
 			m.Lock()
 			//sort.Sort(box)
-			fmt.Println("boxlen: ", upd.Box)
+			//fmt.Println("boxlen: ", upd.Box)
 			bx := append(Boxs{}, upd.Box...)
 			sort.Sort(bx)
 			//	bx := append(Boxs{}, *box...)
@@ -163,7 +163,7 @@ func (upd *UpdateStorage) Check() {
 		//sort.Sort(upd.Box)
 		bx := append(Boxs{}, upd.Box...)
 		sort.Sort(bx)
-		fmt.Println(len(bx))
+		//fmt.Println(len(bx))
 		if 0 < len(bx) {
 			dt := time.Now().Local().Unix()
 			//		fmc.Printfln("#rbt check> #gbtbx[0]: %d, realTime:%d", bx[0].Time, dt)
@@ -194,16 +194,56 @@ func (upd *UpdateStorage) initBot() {
 	var user []DAL.ClientConfig
 	DB.Where("").Find(&user)
 	initV := 0
-	//fmt.Println("init>user>", user[0].BotToken)
 	if len(user) != 0 {
+		fmt.Println("init>user>", user[0].BotToken)
+		fmc.Println("#rbtinitBot>Run bot>")
+		go runBot()
+		initV = 1
+	} else {
+		fmc.Println("#rbtinitBot>False Run>")
+	}
+	for {
+		select {
+		case <-upd.CheckInit:
+			if initV == 0 {
+				fmc.Println("#rbtinitBot>Run bot>")
+				go runBot()
+				initV = 1
+			} else {
+				fmc.Println("#rbtinitBot>Update Token>")
+				Updatetoken <- "t"
+			}
 
-		fmc.Printfln("user:%s", user[0].BotToken)
-		if initV == 0 {
-			fmc.Println("#rbtinitBot>Run bot>")
-			go runBot()
-			initV = 1
+		}
+	}
+	//fmt.Println("init>user>", user[0].BotToken)
+	/*
+		if len(user) != 0 {
+
+			fmc.Printfln("user:%s", user[0].BotToken)
+			if initV == 0 {
+				fmc.Println("#rbtinitBot>Run bot>")
+				go runBot()
+				initV = 1
+			} else {
+				//	Updatetoken <- "t"
+				for {
+					select {
+					case <-upd.CheckInit:
+						if initV == 0 {
+							fmc.Println("#rbtinitBot>Run bot>")
+							go runBot()
+							initV = 1
+						} else {
+							fmc.Println("#rbtinitBot>Update Token>")
+							Updatetoken <- "t"
+						}
+					}
+				}
+
+			}
 		} else {
-			//	Updatetoken <- "t"
+
 			for {
 				select {
 				case <-upd.CheckInit:
@@ -217,24 +257,8 @@ func (upd *UpdateStorage) initBot() {
 					}
 				}
 			}
-
 		}
-	} else {
-
-		for {
-			select {
-			case <-upd.CheckInit:
-				if initV == 0 {
-					fmc.Println("#rbtinitBot>Run bot>")
-					go runBot()
-					initV = 1
-				} else {
-					fmc.Println("#rbtinitBot>Update Token>")
-					Updatetoken <- "t"
-				}
-			}
-		}
-	}
+	*/
 
 }
 

@@ -14,6 +14,8 @@ type Link struct {
 	ChatID   int64 `gorm:"unique"`
 }
 
+//PostSorter []VapiRecord
+type PostSorter []VapiRecord
 type ClientConfig struct {
 	Login    string
 	City     string

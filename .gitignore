@@ -2,9 +2,6 @@ web/test.db
 .idea/*
 
 !*.*
-authmiddle
 web/authmiddle
 web/test.db
-web/test.db
-web/test.db
-web/test.db
+*.db*
