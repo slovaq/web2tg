@@ -23,10 +23,14 @@ func returnChatid(bot *tgbotapi.BotAPI, message *tgbotapi.Message) {
 }
 func checkChat(bot *SNBot, message *tgbotapi.Message) {
 	var link Link
+	var user ClientConfig
 	var msg string
+	DAL.DB.Where("chat_link = ? ", link.UserLink).First(&user)
+	IsLinked := user == ClientConfig{}
+
 	DAL.DB.Where("chat_id = ?", message.Chat.ID).First(&link)
 	if (link != Link{}) {
-		msg = fmt.Sprintf("Чат привязан. Сводка: \n *ChatID*: %d \n UserLink: %s", link.ChatID, link.UserLink)
+		msg = fmt.Sprintf("Чат привязан.\n Чат привязан к юзеру?: %t \n *ChatID*: %d \n UserLink: %s", IsLinked, message.Chat.ID, link.UserLink)
 	} else {
 		msg = fmt.Sprintf("Чат *не привязан*")
 	}
