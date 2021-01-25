@@ -170,8 +170,9 @@ func main() {
 	UpdateConfig := make(chan string)
 	ReadRecord := make(chan bool)
 	ReadConfig := make(chan string)
+	checkInit := make(chan bool)
 	box := vapi.Boxs{}
-	upd := vapi.InitChannel(UpdateRecord, UpdateConfig, ReadRecord, ReadConfig, box)
+	upd := vapi.InitChannel(UpdateRecord, UpdateConfig, ReadRecord, ReadConfig, checkInit, box)
 
 	go upd.Initrc()
 
@@ -183,7 +184,7 @@ func main() {
 	r.Route("/auth", func(r chi.Router) {
 		r.With(authMiddleware).Route("/", func(r chi.Router) {
 			r.Get("/", vapi.GetHandler)
-			r.Get("/create_config", vapi.CreateConf) // /auth/create_config?chatLink=@alalgdfgfdga&token=botfathertokenegbcgbcg&city=test
+			r.Get("/create_config", upd.CreateConf) // /auth/create_config?chatLink=@alalgdfgfdga&token=botfathertokenegbcgbcg&city=test
 			r.Get("/get_config", vapi.GetConf)
 			r.Get("/get_post", vapi.GetPost)
 			r.Get("/index", vapi.Index)

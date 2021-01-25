@@ -75,15 +75,17 @@ type UpdateStorage struct {
 	UpdateConfig chan string
 	ReadRecord   chan bool
 	ReadConfig   chan string
+	CheckInit    chan bool
 	Box          []Box
 }
 
-func InitChannel(UpdateRecord chan bool, UpdateConfig chan string, ReadRecord chan bool, ReadConfig chan string, Box Boxs) *UpdateStorage {
+func InitChannel(UpdateRecord chan bool, UpdateConfig chan string, ReadRecord chan bool, ReadConfig chan string, CheckInit chan bool, Box Boxs) *UpdateStorage {
 	return &UpdateStorage{
 		UpdateRecord: UpdateRecord,
 		UpdateConfig: UpdateConfig,
 		ReadRecord:   ReadRecord,
 		ReadConfig:   ReadConfig,
+		CheckInit:    CheckInit,
 		Box:          Box,
 	}
 }
@@ -187,7 +189,7 @@ func (box *Boxs) Add(message string, timestamp int64, token string, url string, 
 	m.Unlock()
 
 }
-func initBot() {
+func (upd *UpdateStorage) initBot() {
 	fmc.Println("#rbtinitBot")
 	var user []DAL.ClientConfig
 	DB.Where("").Find(&user)
@@ -201,18 +203,33 @@ func initBot() {
 			go runBot()
 			initV = 1
 		} else {
-			Updatetoken <- "t"
+			//	Updatetoken <- "t"
+			for {
+				select {
+				case <-upd.CheckInit:
+					if initV == 0 {
+						fmc.Println("#rbtinitBot>Run bot>")
+						go runBot()
+						initV = 1
+					} else {
+						fmc.Println("#rbtinitBot>Update Token>")
+						Updatetoken <- "t"
+					}
+				}
+			}
+
 		}
 	} else {
 
 		for {
 			select {
-			case <-checkInit:
+			case <-upd.CheckInit:
 				if initV == 0 {
 					fmc.Println("#rbtinitBot>Run bot>")
 					go runBot()
 					initV = 1
 				} else {
+					fmc.Println("#rbtinitBot>Update Token>")
 					Updatetoken <- "t"
 				}
 			}
@@ -232,6 +249,6 @@ func (upd *UpdateStorage) Initrc() {
 	go upd.read()
 	upd.ReadRecord <- true
 
-	go initBot()
+	go upd.initBot()
 
 }

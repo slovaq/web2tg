@@ -89,7 +89,7 @@ func GetConf(w http.ResponseWriter, r *http.Request) {
 }
 
 //CreateConf (w http.ResponseWriter, r *http.Request)
-func CreateConf(w http.ResponseWriter, r *http.Request) {
+func (upd *UpdateStorage) CreateConf(w http.ResponseWriter, r *http.Request) {
 	log.Println(">vapi create")
 	logix, err := r.Cookie("login")
 	if err != nil {
@@ -110,7 +110,7 @@ func CreateConf(w http.ResponseWriter, r *http.Request) {
 		User:   user,
 		Status: status,
 	}
-	checkInit <- true
+	upd.CheckInit <- true
 	json.NewEncoder(w).Encode(data)
 }
 
