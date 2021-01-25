@@ -2,8 +2,6 @@ package vapi
 
 import (
 	"fmt"
-	"strconv"
-
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/mallvielfrass/coloredPrint/fmc"
 	"github.com/slovaq/web2tg/web/DAL"
@@ -60,7 +58,6 @@ func runBot() {
 
 	C, _ = New(s)
 	for {
-
 		select {
 
 		case tok := <-Updatetoken:
@@ -82,46 +79,12 @@ func runBot() {
 		case update := <-C.upd:
 			switch update.Message.Command() {
 			case "id":
-				msg := fmt.Sprintln("ID Чата: " + strconv.FormatInt(update.Message.Chat.ID, 10))
-				C.Send(update.Message.Chat.ID, msg)
+				returnChatid(C.bot, update.Message)
 			case "check":
-				var link Link
-				msg := ""
-				//	msg.ParseMode = tgbotapi.ModeMarkdown
-				DAL.DB.Where("chat_id = ?", update.Message.Chat.ID).First(&link)
-				if (link != Link{}) {
-					msg = fmt.Sprintf("Чат привязан. Сводка: \n *ChatID*: %d \n UserLink: %s", link.ChatID, link.UserLink)
-				} else {
-					msg = fmt.Sprintf("Чат *не привязан*")
-				}
-				C.Send(update.Message.Chat.ID, msg)
+				checkChat(C, update.Message)
 			case "link":
-				admins, err := C.bot.GetChatAdministrators(update.Message.Chat.ChatConfig())
-				if err != nil {
-					msg := "Вероятно что-то пошло не так. Проверьте права админа у бота."
-					C.Send(update.Message.Chat.ID, msg)
-					//	return
-				} else {
-					msg := fmt.Sprint(admins)
-					C.Send(update.Message.Chat.ID, msg)
-
-				}
-				//if !userIsAdmin(update.Message.From, admins) {
-				//	msg.Text = "У тебя нет прав администратора."
-
-				//	return
-				//	}
-				//	errMsg, errLink := CheckLink(args)
-				//	if errLink != nil {
-				//		msg.Text = errMsg
-				//		bot.Send(msg)
-				//		return
-				//	}
+				linkChat(C, update.Message)
 			}
-			fmc.Printfln("#rbt message>#ybt %d>#btt %s> #gbt%s", update.Message.Chat.ID, update.Message.From.UserName, update.Message.Text)
-			//msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
-			//msg.ReplyToMessageID = update.Message.MessageID
-			//C.Send(update.Message.Chat.ID, update.Message.Text)
 		case msg := <-MessageTGChannel:
 			var links []Link
 			DB.Where("user_link = ?", msg.ChatID).Find(&links)
@@ -132,7 +95,8 @@ func runBot() {
 }
 
 //Send Send(chatID int64, msg string) send Message to chat by id
-func (s *SNBot) Send(chatID int64, msg string) {
+func (s *SNBot) Send(chatID int64, msg string) (tgbotapi.Message, error) {
 	m := tgbotapi.NewMessage(chatID, msg)
-	_, _ = s.bot.Send(m)
+	m.ParseMode = tgbotapi.ModeMarkdown
+	return s.bot.Send(m)
 }

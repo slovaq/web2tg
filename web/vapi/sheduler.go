@@ -163,7 +163,7 @@ func (upd *UpdateStorage) Check() {
 		//sort.Sort(upd.Box)
 		bx := append(Boxs{}, upd.Box...)
 		sort.Sort(bx)
-		//	fmt.Println(len(bx))
+		fmt.Println(len(bx))
 		if 0 < len(bx) {
 			dt := time.Now().Local().Unix()
 			//		fmc.Printfln("#rbt check> #gbtbx[0]: %d, realTime:%d", bx[0].Time, dt)

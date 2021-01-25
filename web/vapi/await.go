@@ -52,25 +52,18 @@ func botAwait(token string) {
 		message := update.Message
 		switch update.Message.Command() {
 		case "id":
-			returnChatid(bot, message)
+			returnChatid(C.bot, message)
 		case "check":
-			checkChat(bot, message)
+			checkChat(C, message)
 		case "link":
-			linkChat(bot, message)
+			linkChat(C, message)
 		}
 
 		fmt.Printf("%s %s %s %s\n", redPrint("message>"), yellowPrint(message.Chat.ID), bluePrint(message.From.UserName+">"), greenPrint(message.Text))
 
 	}
 }
-func userIsAdmin(member tgbotapi.User, members []tgbotapi.ChatMember) bool {
-	for _, admin := range members {
-		if member == *admin.User {
-			return true
-		}
-	}
-	return false
-}
+
 func checkBots() {
 	y := color.New(color.FgYellow, color.Bold)
 	b := color.New(color.FgBlue, color.Bold)
