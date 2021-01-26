@@ -2,6 +2,7 @@ package vapi
 
 import (
 	"fmt"
+
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/mallvielfrass/coloredPrint/fmc"
 	"github.com/slovaq/web2tg/web/DAL"
@@ -56,7 +57,15 @@ func runBot() {
 		UpdateTime: 60,
 	}
 
-	C, _ = New(s)
+	C, err := New(s)
+	C.bot.Debug = false
+
+	if err != nil {
+
+		fmc.Printfln("err: %s", err)
+		for {
+		}
+	}
 	for {
 		select {
 
@@ -81,7 +90,11 @@ func runBot() {
 			case "id":
 				returnChatid(C.bot, update.Message)
 			case "check":
-				checkChat(C, update.Message)
+				id, msg := checkChat(C, update.Message)
+				//C.Send(id, msg)
+
+				C.Send(id, msg)
+			//	fmc.Printfln("#gbtid: %d, #bbtupdate.id: %d, msg:%s", id, update.Message.Chat.ID, msg)
 			case "link":
 				linkChat(C, update.Message)
 			}
@@ -97,6 +110,6 @@ func runBot() {
 //Send Send(chatID int64, msg string) send Message to chat by id
 func (s *SNBot) Send(chatID int64, msg string) (tgbotapi.Message, error) {
 	m := tgbotapi.NewMessage(chatID, msg)
-	m.ParseMode = tgbotapi.ModeMarkdown
+	m.ParseMode = tgbotapi.ModeHTML
 	return s.bot.Send(m)
 }

@@ -2,8 +2,9 @@ package vapi
 
 import (
 	"fmt"
-	"github.com/mallvielfrass/coloredPrint/fmc"
 	"strconv"
+
+	"github.com/mallvielfrass/coloredPrint/fmc"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/slovaq/web2tg/web/DAL"
@@ -21,20 +22,35 @@ func returnChatid(bot *tgbotapi.BotAPI, message *tgbotapi.Message) {
 	msg := tgbotapi.NewMessage(message.Chat.ID, "ID Чата: "+strconv.FormatInt(message.Chat.ID, 10))
 	bot.Send(msg)
 }
-func checkChat(bot *SNBot, message *tgbotapi.Message) {
+func checkChat(bot *SNBot, message *tgbotapi.Message) (int64, string) {
 	var link Link
 	var user ClientConfig
 	var msg string
 	DAL.DB.Where("chat_link = ? ", link.UserLink).First(&user)
-	IsLinked := user == ClientConfig{}
-
+	//IsLinked := user == ClientConfig{}
+	IsLinkedstr := ""
+	if (user == ClientConfig{}) {
+		IsLinkedstr = "true"
+	} else {
+		IsLinkedstr = "false"
+	}
 	DAL.DB.Where("chat_id = ?", message.Chat.ID).First(&link)
-	if (link != Link{}) {
-		msg = fmt.Sprintf("Чат привязан.\n Чат привязан к юзеру?: %t \n *ChatID*: %d \n UserLink: %s", IsLinked, message.Chat.ID, link.UserLink)
+	//fmc.Printfln("link.UserLink: %s", link.UserLink)
+	//url_ptr, _ := url.Parse(link.UserLink)
+	//url := *url_ptr
+	//ut := strings.Split(url.String(), "https://t.me/joinchat/")
+	//linkZ := fmt.Sprintf("URL: %s", ut[1])
+	//fmc.Printfln("msg: %s", linkZ)
+	if link.UserLink != "" {
+
+		msg = fmt.Sprintf("Чат привязан.\nЧат привязан к юзеру?: %s \nChatID: %d\nUserLink: %s", IsLinkedstr, message.Chat.ID, link.UserLink)
+		//	msg = fmt.Sprintf("Чат привязан. \ntest\n"), string(IsLinked)
 	} else {
 		msg = fmt.Sprintf("Чат *не привязан*")
 	}
-	bot.Send(message.Chat.ID, msg)
+	fmc.Printfln("#rbtcheck chat>#ybt msg> #bbt%s", msg)
+	//bot.Send(message.Chat.ID, msg)
+	return message.Chat.ID, msg
 
 }
 
