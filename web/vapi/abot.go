@@ -2,6 +2,8 @@ package vapi
 
 import (
 	"fmt"
+	"log"
+	"time"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/mallvielfrass/coloredPrint/fmc"
@@ -42,7 +44,7 @@ func New(cfg *Config) (*SNBot, error) {
 	}, nil
 }
 
-func runBot() {
+func (upd *UpdateStorage) runBot() {
 	fmc.Println("#rbtrun bot> run")
 
 	var user []DAL.ClientConfig
@@ -58,7 +60,8 @@ func runBot() {
 	}
 
 	C, err := New(s)
-	C.bot.Debug = false
+	C.bot.Debug = true
+	log.Printf("Authorized on account %s", C.bot.Self.UserName)
 
 	if err != nil {
 
@@ -69,12 +72,12 @@ func runBot() {
 	for {
 		select {
 
-		case tok := <-Updatetoken:
+		case <-upd.Updatetoken:
 			var user []DAL.ClientConfig
 			DB.Where("").Find(&user)
 			fmc.Printfln("user:%s", user[0].BotToken)
 			if C.bot.Token == user[0].BotToken {
-				fmc.Printfln("#rbtskip Token> #gbt%s", tok)
+				fmc.Printfln("#rbtskip Token> #gbt%s", user[0].BotToken)
 			} else {
 				fmc.Printfln("#rbtchange Token> #gbt%s", user[0].BotToken)
 				C.bot.StopReceivingUpdates()
@@ -86,13 +89,14 @@ func runBot() {
 			}
 
 		case update := <-C.upd:
+			fmt.Println(update.Message)
+			time.Sleep(1 * time.Second)
 			switch update.Message.Command() {
 			case "id":
 				returnChatid(C.bot, update.Message)
 			case "check":
-				id, msg := checkChat(C, update.Message)
+				id, msg := checkChat(C, update.Message, user[0].ChatLink)
 				//C.Send(id, msg)
-
 				C.Send(id, msg)
 			//	fmc.Printfln("#gbtid: %d, #bbtupdate.id: %d, msg:%s", id, update.Message.Chat.ID, msg)
 			case "link":

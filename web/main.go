@@ -169,10 +169,11 @@ func main() {
 	UpdateRecord := make(chan bool)
 	UpdateConfig := make(chan string)
 	ReadRecord := make(chan bool)
+	Updatetoken := make(chan bool)
 	ReadConfig := make(chan string)
 	checkInit := make(chan bool)
 	box := vapi.Boxs{}
-	upd := vapi.InitChannel(UpdateRecord, UpdateConfig, ReadRecord, ReadConfig, checkInit, box)
+	upd := vapi.InitChannel(UpdateRecord, UpdateConfig, ReadRecord, ReadConfig, checkInit, Updatetoken, box)
 
 	go upd.Initrc()
 

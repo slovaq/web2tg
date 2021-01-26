@@ -54,7 +54,7 @@ func botAwait(token string) {
 		case "id":
 			returnChatid(C.bot, message)
 		case "check":
-			checkChat(C, message)
+		//	checkChat(C, message)
 		case "link":
 			linkChat(C, message)
 		}

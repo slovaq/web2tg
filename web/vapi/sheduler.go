@@ -76,16 +76,18 @@ type UpdateStorage struct {
 	ReadRecord   chan bool
 	ReadConfig   chan string
 	CheckInit    chan bool
+	Updatetoken  chan bool
 	Box          []Box
 }
 
-func InitChannel(UpdateRecord chan bool, UpdateConfig chan string, ReadRecord chan bool, ReadConfig chan string, CheckInit chan bool, Box Boxs) *UpdateStorage {
+func InitChannel(UpdateRecord chan bool, UpdateConfig chan string, ReadRecord chan bool, ReadConfig chan string, CheckInit chan bool, Updatetoken chan bool, Box Boxs) *UpdateStorage {
 	return &UpdateStorage{
 		UpdateRecord: UpdateRecord,
 		UpdateConfig: UpdateConfig,
 		ReadRecord:   ReadRecord,
 		ReadConfig:   ReadConfig,
 		CheckInit:    CheckInit,
+		Updatetoken:  Updatetoken,
 		Box:          Box,
 	}
 }
@@ -197,7 +199,7 @@ func (upd *UpdateStorage) initBot() {
 	if len(user) != 0 {
 		fmt.Println("init>user>", user[0].BotToken)
 		fmc.Println("#rbtinitBot>Run bot>")
-		go runBot()
+		go upd.runBot()
 		initV = 1
 	} else {
 		fmc.Println("#rbtinitBot>False Run>")
@@ -207,11 +209,11 @@ func (upd *UpdateStorage) initBot() {
 		case <-upd.CheckInit:
 			if initV == 0 {
 				fmc.Println("#rbtinitBot>Run bot>")
-				go runBot()
+				go upd.runBot()
 				initV = 1
 			} else {
 				fmc.Println("#rbtinitBot>Update Token>")
-				Updatetoken <- "t"
+				upd.Updatetoken <- true
 			}
 
 		}
