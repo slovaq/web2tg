@@ -35,7 +35,10 @@ func checkChat(bot *SNBot, message *tgbotapi.Message, UserURLlink string) (int64
 	} else {
 		IsLinkedstr = "false"
 	}
-	DAL.DB.Where("chat_id = ?", message.Chat.ID).First(&link)
+	//DAL.DB.Where("chat_id = ?", message.Chat.ID).First(&link)
+	DB.Where("chat_id = ?", message.Chat.ID).Find(&link)
+
+	fmt.Println("links: ", link)
 	//fmc.Printfln("link.UserLink: %s", link.UserLink)
 	//url_ptr, _ := url.Parse(link.UserLink)
 	//url := *url_ptr
