@@ -101,6 +101,8 @@ func (upd *UpdateStorage) runBot() {
 					fmc.Printfln("#gbtid: %d, #bbtupdate.id: %d, msg:%s", id, update.Message.Chat.ID, msg)
 				case "link":
 					linkChat(C, update.Message)
+				default:
+					fmc.Printfln("#rbtCommandHandler Error> command not found: #gbt%s", update.Message.Command())
 				}
 			}
 		//
