@@ -88,23 +88,32 @@ func (upd *UpdateStorage) runBot() {
 			}
 
 		case update := <-C.upd:
-			fmt.Println(update.Message)
-			//time.Sleep(1 * time.Second)
-			if update.Message.IsCommand() == true {
+			//	fmt.Println(update.Message)
 
-				switch update.Message.Command() {
-				case "id":
-					returnChatid(C.bot, update.Message)
-				case "check":
-					id, msg := checkChat(C, update.Message, user[0].ChatLink)
-					C.Send(id, msg)
-					fmc.Printfln("#gbtid: %d, #bbtupdate.id: %d, msg:%s", id, update.Message.Chat.ID, msg)
-				case "link":
-					linkChat(C, update.Message)
-				default:
-					fmc.Printfln("#rbtCommandHandler Error> command not found: #gbt%s", update.Message.Command())
+			//time.Sleep(1 * time.Second)
+			if update.EditedMessage != nil {
+				fmc.Printfln("#ybtedited message> #gbtmsg: %s", update.EditedMessage.Text)
+
+			} else {
+
+				fmc.Printfln("#gbtmsg:%s", update.Message.Text)
+				if update.Message.IsCommand() == true {
+
+					switch update.Message.Command() {
+					case "id":
+						returnChatid(C.bot, update.Message)
+					case "check":
+						id, msg := checkChat(C, update.Message, user[0].ChatLink)
+						C.Send(id, msg)
+						fmc.Printfln("#gbtid: %d, #bbtupdate.id: %d, msg:%s", id, update.Message.Chat.ID, msg)
+					case "link":
+						linkChat(C, update.Message)
+					default:
+						fmc.Printfln("#rbtCommandHandler Error> command not found: #gbt%s", update.Message.Command())
+					}
 				}
 			}
+
 		//
 		case msg := <-MessageTGChannel:
 			var links []Link
