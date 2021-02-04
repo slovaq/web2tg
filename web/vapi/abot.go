@@ -59,7 +59,7 @@ func (upd *UpdateStorage) runBot() {
 	}
 
 	C, err := New(s)
-	C.bot.Debug = true
+	C.bot.Debug = false
 	log.Printf("Authorized on account %s", C.bot.Self.UserName)
 
 	if err != nil {

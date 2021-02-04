@@ -1,6 +1,8 @@
 package vapi
 
 import (
+	"sync"
+
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -57,4 +59,40 @@ type SNBot struct {
 	cfg *Config
 	bot *tgbotapi.BotAPI
 	upd tgbotapi.UpdatesChannel
+}
+
+var (
+	m         sync.Mutex
+	d         int
+	CheckDate chan bool
+	checkInit chan bool
+	layout    = "2021-01-18 17:53"
+	records   []VapiRecord
+)
+
+//Box Message string, Time int64, Token string, URL string, ID int, User string
+type Box struct {
+	Message string
+	Time    int64
+	Token   string
+	URL     string
+	ID      int
+	User    string
+}
+
+//Boxs []Box
+type Boxs []Box
+
+//IntRange struct {min, max int}
+type IntRange struct {
+	min, max int
+}
+type UpdateStorage struct {
+	UpdateRecord chan bool
+	UpdateConfig chan string
+	ReadRecord   chan bool
+	ReadConfig   chan string
+	CheckInit    chan bool
+	Updatetoken  chan bool
+	Box          []Box
 }
