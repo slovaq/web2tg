@@ -13,39 +13,57 @@ import (
 func (ir *IntRange) NextRandom(r *rand.Rand) int {
 	return r.Intn(ir.max-ir.min+1) + ir.min
 }
+func getTimestamp(dt, tm string) int64 {
+	fulltime := dt + "T" + tm + ":00+03:00"
+	t, err := time.Parse(time.RFC3339, fulltime)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return t.Unix()
 
+}
 func (upd *UpdateStorage) dBCheck() {
-	fmc.Printfln("#gbtDBCheck> open")
+	fmc.Caller()
+	fmc.Printfln("#rbtDBCheck> #gbtopen")
 	m.Lock()
-	fmc.Printfln("#gbtDBCheck> m.Lock()")
+
+	fmc.Printfln("#rbtDBCheck> #gbtm.Lock()")
 	var user []ClientConfig
 	DB.Where("").Find(&user)
 	boxT := Boxs{}
-	var posts []VapiRecord
-
-	DB.Where("status = 'created' ").Find(&posts)
-	fmc.Printfln("#gbtDBCheck> posts: %v", posts)
-	for v := 0; v < len(posts); v++ {
-		fmc.Printfln("#gbtDBCheck> iter post: %d", v)
-		for d := 0; d < len(user); d++ {
-			if user[d].Login == posts[v].User {
-				fulltime := posts[v].Date + "T" + posts[v].Time + ":00+03:00"
-				t, err := time.Parse(time.RFC3339, fulltime)
-				if err != nil {
-					fmt.Println(err)
-				}
-				timestamp := t.Unix()
-				boxT.appendToItself(posts[v].Message, timestamp, user[d].BotToken, user[d].ChatLink, posts[v].ID, user[d].Login)
-			}
+	for d := 0; d < len(user); d++ {
+		fmc.Printfln("#ybt Get Table>\n\t#gbtUser: %s", user[d].Login)
+		var posts []VapiRecord
+		DB.Where("user=? and( (status = 'created' and period='one') or (period!='one' and  data_read!=?))", user[d].Login, getCurrentDate()).Find(&posts)
+		for v := 0; v < len(posts); v++ {
+			post := posts[v]
+			fmc.Printfln("\t\t#ybtPost: #bbtMessage:[#gbt%s#bbt]#wbt, #bbt City[#gbt%s#bbt]#wbt, #bbtDate[#gbt%s %s#bbt]#wbt, #bbtPeriod[#gbt%s#bbt]", post.Message, post.City,
+				post.Date, post.Time, post.Period)
+			tm := getTimestamp(posts[v].Date, posts[v].Time)
+			boxT.appendToItself(posts[v].Message, tm, user[d].BotToken, user[d].ChatLink, posts[v].ID, user[d].Login)
 		}
 	}
-	fmc.Printfln("#gbtDBCheck> iter closed")
+	//var posts []VapiRecord
+
+	//DB.Where("status = 'created' ").Find(&posts)
+	//fmc.Printfln("#gbtDBCheck> posts: %v", posts)
+	//for v := 0; v < len(posts); v++ {
+	//	fmc.Printfln("#gbtDBCheck> iter post: %d", v)
+	//	for d := 0; d < len(user); d++ {
+	//		if user[d].Login == posts[v].User {
+	//			tm := getTimestamp(posts[v].Date, posts[v].Time)
+	//			boxT.appendToItself(posts[v].Message, tm, user[d].BotToken, user[d].ChatLink, posts[v].ID, user[d].Login)
+	//		}
+	//	}
+	//	}
+	fmc.Printfln("#rbtDBCheck>#gbt iter closed")
+	sort.Sort(boxT)
 	*&upd.Box = boxT
 	m.Unlock()
-	fmc.Printfln("#gbtfunc DBCheck> closed")
+	fmc.Printfln("#rbtfunc DBCheck> #gbtclosed")
 }
 
-func InitChannel(UpdateRecord chan bool, UpdateConfig chan string, ReadRecord chan bool, ReadConfig chan string, CheckInit chan bool, Updatetoken chan bool, Box Boxs) *UpdateStorage {
+func InitChannel(UpdateRecord chan bool, UpdateConfig chan string, ReadRecord chan bool, ReadConfig chan string, CheckInit chan bool, Updatetoken chan bool, Box Boxs, msg chan MessageTG) *UpdateStorage {
 	return &UpdateStorage{
 		UpdateRecord: UpdateRecord,
 		UpdateConfig: UpdateConfig,
@@ -54,11 +72,12 @@ func InitChannel(UpdateRecord chan bool, UpdateConfig chan string, ReadRecord ch
 		CheckInit:    CheckInit,
 		Updatetoken:  Updatetoken,
 		Box:          Box,
+		MessageTG:    msg,
 	}
 }
 func (upd *UpdateStorage) checkDateCounter() {
 	for {
-		fmc.Printfln("#gbtcheckDateCounter>")
+		fmc.Printfln("#ybtcheckDateCounter> #gbtawait update")
 		time.Sleep(time.Duration(1) * time.Second)
 		select {
 		case <-upd.ReadRecord:
@@ -72,30 +91,29 @@ func (box *Boxs) add(item int64) {
 	*box = append(*box, Box{Time: item})
 }
 func (upd *UpdateStorage) ManageMessage(f Box) {
-	unixTimeUTC := time.Unix(f.Time, 0)
-	unitTimeInRFC3339 := unixTimeUTC.Format(time.RFC3339)
-	fmc.Printfln("#rbt read> #bbt Time: #gbt %s", unitTimeInRFC3339)
-	//var posts []VapiRecord
-	//	DB.Where("status = 'created'").Find()
 	msg := MessageTG{
 		Message: f.Message,
 		ChatID:  f.URL,
 	}
-	MessageTGChannel <- msg
-	DB.Table("vapi_records").Where("id = ?", f.ID).Updates(VapiRecord{Status: "deleted"})
+	upd.MessageTG <- msg
 
+	fmc.Printfln("#ybtManageMessage> #bbtMessage[#gbt%s#bbt]#wbt, #bbtChatID[#gbt%s#bbt]", msg.Message, msg.ChatID)
+
+	DB.Table("vapi_records").Where("id = ?", f.ID).Updates(VapiRecord{Status: "deleted", DataRead: getCurrentDate()})
+
+}
+func getCurrentDate() string {
+	currentTime := time.Now()
+	//	fmt.Println("YYYY-MM-DD : ", currentTime.Format("2006-01-02"))
+	return currentTime.Format("2006-01-02")
 }
 func (upd *UpdateStorage) read() {
 	for {
 		select {
 		case <-upd.UpdateRecord:
-			m.Lock()
 			fmc.Printfln("#rbtread> #bbtupd.UpdateRecord")
-			//sort.Sort(box)
-			//fmt.Println("boxlen: ", upd.Box)
+			m.Lock()
 			bx := append(Boxs{}, upd.Box...)
-			sort.Sort(bx)
-			//	bx := append(Boxs{}, *box...)
 			upd.ManageMessage(bx[0])
 			if len(bx) == 1 {
 				upd.Box = Boxs{}
@@ -115,7 +133,6 @@ func (box Boxs) Len() int {
 
 func (box Boxs) Less(i, j int) bool {
 	return box[i].Time < box[j].Time
-	//return false
 }
 
 func (box Boxs) Swap(i, j int) {
@@ -127,21 +144,13 @@ func (upd *UpdateStorage) Check() {
 	fmc.Printfln("#rbt Run> #gbtCheck")
 	for {
 		m.Lock()
-		//fmc.Printfln("#rbt check lock")
-		//sort.Sort(upd.Box)
-		bx := append(Boxs{}, upd.Box...)
-		sort.Sort(bx)
-		//fmt.Println(len(bx))
-		if 0 < len(bx) {
-			dt := time.Now().Local().Unix()
-			//		fmc.Printfln("#rbt check> #gbtbx[0]: %d, realTime:%d", bx[0].Time, dt)
-			if (bx[0].Time - dt) < 0 {
-				v := true
-				upd.UpdateRecord <- v
+		if 0 < len(upd.Box) {
+			if (upd.Box[0].Time - time.Now().Local().Unix()) < 0 {
+				upd.UpdateRecord <- true
 			}
 		}
 		m.Unlock()
-		time.Sleep(time.Duration(1) * time.Second)
+		time.Sleep(time.Duration(500) * time.Millisecond)
 	}
 }
 

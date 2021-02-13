@@ -6,3 +6,5 @@ web/authmiddle
 web/test.db
 *.db*
 
+web/__debug_bin
+web/test.db

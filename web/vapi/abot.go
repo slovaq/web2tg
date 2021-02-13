@@ -1,7 +1,6 @@
 package vapi
 
 import (
-	"fmt"
 	"log"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
@@ -96,7 +95,7 @@ func (upd *UpdateStorage) runBot() {
 
 			} else {
 
-				fmc.Printfln("#gbtmsg:%s", update.Message.Text)
+				fmc.Printfln("#ybtmsg: #bbt%s %s> #gbt %s", update.Message.From.FirstName, update.Message.From.LastName, update.Message.Text)
 				if update.Message.IsCommand() == true {
 
 					switch update.Message.Command() {
@@ -115,10 +114,12 @@ func (upd *UpdateStorage) runBot() {
 			}
 
 		//
-		case msg := <-MessageTGChannel:
+		case msg := <-upd.MessageTG:
 			var links []Link
 			DB.Where("user_link = ?", msg.ChatID).Find(&links)
-			fmt.Println(links[0])
+			//fmt.Println(links[0])
+			fmc.Printfln("<-MessageTGChannel : %d, %s", links[0].ChatID, msg.Message)
+			C.Send(links[0].ChatID, msg.Message)
 		}
 	}
 

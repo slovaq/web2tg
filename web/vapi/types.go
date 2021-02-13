@@ -1,14 +1,14 @@
 package vapi
 
 import (
-	"sync"
-
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
-var DB, _ = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+var DB, _ = gorm.Open(sqlite.Open("test.db"), &gorm.Config{
+	//Logger: logger.Default.LogMode(logger.Silent)
+})
 
 type Link struct {
 	ID       int `gorm:"primaryKey"`
@@ -26,14 +26,15 @@ type ClientConfig struct {
 }
 
 type VapiRecord struct {
-	User    string
-	Message string
-	City    string
-	Date    string
-	ID      int `gorm:"primarykey"`
-	Time    string
-	Status  string
-	Period  string
+	User     string
+	Message  string
+	City     string
+	Date     string
+	ID       int `gorm:"primarykey"`
+	Time     string
+	Status   string
+	Period   string
+	DataRead string
 }
 type CreateConfData struct {
 	User   *ClientConfig
@@ -61,14 +62,11 @@ type SNBot struct {
 	upd tgbotapi.UpdatesChannel
 }
 
-var (
-	m         sync.Mutex
-	d         int
-	CheckDate chan bool
-	checkInit chan bool
-	layout    = "2021-01-18 17:53"
-	records   []VapiRecord
-)
+type infoMutex struct {
+	Status    bool
+	Locker    string
+	MutexName string
+}
 
 //Box Message string, Time int64, Token string, URL string, ID int, User string
 type Box struct {
@@ -95,4 +93,5 @@ type UpdateStorage struct {
 	CheckInit    chan bool
 	Updatetoken  chan bool
 	Box          []Box
+	MessageTG    chan MessageTG
 }
