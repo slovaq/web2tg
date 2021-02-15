@@ -7,21 +7,14 @@ import (
 	"time"
 
 	"github.com/mallvielfrass/coloredPrint/fmc"
+	"github.com/slovaq/web2tg/web/data"
 )
 
 //NextRandom get next random value within the interval including min and max
 func (ir *IntRange) NextRandom(r *rand.Rand) int {
 	return r.Intn(ir.max-ir.min+1) + ir.min
 }
-func getTimestamp(dt, tm string) int64 {
-	fulltime := dt + "T" + tm + ":00+03:00"
-	t, err := time.Parse(time.RFC3339, fulltime)
-	if err != nil {
-		fmt.Println(err)
-	}
-	return t.Unix()
 
-}
 func (upd *UpdateStorage) dBCheck() {
 	fmc.Caller()
 	fmc.Printfln("#rbtDBCheck> #gbtopen")
@@ -31,16 +24,23 @@ func (upd *UpdateStorage) dBCheck() {
 	var user []ClientConfig
 	DB.Where("").Find(&user)
 	boxT := Boxs{}
+	sql := fmt.Sprintf("%%%s%%", data.Weekday())
+	fmt.Println(sql)
 	for d := 0; d < len(user); d++ {
 		fmc.Printfln("#ybt Get Table>\n\t#gbtUser: %s", user[d].Login)
 		var posts []VapiRecord
-		DB.Where("user=? and( (status = 'created' and period='one') or (period!='one' and  data_read!=?))", user[d].Login, getCurrentDate()).Find(&posts)
+
+		//fmt.Println("sql ", sql)
+		DB.Where("user=? and( (status = 'created' and period='one') or (status = 'created' and period like ? and  data_read!=?))", user[d].Login, sql, data.GetCurrentDate()).Find(&posts)
+		//	DB.Where("user=? and( (status = 'created' and period='one') )", userstatus[d].Login, sql, data.GetCurrentDate()).Find(&posts)
+
+		fmt.Println("post:", posts)
 		for v := 0; v < len(posts); v++ {
 			post := posts[v]
 			fmc.Printfln("\t\t#ybtPost: #bbtMessage:[#gbt%s#bbt]#wbt, #bbt City[#gbt%s#bbt]#wbt, #bbtDate[#gbt%s %s#bbt]#wbt, #bbtPeriod[#gbt%s#bbt]", post.Message, post.City,
 				post.Date, post.Time, post.Period)
-			tm := getTimestamp(posts[v].Date, posts[v].Time)
-			boxT.appendToItself(posts[v].Message, tm, user[d].BotToken, user[d].ChatLink, posts[v].ID, user[d].Login)
+			tm := data.GetTimestamp(posts[v].Date, posts[v].Time)
+			boxT.appendToItself(posts[v].Message, tm, user[d].BotToken, user[d].ChatLink, posts[v].ID, user[d].Login, post.Status, post.Period)
 		}
 	}
 	//var posts []VapiRecord
@@ -55,7 +55,7 @@ func (upd *UpdateStorage) dBCheck() {
 	//			boxT.appendToItself(posts[v].Message, tm, user[d].BotToken, user[d].ChatLink, posts[v].ID, user[d].Login)
 	//		}
 	//	}
-	//	}
+	//	}status
 	fmc.Printfln("#rbtDBCheck>#gbt iter closed")
 	sort.Sort(boxT)
 	*&upd.Box = boxT
@@ -96,17 +96,18 @@ func (upd *UpdateStorage) ManageMessage(f Box) {
 		ChatID:  f.URL,
 	}
 	upd.MessageTG <- msg
+	if f.Period == "one" {
 
+		DB.Table("vapi_records").Where("id = ?", f.ID).Updates(VapiRecord{Status: "deleted", DataRead: data.GetCurrentDate()})
+
+	} else {
+		DB.Table("vapi_records").Where("id = ?", f.ID).Updates(VapiRecord{DataRead: data.GetCurrentDate()})
+
+	}
 	fmc.Printfln("#ybtManageMessage> #bbtMessage[#gbt%s#bbt]#wbt, #bbtChatID[#gbt%s#bbt]", msg.Message, msg.ChatID)
 
-	DB.Table("vapi_records").Where("id = ?", f.ID).Updates(VapiRecord{Status: "deleted", DataRead: getCurrentDate()})
+}
 
-}
-func getCurrentDate() string {
-	currentTime := time.Now()
-	//	fmt.Println("YYYY-MM-DD : ", currentTime.Format("2006-01-02"))
-	return currentTime.Format("2006-01-02")
-}
 func (upd *UpdateStorage) read() {
 	for {
 		select {
@@ -154,15 +155,15 @@ func (upd *UpdateStorage) Check() {
 	}
 }
 
-func (box *Boxs) appendToItself(message string, time int64, token string, url string, id int, user string) {
-	z := Box{message, time, token, url, id, user}
+func (box *Boxs) appendToItself(message string, time int64, token string, url string, id int, user string, status string, period string) {
+	z := Box{message, time, token, url, id, user, status, period}
 	*box = append(*box, z)
 }
 
 //Add (message string, timestamp int64, token string, url string, id int, user string)
-func (box *Boxs) Add(message string, timestamp int64, token string, url string, id int, user string) {
+func (box *Boxs) Add(message string, timestamp int64, token string, url string, id int, user string, status string, period string) {
 	m.Lock()
-	box.appendToItself(message, timestamp, token, url, id, user)
+	box.appendToItself(message, timestamp, token, url, id, user, status, period)
 	m.Unlock()
 
 }

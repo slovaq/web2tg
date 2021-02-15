@@ -76,6 +76,8 @@ type Box struct {
 	URL     string
 	ID      int
 	User    string
+	Status  string
+	Period  string
 }
 
 //Boxs []Box
