@@ -118,8 +118,14 @@ func (upd *UpdateStorage) runBot() {
 			var links []Link
 			DB.Where("user_link = ?", msg.ChatID).Find(&links)
 			//fmt.Println(links[0])
-			fmc.Printfln("<-MessageTGChannel : %d, %s", links[0].ChatID, msg.Message)
-			C.Send(links[0].ChatID, msg.Message)
+			if len(links) != 0 {
+				fmc.Printfln("<-MessageTGChannel : %d, %s", links[0].ChatID, msg.Message)
+				C.Send(links[0].ChatID, msg.Message)
+
+			} else {
+				fmc.Println("#rbtupd.MessageTG Error> #ybtlen(links) = 0")
+			}
+
 		}
 	}
 
