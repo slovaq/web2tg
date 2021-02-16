@@ -3,21 +3,21 @@
 <header>
     <script src="https://ru.vuejs.org/js/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/js/vendor/jquery.min.js"
-            integrity="sha512-ju6u+4bPX50JQmgU97YOGAXmRMrD9as4LE05PdC3qycsGQmjGlfm041azyB1VfCXpkpt1i9gqXCT6XuxhBJtKg=="
-            crossorigin="anonymous"></script>
+        integrity="sha512-ju6u+4bPX50JQmgU97YOGAXmRMrD9as4LE05PdC3qycsGQmjGlfm041azyB1VfCXpkpt1i9gqXCT6XuxhBJtKg=="
+        crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/js/vendor/respond.min.js"
-            integrity="sha512-qWVvreMuH9i0DrugcOtifxdtZVBBL0X75r9YweXsdCHtXUidlctw7NXg5KVP3ITPtqZ2S575A0wFkvgS2anqSA=="
-            crossorigin="anonymous"></script>
+        integrity="sha512-qWVvreMuH9i0DrugcOtifxdtZVBBL0X75r9YweXsdCHtXUidlctw7NXg5KVP3ITPtqZ2S575A0wFkvgS2anqSA=="
+        crossorigin="anonymous"></script>
     <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/vendor/bootstrap/css/bootstrap.min.css"
-          integrity="sha512-cp9JSDyi0CDCvBfFKYLWXevb3r8hRv5JxcxLkUq/LEtAmOg7X0yzR3p0x/g+S3aWcZw18mhxsCXyelKWmXgzzg=="
-          crossorigin="anonymous" />
+        href="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/vendor/bootstrap/css/bootstrap.min.css"
+        integrity="sha512-cp9JSDyi0CDCvBfFKYLWXevb3r8hRv5JxcxLkUq/LEtAmOg7X0yzR3p0x/g+S3aWcZw18mhxsCXyelKWmXgzzg=="
+        crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/css/flat-ui.min.css"
-          integrity="sha512-6f7HT84a/AplPkpSRSKWqbseRTG4aRrhadjZezYQ0oVk/B+nm/US5KzQkyyOyh0Mn9cyDdChRdS9qaxJRHayww=="
-          crossorigin="anonymous" />
+        integrity="sha512-6f7HT84a/AplPkpSRSKWqbseRTG4aRrhadjZezYQ0oVk/B+nm/US5KzQkyyOyh0Mn9cyDdChRdS9qaxJRHayww=="
+        crossorigin="anonymous" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/js/flat-ui.min.js"
-            integrity="sha512-GG/1z6B4MVJdQOw35lE4otrbjd2WYV+zhXgjUR+DTeaAc7s/ijgWsexEScSOIo8J4RlhC28CVerDjYQSH89ekQ=="
-            crossorigin="anonymous"></script>
+        integrity="sha512-GG/1z6B4MVJdQOw35lE4otrbjd2WYV+zhXgjUR+DTeaAc7s/ijgWsexEScSOIo8J4RlhC28CVerDjYQSH89ekQ=="
+        crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/static/css/uikit.min.css" />
     <script src="/static/js/uikit.min.js"></script>
     <script src="/static/js/uikit-icons.min.js"></script>
@@ -49,91 +49,111 @@
 </head>
 
 <body>
-<div class="navbar navbar-default navbar-static-top" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-            </button>
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="/auth/">Туда</a></li>
-		<li><a href="/about">Сюда</a></li>
-            </ul>
-        </div><!--/.nav-collapse -->
-    </div>
-</div>
-<div class="container" id="app" >
-    <div v-if="modVisible">
-        <div class="modal-mask">
-            <div class="modal-wrapper">
-                <div class="modal-container">
-                    <form @submit.prevent="subHandler">
-                        <vue-ctk-date-time-picker     locale="en" v-model="date" :range="false">
-                        </vue-ctk-date-time-picker>
-                        <div style="padding-top: 4px;">   <input type="text" value=""  placeholder="сообщение" v-model="message" class="form-control"></div>
-                    
-                        <div>
-                            <div style="padding-top: 10px;padding-bottom: 10px;">
-                                <select v-model="repeat" class=" select  select-block  select-primary ">
-                                    <optgroup label="Единоразово">
-                                        <option value="one">Один раз</option>
-                                    </optgroup>
-                             
-                                </select>
-                            </div>
-
-                        </div>
-                        <div style="padding-left: 30px;">
-                            <button v-on:click="modVisible=false" class="btn btn-lg btn-danger"
-                                    style="width: 150px;">cancel</button>
-
-                            <button type="submit" class="btn btn-lg btn-success" style="width: 150px;">ok</button>
-                        </div>
-                    </form>
-
-                </div>
-
+    <div class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                </button>
             </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/auth/">Туда</a></li>
+                    <li><a href="/about">Сюда</a></li>
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
         </div>
     </div>
-    <div v-else>
-        <div style="">
-            <button v-on:click="inst()" class="btn btn-lg btn-success">Запланировать</button>
-            <button  v-on:click="updatePosts()"  class="btn btn-lg btn-inverse">Обновить список</a></button>
-        
-        </div>
-        
-        <div v-if="items.length>0">      
-            <div style="padding-top: 10px;">
-                <div class="mainContainer">
-                    <div v-for="item in items" :key="item.message">
-                        <div style="padding-left: 0px;padding-top: 20px;padding-right: 20px;">
-                            <div class="uk-card uk-card-default " style="padding: 10px 0px;">
-                                <div>Date: {{item.Date}} {{item.Time}} Period: {{item.Period}} ID: {{item.ID}}
-                                    <button v-on:click="deletepost(item.ID)" class="uk-button uk-button-default" style="padding: 0px 4px;font-size: .875rem;
-                                        line-height: 30px;">Удалить</button></div>
-                                <div>{{item.Message}}</div>
+    <div class="container" id="app">
+        <div v-if="modVisible">
+            <div class="modal-mask">
+                <div class="modal-wrapper">
+                    <div v-if="HttpError">
+                        <div class="modal-container">
+                            <div>Ошибка! Бот не привязан к чату. Для привязки отправьте в чат команду  </div>
+                            "/link t.me/joinchat/12fdf4wrfw4", где заместо ссылки аналогично укажите адрес на свою группу. 
+                            <div style="padding-left: 30px;">
+                                <button v-on:click="modVisible=false;HttpError=false " class="btn btn-lg btn-danger"
+                                    style="width: 150px;">cancel</button>
                             </div>
+
+                        </div>
+
+                    </div>
+                    <div v-else>
+                        <div class="modal-container">
+                            <form @submit.prevent="subHandler">
+                                <vue-ctk-date-time-picker locale="en" v-model="date" :range="false">
+                                </vue-ctk-date-time-picker>
+                                <div style="padding-top: 4px;"> <input type="text" value="" placeholder="сообщение"
+                                        v-model="message" class="form-control"></div>
+
+                                <div>
+                                    <div style="padding-top: 10px;padding-bottom: 10px;">
+                                        <select v-model="repeat" class=" select  select-block  select-primary ">
+                                            <optgroup label="Единоразово">
+                                                <option value="one">Один раз</option>
+                                            </optgroup>
+
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div style="padding-left: 30px;">
+                                    <button v-on:click="modVisible=false" class="btn btn-lg btn-danger"
+                                        style="width: 150px;">cancel</button>
+
+                                    <button type="submit" class="btn btn-lg btn-success"
+                                        style="width: 150px;">ok</button>
+                                </div>
+                            </form>
+
                         </div>
                     </div>
-        
+
+
                 </div>
             </div>
         </div>
+        <div v-else>
+            <div style="">
+                <button v-on:click="inst()" class="btn btn-lg btn-success">Запланировать</button>
+                <button v-on:click="updatePosts()" class="btn btn-lg btn-inverse">Обновить список</a></button>
+
+            </div>
+
+            <div v-if="items.length>0">
+                <div style="padding-top: 10px;">
+                    <div class="mainContainer">
+                        <div v-for="item in items" :key="item.message">
+                            <div style="padding-left: 0px;padding-top: 20px;padding-right: 20px;">
+                                <div class="uk-card uk-card-default " style="padding: 10px 0px;">
+                                    <div>Date: {{item.Date}} {{item.Time}} Period: {{item.Period}} ID: {{item.ID}}
+                                        <button v-on:click="deletepost(item.ID)" class="uk-button uk-button-default"
+                                            style="padding: 0px 4px;font-size: .875rem;
+                                        line-height: 30px;">Удалить</button>
+                                    </div>
+                                    <div>{{item.Message}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 
     </div>
-</div>
-
-
-</div>
 </body>
 
 <link rel="stylesheet" type="text/css"
-      href="https://cdn.jsdelivr.net/npm/vue-ctk-date-time-picker@2.0.6/dist/vue-ctk-date-time-picker.css">
+    href="https://cdn.jsdelivr.net/npm/vue-ctk-date-time-picker@2.0.6/dist/vue-ctk-date-time-picker.css">
 <script src="https://cdn.jsdelivr.net/npm/vue-ctk-date-time-picker@2.0.6/dist/vue-ctk-date-time-picker.umd.min.js"
-        charset="utf-8"></script>
+    charset="utf-8"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
     Vue.component('vue-ctk-date-time-picker', window['vue-ctk-date-time-picker'],
@@ -149,6 +169,7 @@
             modVisible: false,
             value: null,
             passT: null,
+            HttpError: false,
             locale: 'fr',
             items: []
         },
@@ -179,7 +200,7 @@
                 app.modVisible = true;
             },
             deletepost(id) {
-                console.log("delete>",id)
+                console.log("delete>", id)
                 axios.get(`/auth/record_delete?id=${id}`)
                     .then(function (response) {
                         // handle success
@@ -201,7 +222,7 @@
                         console.log(error);
                     });
             },
-            updatePosts(){
+            updatePosts() {
                 console.log("updatePosts> send")
                 axios.get(`/auth/record_get`)
                     .then(function (response) {
@@ -231,11 +252,25 @@
                         // handle success
                         console.log(response);
                         if (response.data.Error != null) {
-                            console.log(response.data.Error);
+                            console.log("error:>", response.data.Error);
 
                         } else {
+                            if (response.data.HttpError == "link" ) {
+                                console.log("error:>", response.data.HttpError);
+                                app.modVisible = false
+                                app.HttpError = true
+                                app.modVisible = true
+                            } else {
+                                console.log("AxiosSend> else> ok");
 
-                            console.log("AxiosSend>ok");
+                                app.updatePosts()
+                                this.message = ""
+                                this.date = null
+                                app.HttpError = false
+                                app.modVisible = false
+
+                            }
+
                         }
 
                     })
@@ -243,10 +278,7 @@
                         // handle error
                         console.log(error);
                     });
-                app.updatePosts()
-                this.message=""
-                this.date=null
-                app.modVisible = false
+
             },
             subHandler() {
                 this.errors = [];

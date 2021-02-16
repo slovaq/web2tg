@@ -28,39 +28,56 @@ func (upd *UpdateStorage) RecordCreate(w http.ResponseWriter, r *http.Request) {
 	period := r.FormValue("period")
 	dateTimePicker := r.FormValue("date")
 
-	dt := strings.Split(dateTimePicker, " ")
-	layout1 := "03:04PM"
-	layout2 := "15:04"
+	var links []Link
+	DB.Where("").Find(&links)
+	//fmt.Println(links[0])
+	if len(links) != 0 {
+		dt := strings.Split(dateTimePicker, " ")
+		layout1 := "03:04PM"
+		layout2 := "15:04"
 
-	date := dt[0]
-	if dt[2] == "pm" {
-		dt[2] = "PM"
+		date := dt[0]
+		if dt[2] == "pm" {
+			dt[2] = "PM"
+		}
+		if dt[2] == "am" {
+			dt[2] = "AM"
+		}
+		posttime := dt[1] + dt[2]
+		t, err := time.Parse(layout1, posttime)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		normalTime := t.Format(layout2)
+		conf := VapiRecord{
+			User:    login,
+			Message: message,
+			City:    city,
+			Date:    date,
+			Time:    normalTime,
+			Status:  "created",
+			Period:  period,
+		}
+		if result := DB.Create(&conf); result.Error != nil {
+			fmt.Printf("conf with login %s is exists", login)
+		}
+		fmc.Printfln("#rbtRecordCreate> #bbt%s> #gbt%s", login, dateTimePicker)
+		upd.ReadRecord <- true
+		json.NewEncoder(w).Encode(conf)
+
+	} else {
+		fmc.Println("error:'links not found'")
+		f := HandleError{
+			HttpError: "link",
+		}
+		json.NewEncoder(w).Encode(f)
 	}
-	if dt[2] == "am" {
-		dt[2] = "AM"
-	}
-	posttime := dt[1] + dt[2]
-	t, err := time.Parse(layout1, posttime)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	normalTime := t.Format(layout2)
-	conf := VapiRecord{
-		User:    login,
-		Message: message,
-		City:    city,
-		Date:    date,
-		Time:    normalTime,
-		Status:  "created",
-		Period:  period,
-	}
-	if result := DB.Create(&conf); result.Error != nil {
-		fmt.Printf("conf with login %s is exists", login)
-	}
-	fmc.Printfln("#rbtRecordCreate> #bbt%s> #gbt%s", login, dateTimePicker)
-	upd.ReadRecord <- true
-	json.NewEncoder(w).Encode(conf)
+
+}
+
+type HandleError struct {
+	HttpError string
 }
 
 //RecordGet (w http.ResponseWriter, r *http.Request)
