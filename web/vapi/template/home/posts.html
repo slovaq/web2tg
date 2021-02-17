@@ -71,8 +71,9 @@
                 <div class="modal-wrapper">
                     <div v-if="HttpError">
                         <div class="modal-container">
-                            <div>Ошибка! Бот не привязан к чату. Для привязки отправьте в чат команду  </div>
-                            "/link t.me/joinchat/12fdf4wrfw4", где заместо ссылки аналогично укажите адрес на свою группу. 
+                            <div>Ошибка! Бот не привязан к чату. Для привязки отправьте в чат команду </div>
+                            "/link t.me/joinchat/12fdf4wrfw4", где заместо ссылки аналогично укажите адрес на свою
+                            группу.
                             <div style="padding-left: 30px;">
                                 <button v-on:click="modVisible=false;HttpError=false " class="btn btn-lg btn-danger"
                                     style="width: 150px;">cancel</button>
@@ -91,12 +92,48 @@
 
                                 <div>
                                     <div style="padding-top: 10px;padding-bottom: 10px;">
-                                        <select v-model="repeat" class=" select  select-block  select-primary ">
-                                            <optgroup label="Единоразово">
-                                                <option value="one">Один раз</option>
-                                            </optgroup>
+                                        <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+                                            <label><input class="uk-radio" type="radio" name="radio2" value=false
+                                                    v-model="picked" checked> Один раз</label>
+                                            <label><input class="uk-radio" type="radio" name="radio2" value=true
+                                                    v-model="picked"> Повтор</label>
+                                        </div>
+                                        <div v-if="picked=='true'">
+                                            
+                                            <div class="uk-margin">
+                                                <div class="uk-form-controls">
+                                                    <div><label><input class="uk-checkbox" type="checkbox"
+                                                                name="radio1">
 
-                                        </select>
+                                                            понедельник</label></div>
+                                                    <div><label><input class="uk-checkbox" type="checkbox"
+                                                                name="radio1">
+
+                                                            вторник</label></div>
+                                                    <div><label><input class="uk-checkbox" type="checkbox"
+                                                                name="radio1">
+
+                                                            среда</label></div>
+                                                    <div><label><input class="uk-checkbox" type="checkbox"
+                                                                name="radio1">
+
+                                                            четверг</label></div>
+                                                    <div><label><input class="uk-checkbox" type="checkbox"
+                                                                name="radio1">
+
+                                                            пятница</label></div>
+                                                    <div><label><input class="uk-checkbox" type="checkbox"
+                                                                name="radio1">
+
+                                                            суббота</label></div>
+                                                    <div><label><input class="uk-checkbox" type="checkbox"
+                                                                name="radio1">
+                                                            воскресенье</label></div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div v-else></div>
                                     </div>
 
                                 </div>
@@ -171,7 +208,9 @@
             passT: null,
             HttpError: false,
             locale: 'fr',
-            items: []
+            items: [],
+            picked: false,
+
         },
         created() {
             console.log("send")
@@ -255,7 +294,7 @@
                             console.log("error:>", response.data.Error);
 
                         } else {
-                            if (response.data.HttpError == "link" ) {
+                            if (response.data.HttpError == "link") {
                                 console.log("error:>", response.data.HttpError);
                                 app.modVisible = false
                                 app.HttpError = true
