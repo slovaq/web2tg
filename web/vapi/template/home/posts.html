@@ -166,7 +166,7 @@
                         <div v-for="item in items" :key="item.message">
                             <div style="padding-left: 0px;padding-top: 20px;padding-right: 20px;">
                                 <div class="uk-card uk-card-default " style="padding: 10px 0px;">
-                                    <div>Date: {{item.Date}} {{item.Time}} Period: {{item.Period}} ID: {{item.ID}}
+                                    <div>Запланировано на {{item.Date}} в {{item.Time}} с периодичностью {{item.Period}} ID: {{item.ID}}
                                         <button v-on:click="deletepost(item.ID)" class="uk-button uk-button-default"
                                             style="padding: 0px 4px;font-size: .875rem;
                                         line-height: 30px;">Удалить</button>
@@ -207,7 +207,7 @@
             value: null,
             passT: null,
             HttpError: false,
-            locale: 'fr',
+            locale: 'en',
             items: [],
             picked: false,
 

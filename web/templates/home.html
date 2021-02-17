@@ -29,7 +29,7 @@
     }
 
     th {
-        background: #4F4F4F;
+        background: #2C7279;
         color: white;
         text-shadow: 0 1px 1px #2D2020;
         padding: 10px;
@@ -199,10 +199,9 @@
                             margin-right: auto;">
 
                                 <tr>
-                                    <th>login</th>
+                                    <th>Login</th>
                                     <th>ChatLink</th>
                                     <th>BotToken </th>
-                                    <th>City </th>
                                     <th>Button </th>
                                 </tr>
 
@@ -218,9 +217,7 @@
                                     <td>
                                         <div class="break">{{ post.BotToken }}</div>
                                     </td>
-                                    <td>
-                                        <div class="break">{{ post.City }}</div>
-                                    </td>
+                                   
                                     <td> <button onclick=" app.modVisible=true"
                                                  class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom"
                                                  style="font-size: 2rem;padding:0 1px;" value="return to login page!">
@@ -242,7 +239,7 @@
                                 </tr>
 
                                 <tr>
-                                    <td colspan="4">нет записей</td>
+                                    <td colspan="4">Пустовато...</td>
                                 </tr>
 
                             </table>
@@ -273,12 +270,7 @@
 <script src="/static/js/compressed.js"></script>
 
 <link rel="stylesheet" href="/static/css/uikit.min.css" />
-<style>
-    .uk-button-default {
 
-        border: 1px solid #c4c4c4;
-    }
-</style>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
 
