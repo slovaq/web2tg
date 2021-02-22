@@ -29,38 +29,6 @@ func chk(err error) {
 		}
 	}
 }
-func index(writer http.ResponseWriter, _ *http.Request) {
-	var records []DAL.Record
-	var cities []DAL.City
-	var users []DAL.User
-	var ClientConfig []DAL.ClientConfig
-	DAL.DB.Find(&records) // select * from Records to &record
-	DAL.DB.Find(&cities)  // select * from Records to &record
-	DAL.DB.Find(&users)   // select * from Records to &record
-	DAL.DB.Find(&ClientConfig)
-	tmpl, err := template.ParseFiles("templates/index.html", "templates/base.html")
-	if err != nil {
-		_, err := writer.Write([]byte(err.Error()))
-		if err != nil {
-			fmt.Printf("error in index() with text: %s \n", err.Error())
-		}
-		return
-	}
-
-	var structData = struct {
-		Records      []DAL.Record
-		Users        []DAL.User
-		Cities       []DAL.City
-		ClientConfig []DAL.ClientConfig
-	}{Records: records, Users: users, Cities: cities, ClientConfig: ClientConfig}
-	err = tmpl.Execute(writer, structData)
-	if err != nil {
-		_, err := writer.Write([]byte(err.Error()))
-		if err != nil {
-			fmt.Printf("error in index() with text: %s \n", err.Error())
-		}
-	}
-}
 
 func staticRouter(w http.ResponseWriter, r *http.Request) {
 	file := chi.URLParam(r, "file")
@@ -180,7 +148,7 @@ func main() {
 
 	r.Use(middleware.Logger)
 	//	go sheduler.Listen()
-	r.HandleFunc("/", index)
+	r.HandleFunc("/", reg)
 	r.HandleFunc("/profile", profile)
 	r.HandleFunc("/reg", reg)
 	r.Route("/auth", func(r chi.Router) {
