@@ -3,8 +3,10 @@ package vapi
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"os"
 	"sort"
 	"strings"
 	"time"
@@ -21,12 +23,35 @@ func (upd *UpdateStorage) RecordCreate(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/reg", 301)
 		return
 	}
-
+	pic := ""
 	login := logix.Value
 	city := r.FormValue("city")
 	message := r.FormValue("message")
 	period := r.FormValue("period")
 	dateTimePicker := r.FormValue("date")
+	//file := r.FormValue("file")
+	_, _, fileerr := r.FormFile("file")
+	if fileerr != nil {
+		fmc.Printfln("#rbtError: #ybt%s", fileerr.Error())
+	} else {
+		file, fileheader, err := r.FormFile("file")
+		if err != nil || fileheader.Size == 0 {
+			// file was not sent
+		} else {
+			// process file
+
+			FileName := "files/" + fileheader.Filename
+			f, err := os.Open(FileName)
+			if err != nil {
+				fmt.Println(err)
+			}
+			defer f.Close()
+			fmt.Println("file: ", file)
+			io.Copy(f, file)
+			pic = FileName
+		}
+		defer file.Close()
+	}
 
 	var links []Link
 	DB.Where("").Find(&links)
@@ -58,6 +83,7 @@ func (upd *UpdateStorage) RecordCreate(w http.ResponseWriter, r *http.Request) {
 			Time:    normalTime,
 			Status:  "created",
 			Period:  period,
+			Pic:     pic,
 		}
 		if result := DB.Create(&conf); result.Error != nil {
 			fmt.Printf("conf with login %s is exists", login)

@@ -35,6 +35,7 @@ type VapiRecord struct {
 	Status   string
 	Period   string
 	DataRead string
+	Pic      string
 }
 type CreateConfData struct {
 	User   *ClientConfig

@@ -193,6 +193,7 @@ func main() {
 			r.Put("/", vapi.PutHandler)
 			r.Get("/record_get", vapi.RecordGet)
 			r.Get("/record_create", upd.RecordCreate)
+			r.Post("/record_create", upd.RecordCreate)
 			r.Get("/record_delete", upd.RecordDelete)
 		})
 	})
