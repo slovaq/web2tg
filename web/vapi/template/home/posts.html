@@ -103,35 +103,36 @@
                                             <div class="uk-margin">
                                                 <div class="uk-form-controls">
                                                     <div><label><input class="uk-checkbox" type="checkbox"
-                                                                name="radio1">
+                                                                name="radio1" v-model="checkedNames" id="Monday" value="Monday" >
 
                                                             понедельник</label></div>
                                                     <div><label><input class="uk-checkbox" type="checkbox"
-                                                                name="radio1">
+                                                                name="radio1" v-model="checkedNames" id="Tuesday" value="Tuesday" >
 
                                                             вторник</label></div>
                                                     <div><label><input class="uk-checkbox" type="checkbox"
-                                                                name="radio1">
+                                                                name="radio1" v-model="checkedNames" id="Wednesday" value="Wednesday" >
 
                                                             среда</label></div>
                                                     <div><label><input class="uk-checkbox" type="checkbox"
-                                                                name="radio1">
+                                                                name="radio1" v-model="checkedNames" id="Thursday" value="Thursday" >
 
                                                             четверг</label></div>
                                                     <div><label><input class="uk-checkbox" type="checkbox"
-                                                                name="radio1">
+                                                                name="radio1" v-model="checkedNames" id="Friday" value="Friday" >
 
                                                             пятница</label></div>
                                                     <div><label><input class="uk-checkbox" type="checkbox"
-                                                                name="radio1">
+                                                                name="radio1" v-model="checkedNames" id="Saturday" value="Saturday" >
 
                                                             суббота</label></div>
                                                     <div><label><input class="uk-checkbox" type="checkbox"
-                                                                name="radio1">
+                                                                name="radio1" v-model="checkedNames" id="Sunday" value="Sunday" >
                                                             воскресенье</label></div>
                                                 </div>
                                             </div>
-
+                                            <br>
+                                            <span>Отмеченные имена: {{ checkedNames }}</span>
                                         </div>
                                         <div v-else></div>
                                     </div>
@@ -212,6 +213,7 @@
             items: [],
             picked: false,
             file: '',
+            checkedNames: [],
 
         },
         created() {
@@ -294,7 +296,13 @@
                 console.log("AxiosSend> message:" + message + " date: " + date + " city: " + city + " repeat: " + repeat)
                 var formData = new FormData();
                 formData.append("file",  app.file);
-                axios.post(`/auth/record_create?message=${message}&date=${date}&city=city&period=${repeat}`,formData, {
+                if ( app.picked==false){
+                    repeat="one"
+                }else{
+                    repeat="week"
+                }
+
+                axios.post(`/auth/record_create?message=${message}&date=${date}&city=city&period=${repeat}&week=${app.checkedNames}`,formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
@@ -329,7 +337,9 @@
                         // handle error
                         console.log(error);
                     });
-
+                    app.checkedNames=[]
+                    app.file=''
+                    
             },
             subHandler() {
                 this.errors = [];

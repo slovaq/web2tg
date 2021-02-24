@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/mallvielfrass/coloredPrint/fmc"
+	"github.com/slovaq/web2tg/web/data"
 )
 
 //RecordCreate (w http.ResponseWriter, r *http.Request)
@@ -30,6 +31,7 @@ func (upd *UpdateStorage) RecordCreate(w http.ResponseWriter, r *http.Request) {
 	message := r.FormValue("message")
 	period := r.FormValue("period")
 	dateTimePicker := r.FormValue("date")
+
 	//file := r.FormValue("file")
 	_, _, fileerr := r.FormFile("file")
 	if fileerr != nil {
@@ -88,22 +90,89 @@ func (upd *UpdateStorage) RecordCreate(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		normalTime := t.Format(layout2)
-		conf := VapiRecord{
-			User:    login,
-			Message: message,
-			City:    city,
-			Date:    date,
-			Time:    normalTime,
-			Status:  "created",
-			Period:  period,
-			Pic:     pic,
+		switch period {
+
+		case "one":
+			fmt.Println("case: one")
+			conf := VapiRecord{
+				User:    login,
+				Message: message,
+				City:    city,
+				Date:    date,
+				Time:    normalTime,
+				Status:  "created",
+				Period:  period,
+				Pic:     pic,
+			}
+			if result := DB.Create(&conf); result.Error != nil {
+				fmt.Printf("conf with login %s is exists", login)
+
+			}
+			fmc.Printfln("#rbtRecordCreate> #bbt%s> #gbt%s", login, dateTimePicker)
+			upd.ReadRecord <- true
+			json.NewEncoder(w).Encode(conf)
+		case "week":
+			checkedNames := r.FormValue("week")
+			fmt.Println("ck: ", checkedNames)
+			fmt.Println("case: week")
+			if strings.Contains(checkedNames, data.Weekday().String()) {
+				fmc.Printfln("week contains %s", data.Weekday().String())
+				conf := VapiRecord{
+					User:    login,
+					Message: message,
+					City:    city,
+					Date:    date,
+					Time:    normalTime,
+					Status:  "created",
+					Period:  checkedNames,
+					Pic:     pic,
+				}
+				if result := DB.Create(&conf); result.Error != nil {
+					fmt.Printf("conf with login %s is exists", login)
+
+				}
+				fmc.Printfln("#rbtRecordCreate> #bbt%s> #gbt%s", login, dateTimePicker)
+				upd.ReadRecord <- true
+				json.NewEncoder(w).Encode(conf)
+			} else {
+
+				conf := VapiRecord{
+					User:    login,
+					Message: message,
+					City:    city,
+					Date:    date,
+					Time:    normalTime,
+					Status:  "created",
+					Period:  "one",
+					Pic:     pic,
+				}
+				if result := DB.Create(&conf); result.Error != nil {
+					fmt.Printf("conf with login %s is exists", login)
+
+				}
+				fmc.Printfln("#rbtRecordCreate> #bbt%s> #gbt%s", login, dateTimePicker)
+				conf = VapiRecord{
+					User:    login,
+					Message: message,
+					City:    city,
+					Date:    date,
+					Time:    normalTime,
+					Status:  "created",
+					Period:  checkedNames,
+					Pic:     pic,
+				}
+				if result := DB.Create(&conf); result.Error != nil {
+					fmt.Printf("conf with login %s is exists", login)
+
+				}
+				fmc.Printfln("#rbtRecordCreate> #bbt%s> #gbt%s", login, dateTimePicker)
+				upd.ReadRecord <- true
+				json.NewEncoder(w).Encode(conf)
+			}
+		default:
+			fmc.Printfln("case: %s not found", period)
 		}
-		if result := DB.Create(&conf); result.Error != nil {
-			fmt.Printf("conf with login %s is exists", login)
-		}
-		fmc.Printfln("#rbtRecordCreate> #bbt%s> #gbt%s", login, dateTimePicker)
-		upd.ReadRecord <- true
-		json.NewEncoder(w).Encode(conf)
+		//fmt.Println(data.Weekday())
 
 	} else {
 		fmc.Println("error:'links not found'")

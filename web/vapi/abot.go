@@ -125,8 +125,11 @@ func (upd *UpdateStorage) runBot() {
 				if msg.Pic != "" {
 					fmc.Printfln("#ybtpic> #gbt%s", msg.Pic)
 					ms, err := C.SendWithMedia(links[0].ChatID, msg.Pic)
-					fmc.Printfln("ms err:", ms)
-					fmc.Printfln("message error>%s", err.Error())
+					//fmc.Printfln("ms: %s", ms)
+					if err != nil {
+						fmc.Printfln("message error>%s \n\t ms: %v", err.Error(), ms)
+					}
+
 				}
 
 			} else {
