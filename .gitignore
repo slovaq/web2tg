@@ -8,3 +8,6 @@ web/test.db
 
 web/__debug_bin
 web/test.db
+*.png
+*.jpeg
+*.jpg

@@ -8,10 +8,12 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"sort"
 	"strings"
 	"time"
 
+	"github.com/disintegration/imaging"
 	"github.com/mallvielfrass/coloredPrint/fmc"
 	"github.com/slovaq/web2tg/web/data"
 )
@@ -53,9 +55,11 @@ func (upd *UpdateStorage) RecordCreate(w http.ResponseWriter, r *http.Request) {
 			defer f.Close()
 			fmt.Println("file: ", file)
 			buf := bytes.NewBuffer(nil)
+
 			if _, err := io.Copy(buf, file); err != nil {
 				fmc.Printfln("#rbtError: #ybt%s", err.Error())
 			}
+
 			n2, err := f.Write(buf.Bytes())
 			if err != nil {
 				fmc.Printfln("#rbtError: #ybt%s", err.Error())
@@ -64,6 +68,50 @@ func (upd *UpdateStorage) RecordCreate(w http.ResponseWriter, r *http.Request) {
 
 			//	io.Copy(f, file)
 			pic = FileName
+			fmt.Println("file: ", fileheader.Size)
+			src, err := imaging.Open(pic)
+			if err != nil {
+				log.Fatalf("failed to open image: %v", err)
+			}
+			// Resize srcImage to size = 128x128px using the Lanczos filter.
+			g := src.Bounds()
+
+			// Get height and width
+
+			if 4500000 < fileheader.Size || 3061 < g.Dy() || 3061 < g.Dx() {
+				height := float64(g.Dy())
+				width := float64(g.Dx())
+
+				perc := float64(4999999) / float64(fileheader.Size)
+				fmt.Printf(" %f %f \n perc= %f\n", width, height, perc)
+				if 4500000 < fileheader.Size {
+
+					height = height * perc
+					width = width * perc
+				}
+
+				fmt.Printf(" %f %f\n", width, height)
+
+				for {
+					if 3060 < height || 3060 < width {
+						height = height * 0.9
+						width = width * 0.9
+					} else {
+						break
+					}
+				}
+				h := int(height)
+				w := int(width)
+				fmt.Printf(" %d %d\n", w, h)
+				d := fmt.Sprintf("ffmpeg -y -i %s -vf scale=%d:%d %s", pic, w, h, pic)
+				//d := fmt.Sprintf("ffmpeg -y -i %s -vf scale=512:512 %s", pic, pic)
+				lsCmd := exec.Command("bash", "-c", d)
+				_, err = lsCmd.Output()
+				if err != nil {
+					panic(err)
+				}
+
+			}
 		}
 		defer file.Close()
 	}
