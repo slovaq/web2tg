@@ -1,6 +1,7 @@
 package vapi
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -41,13 +42,25 @@ func (upd *UpdateStorage) RecordCreate(w http.ResponseWriter, r *http.Request) {
 			// process file
 
 			FileName := "files/" + fileheader.Filename
-			f, err := os.Open(FileName)
+			f, err := os.Create(FileName)
 			if err != nil {
-				fmt.Println(err)
+				fmc.Printfln("#rbtError: #ybt%s", err.Error())
 			}
+			// It's idiomatic to defer a `Close` immediately
+			// after opening a file.
 			defer f.Close()
 			fmt.Println("file: ", file)
-			io.Copy(f, file)
+			buf := bytes.NewBuffer(nil)
+			if _, err := io.Copy(buf, file); err != nil {
+				fmc.Printfln("#rbtError: #ybt%s", err.Error())
+			}
+			n2, err := f.Write(buf.Bytes())
+			if err != nil {
+				fmc.Printfln("#rbtError: #ybt%s", err.Error())
+			}
+			fmt.Printf("wrote %d bytes\n", n2)
+
+			//	io.Copy(f, file)
 			pic = FileName
 		}
 		defer file.Close()

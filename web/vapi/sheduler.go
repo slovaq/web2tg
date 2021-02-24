@@ -40,7 +40,7 @@ func (upd *UpdateStorage) dBCheck() {
 			fmc.Printfln("\t\t#ybtPost: #bbtMessage:[#gbt%s#bbt]#wbt, #bbt City[#gbt%s#bbt]#wbt, #bbtDate[#gbt%s %s#bbt]#wbt, #bbtPeriod[#gbt%s#bbt]", post.Message, post.City,
 				post.Date, post.Time, post.Period)
 			tm := data.GetTimestamp(posts[v].Date, posts[v].Time)
-			boxT.appendToItself(posts[v].Message, tm, user[d].BotToken, user[d].ChatLink, posts[v].ID, user[d].Login, post.Status, post.Period)
+			boxT.appendToItself(posts[v].Message, tm, user[d].BotToken, user[d].ChatLink, posts[v].ID, user[d].Login, post.Status, post.Period, post.Pic)
 		}
 	}
 	//var posts []VapiRecord
@@ -94,6 +94,7 @@ func (upd *UpdateStorage) ManageMessage(f Box) {
 	msg := MessageTG{
 		Message: f.Message,
 		ChatID:  f.URL,
+		Pic:     f.Pic,
 	}
 	upd.MessageTG <- msg
 	if f.Period == "one" {
@@ -155,15 +156,15 @@ func (upd *UpdateStorage) Check() {
 	}
 }
 
-func (box *Boxs) appendToItself(message string, time int64, token string, url string, id int, user string, status string, period string) {
-	z := Box{message, time, token, url, id, user, status, period}
+func (box *Boxs) appendToItself(message string, time int64, token string, url string, id int, user string, status string, period string, pic string) {
+	z := Box{message, time, token, url, id, user, status, period, pic}
 	*box = append(*box, z)
 }
 
 //Add (message string, timestamp int64, token string, url string, id int, user string)
-func (box *Boxs) Add(message string, timestamp int64, token string, url string, id int, user string, status string, period string) {
+func (box *Boxs) Add(message string, timestamp int64, token string, url string, id int, user string, status string, period string, pic string) {
 	m.Lock()
-	box.appendToItself(message, timestamp, token, url, id, user, status, period)
+	box.appendToItself(message, timestamp, token, url, id, user, status, period, pic)
 	m.Unlock()
 
 }

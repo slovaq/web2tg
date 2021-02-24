@@ -11,6 +11,7 @@ import (
 type MessageTG struct {
 	Message string
 	ChatID  string
+	Pic     string
 }
 
 var (
@@ -121,6 +122,12 @@ func (upd *UpdateStorage) runBot() {
 			if len(links) != 0 {
 				fmc.Printfln("<-MessageTGChannel : %d, %s", links[0].ChatID, msg.Message)
 				C.Send(links[0].ChatID, msg.Message)
+				if msg.Pic != "" {
+					fmc.Printfln("#ybtpic> #gbt%s", msg.Pic)
+					ms, err := C.SendWithMedia(links[0].ChatID, msg.Pic)
+					fmc.Printfln("ms err:", ms)
+					fmc.Printfln("message error>%s", err.Error())
+				}
 
 			} else {
 				fmc.Println("#rbtupd.MessageTG Error> #ybtlen(links) = 0")
@@ -135,5 +142,12 @@ func (upd *UpdateStorage) runBot() {
 func (s *SNBot) Send(chatID int64, msg string) (tgbotapi.Message, error) {
 	m := tgbotapi.NewMessage(chatID, msg)
 	m.ParseMode = tgbotapi.ModeHTML
+	return s.bot.Send(m)
+}
+
+//SendWithMedia Send(chatID int64, msg string) send Message to chat by id
+func (s *SNBot) SendWithMedia(chatID int64, pic string) (tgbotapi.Message, error) {
+	m := tgbotapi.NewPhotoUpload(chatID, pic)
+	//	m.ParseMode = tgbotapi.ModeHTML
 	return s.bot.Send(m)
 }

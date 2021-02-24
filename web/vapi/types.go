@@ -79,6 +79,7 @@ type Box struct {
 	User    string
 	Status  string
 	Period  string
+	Pic     string
 }
 
 //Boxs []Box
