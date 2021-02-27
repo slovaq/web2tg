@@ -106,11 +106,7 @@ func (upd *UpdateStorage) RecordCreate(w http.ResponseWriter, r *http.Request) {
 	dateTimePicker := r.FormValue("date")
 	//file := r.FormValue("file")
 	file, fileheader, fileerr := r.FormFile("file")
-
-	if fileerr != nil || fileheader.Size == 0 {
-		fmc.Printfln("#rbtError: #ybt%s", fileerr.Error())
-		return
-	} else {
+	if fileerr == nil {
 		// process file
 		pic = prepareImg(file, fileheader)
 	}

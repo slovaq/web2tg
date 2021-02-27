@@ -120,16 +120,20 @@ func (upd *UpdateStorage) runBot() {
 			DB.Where("user_link = ?", msg.ChatID).Find(&links)
 			//fmt.Println(links[0])
 			if len(links) != 0 {
-				fmc.Printfln("<-MessageTGChannel : %d, %s", links[0].ChatID, msg.Message)
-				C.Send(links[0].ChatID, msg.Message)
-				if msg.Pic != "" {
-					fmc.Printfln("#ybtpic> #gbt%s", msg.Pic)
-					ms, err := C.SendWithMedia(links[0].ChatID, msg.Pic)
-					//fmc.Printfln("ms: %s", ms)
-					if err != nil {
-						fmc.Printfln("message error>%s \n\t ms: %v", err.Error(), ms)
-					}
 
+				var ms tgbotapi.Message
+				var err error
+				if msg.Pic == "" {
+					ms, err = C.Send(links[0].ChatID, msg.Message)
+				} else {
+					C.Send(links[0].ChatID, msg.Message)
+					ms, err = C.SendWithMedia(links[0].ChatID, msg.Pic)
+				}
+				fmc.Printfln("<-MessageTGChannel : %d, %s", links[0].ChatID, msg.Message)
+
+				fmc.Printfln("#ybtpic> #gbt%s", msg.Pic)
+				if err != nil {
+					fmc.Printfln("message error>%s \n\t ms: %v", err.Error(), ms)
 				}
 
 			} else {
