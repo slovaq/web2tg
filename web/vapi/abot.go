@@ -103,7 +103,7 @@ func (upd *UpdateStorage) runBot() {
 					case "id":
 						returnChatid(C.bot, update.Message)
 					case "check":
-						id, msg := checkChat(C, update.Message, user[0].ChatLink)
+						id, msg := checkChat(update.Message, user[0].ChatLink)
 						C.Send(id, msg)
 						fmc.Printfln("#gbtid: %d, #bbtupdate.id: %d, msg:%s", id, update.Message.Chat.ID, msg)
 					case "link":

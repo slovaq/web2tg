@@ -22,7 +22,7 @@ func returnChatid(bot *tgbotapi.BotAPI, message *tgbotapi.Message) {
 	msg := tgbotapi.NewMessage(message.Chat.ID, "ID Чата: "+strconv.FormatInt(message.Chat.ID, 10))
 	bot.Send(msg)
 }
-func checkChat(bot *SNBot, message *tgbotapi.Message, UserURLlink string) (int64, string) {
+func checkChat(message *tgbotapi.Message, UserURLlink string) (int64, string) {
 	var link Link
 	var user ClientConfig
 	var msg string

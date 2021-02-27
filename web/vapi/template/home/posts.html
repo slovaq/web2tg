@@ -240,14 +240,14 @@
         },
         methods: {
             handleFileUpload(){
-    app.file = this.$refs.file.files[0];
-    console.log(this.$refs.file.files[0]);
-    console.log(this.$refs.file.files[0].type);
-    if (this.$refs.file.files[0].type!=="image/png"&this.$refs.file.files[0].type!=="image/jpeg"&this.$refs.file.files[0].type!=="image/jpg"){
-
-        alert("Картинка должна быть типа png или jpeg/jpg. измените пожалуйста картинку. ");
-    }
-  },
+                app.file = this.$refs.file.files[0];
+                console.log(this.$refs.file.files[0]);
+                console.log(this.$refs.file.files[0].type);
+                if (this.$refs.file.files[0].type !== "image/png" && this.$refs.file.files[0].type !== "image/jpeg"
+                    && this.$refs.file.files[0].type !== "image/jpg") {
+                    alert("Картинка должна быть типа png или jpeg/jpg. измените пожалуйста картинку. ");
+                }
+            },
             inst() {
                 app.modVisible = true;
             },
