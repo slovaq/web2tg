@@ -96,9 +96,14 @@ func (upd *UpdateStorage) runBot() {
 							case "id":
 								returnChatid(C.bot, update.Message)
 							case "check":
-								//id, msg := checkChat(update.Message, user[0].ChatLink)
-								//C.Send(id, msg)
-								//fmc.Printfln("#gbtid: %d, #bbtupdate.id: %d, msg:%s", id, update.Message.Chat.ID, msg)
+								if update.Message.CommandArguments() == "" {
+									C.Send(update.Message.Chat.ID, "/check https://t.me/joinchat/asdhajksdasd")
+								} else {
+									id, msg := checkChat(update.Message, update.Message.CommandArguments()) // По другому никак.
+									C.Send(id, msg)
+									fmc.Printfln("#gbtid: %d, #bbtupdate.id: %d, msg:%s", id, update.Message.Chat.ID, msg)
+
+								}
 
 							case "link":
 								linkChat(C, update.Message)
@@ -138,13 +143,12 @@ func (upd *UpdateStorage) runBot() {
 //Send Send(chatID int64, msg string) send Message to chat by id
 func (s *SNBot) Send(chatID int64, msg string) (tgbotapi.Message, error) {
 	m := tgbotapi.NewMessage(chatID, msg)
-	m.ParseMode = tgbotapi.ModeHTML
+	m.ParseMode = tgbotapi.ModeMarkdown
 	return s.bot.Send(m)
 }
 
 //SendWithMedia Send(chatID int64, msg string) send Message to chat by id
 func (s *SNBot) SendWithMedia(chatID int64, pic string) (tgbotapi.Message, error) {
 	m := tgbotapi.NewPhotoUpload(chatID, pic)
-	//	m.ParseMode = tgbotapi.ModeHTML
 	return s.bot.Send(m)
 }

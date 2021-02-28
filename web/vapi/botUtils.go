@@ -28,29 +28,17 @@ func checkChat(message *tgbotapi.Message, UserURLlink string) (int64, string) {
 	var msg string
 
 	DAL.DB.Where("chat_link = ? ", UserURLlink).First(&user)
-	//IsLinked := user == ClientConfig{}
-	IsLinkedstr := ""
-	if (user == ClientConfig{}) {
-		IsLinkedstr = "true"
-	} else {
-		IsLinkedstr = "false"
-	}
-	//DAL.DB.Where("chat_id = ?", message.Chat.ID).First(&link)
+
+	IsLinked := strconv.FormatBool(user == ClientConfig{})
+
 	DB.Where("chat_id = ?", message.Chat.ID).Find(&link)
 
 	fmt.Println("links: ", link)
-	//fmc.Printfln("link.UserLink: %s", link.UserLink)
-	//url_ptr, _ := url.Parse(link.UserLink)
-	//url := *url_ptr
-	//ut := strings.Split(url.String(), "https://t.me/joinchat/")
-	//linkZ := fmt.Sprintf("URL: %s", ut[1])
-	//fmc.Printfln("msg: %s", linkZ)
 	if link.UserLink != "" {
 
-		msg = fmt.Sprintf("Чат привязан.\nЧат привязан к юзеру?: %s \nChatID: %d\nUserLink: %s", IsLinkedstr, message.Chat.ID, link.UserLink)
-		//	msg = fmt.Sprintf("Чат привязан. \ntest\n"), string(IsLinked)
+		msg = fmt.Sprintf("Чат привязан.\nЧат привязан к юзеру?: %s \nChatID: %d\nUserLink: %s", IsLinked, message.Chat.ID, link.UserLink)
 	} else {
-		msg = fmt.Sprintf("Чат *не привязан*")
+		msg = "Чат не привязан"
 	}
 	fmc.Printfln("#rbtcheck chat>#ybt msg> #bbt%s", msg)
 	//bot.Send(message.Chat.ID, msg)
