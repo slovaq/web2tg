@@ -2,18 +2,12 @@ package vapi
 
 import (
 	"fmt"
-	"math/rand"
 	"sort"
 	"time"
 
 	"github.com/mallvielfrass/coloredPrint/fmc"
 	"github.com/slovaq/web2tg/web/data"
 )
-
-//NextRandom get next random value within the interval including min and max
-func (ir *IntRange) NextRandom(r *rand.Rand) int {
-	return r.Intn(ir.max-ir.min+1) + ir.min
-}
 
 func (upd *UpdateStorage) dBCheck() {
 	fmc.Caller()
@@ -30,9 +24,7 @@ func (upd *UpdateStorage) dBCheck() {
 		fmc.Printfln("#ybt Get Table>\n\t#gbtUser: %s", user[d].Login)
 		var posts []VapiRecord
 
-		//fmt.Println("sql ", sql)
 		DB.Where("user=? and( (status = 'created' and period='one') or (status = 'created' and period like ? and  data_read!=?))", user[d].Login, sql, data.GetCurrentDate()).Find(&posts)
-		//	DB.Where("user=? and( (status = 'created' and period='one') )", userstatus[d].Login, sql, data.GetCurrentDate()).Find(&posts)
 
 		fmt.Println("post:", posts)
 		for v := 0; v < len(posts); v++ {
@@ -43,19 +35,6 @@ func (upd *UpdateStorage) dBCheck() {
 			boxT.appendToItself(posts[v].Message, tm, user[d].BotToken, user[d].ChatLink, posts[v].ID, user[d].Login, post.Status, post.Period, post.Pic)
 		}
 	}
-	//var posts []VapiRecord
-
-	//DB.Where("status = 'created' ").Find(&posts)
-	//fmc.Printfln("#gbtDBCheck> posts: %v", posts)
-	//for v := 0; v < len(posts); v++ {
-	//	fmc.Printfln("#gbtDBCheck> iter post: %d", v)
-	//	for d := 0; d < len(user); d++ {
-	//		if user[d].Login == posts[v].User {
-	//			tm := getTimestamp(posts[v].Date, posts[v].Time)
-	//			boxT.appendToItself(posts[v].Message, tm, user[d].BotToken, user[d].ChatLink, posts[v].ID, user[d].Login)
-	//		}
-	//	}
-	//	}status
 	fmc.Printfln("#rbtDBCheck>#gbt iter closed")
 	sort.Sort(boxT)
 	*&upd.Box = boxT
@@ -63,14 +42,14 @@ func (upd *UpdateStorage) dBCheck() {
 	fmc.Printfln("#rbtfunc DBCheck> #gbtclosed")
 }
 
-func InitChannel(UpdateRecord chan bool, UpdateConfig chan string, ReadRecord chan bool, ReadConfig chan string, CheckInit chan bool, Updatetoken chan bool, Box Boxs, msg chan MessageTG) *UpdateStorage {
+func InitChannel(UpdateRecord chan bool, UpdateConfig chan string, ReadRecord chan bool, ReadConfig chan string, CheckInit chan bool, UpdateToken chan bool, Box Boxs, msg chan MessageTG) *UpdateStorage {
 	return &UpdateStorage{
 		UpdateRecord: UpdateRecord,
 		UpdateConfig: UpdateConfig,
 		ReadRecord:   ReadRecord,
 		ReadConfig:   ReadConfig,
 		CheckInit:    CheckInit,
-		Updatetoken:  Updatetoken,
+		Updatetoken:  UpdateToken,
 		Box:          Box,
 		MessageTG:    msg,
 	}
