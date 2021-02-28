@@ -21,11 +21,9 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 	login := logix.Value
 	var user []ClientConfig
 	DB.Where("login = ?", login).Find(&user)
-	for i := 0; len(user) < 0; i++ {
-		fmt.Println(user[i])
-
+	for i, x := range user {
+		fmt.Printf("%d: %v", i, x)
 	}
-
 	w.Header().Set("Content-Type", "application/json")
 
 	json.NewEncoder(w).Encode(user)

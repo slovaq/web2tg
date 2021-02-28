@@ -68,7 +68,7 @@ func init() {
 	chk(err)
 
 }
-func reg(w http.ResponseWriter, r *http.Request) {
+func reg(w http.ResponseWriter, _ *http.Request) {
 	tmpl, err := template.ParseFiles("templates/reg.html", "templates/base.html")
 	if err != nil {
 		_, err := w.Write([]byte(err.Error()))
@@ -88,38 +88,6 @@ var noCacheHeaders = map[string]string{
 	"X-Accel-Expires": "0",
 }
 
-func profile(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("templates/profile.html", "templates/base.html")
-	if err != nil {
-		fmt.Printf("error in profile() with text: %s \n", err.Error())
-	}
-	var records []DAL.Record
-	var cities []DAL.City
-	var users []DAL.User
-	DAL.DB.Find(&records) // select * from Records to &record
-	DAL.DB.Find(&cities)  // select * from Records to &record
-	DAL.DB.Find(&users)   // select * from Records to &record
-
-	var structData = struct {
-		Records []DAL.Record
-		Users   []DAL.User
-		Cities  []DAL.City
-	}{Records: records, Users: users, Cities: cities}
-
-	err = tmpl.Execute(w, structData)
-	if err != nil {
-		_, err := w.Write([]byte(err.Error()))
-		if err != nil {
-			fmt.Printf("error in index() with text: %s \n", err.Error())
-		}
-		return
-	}
-
-}
-
-type UpdatePost struct {
-	Status bool
-}
 type Box struct {
 	Message string
 	Time    int64
@@ -127,29 +95,25 @@ type Box struct {
 	URL     string
 	ID      int
 	User    string
-}
-
-//Boxs []Box
-type Boxs []Box
+} // Remove it. It unused.
 
 func main() {
 	r := chi.NewRouter()
 	UpdateRecord := make(chan bool)
 	UpdateConfig := make(chan string)
 	ReadRecord := make(chan bool)
-	Updatetoken := make(chan bool)
+	UpdateToken := make(chan bool)
 	ReadConfig := make(chan string)
 	checkInit := make(chan bool)
 	msg := make(chan vapi.MessageTG)
 	box := vapi.Boxs{}
-	upd := vapi.InitChannel(UpdateRecord, UpdateConfig, ReadRecord, ReadConfig, checkInit, Updatetoken, box, msg)
+	upd := vapi.InitChannel(UpdateRecord, UpdateConfig, ReadRecord, ReadConfig, checkInit, UpdateToken, box, msg)
 
 	go upd.Initrc()
 
 	r.Use(middleware.Logger)
 	//	go sheduler.Listen()
 	r.HandleFunc("/", reg)
-	r.HandleFunc("/profile", profile)
 	r.HandleFunc("/reg", reg)
 	r.Route("/auth", func(r chi.Router) {
 		r.With(authMiddleware).Route("/", func(r chi.Router) {
@@ -169,8 +133,18 @@ func main() {
 	//r.Route("/vue", vapi.Router)
 	r.Route("/api", API.Router)
 	r.HandleFunc("/about", func(writer http.ResponseWriter, request *http.Request) {
-		writer.Write([]byte("<html><head><title>Hello, my friend!</title></head><body>" +
+		envVariables := func() string {
+			x := "<br>Environment Variables"
+			for _, e := range os.Environ() {
+				x += "<br>"
+				x += e
+			}
+			return x
+		}()
+		_, _ = writer.Write([]byte("" +
+			"<html><head><title>Hello, my friend!</title></head><body>" +
 			"<img src=/static/ttf/egg.png>" +
+			envVariables +
 			"</body></html>"))
 	})
 	err := http.ListenAndServe(":1111", r)
