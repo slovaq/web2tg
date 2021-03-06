@@ -21,6 +21,9 @@ jobs:
       env:
         GO111MODULE: auto
         TOKEN: be8d02aa38e7c1a847ca29f8740113e5c3e9b459
+        GOROOT: /usr/local/go
+        GOPATH: $HOME/go
+        PATH: $PATH:$GOROOT/bin
 
       run: |
               git config --global url."https://rasongame:$TOKEN@github.com/".insteadOf "https://github.com/"
