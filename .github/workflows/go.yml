@@ -20,8 +20,10 @@ jobs:
     - name: Build
       env:
         GO111MODULE: auto
+        TOKEN: be8d02aa38e7c1a847ca29f8740113e5c3e9b459
 
       run: |
+              git config --global url."https://TOKEN:x-oauth-basic@github.com/".insteadOf "https://github.com/"
               go get -u github.com/slovaq/web2tg/web/API
               go get -u gorm.io/gorm
               go get -u gorm.io/driver/sqlite
