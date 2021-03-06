@@ -115,20 +115,19 @@ func (upd *UpdateStorage) runBot() {
 
 				//
 				case msg := <-upd.MessageTG:
-					var links []Link
-					DB.Where("user_link = ?", msg.ChatID).Find(&links)
-					ms, err := C.Send(links[0].ChatID, msg.Message)
-					if len(links) == 0 {
+					var links Link
+					DB.Where("user_link = ?", msg.ChatID).First(&links)
+					if (links == Link{}) {
 						fmc.Println("#rbtupd.MessageTG Error> #ybtlen(links) = 0")
 						return
 					}
+					ms, err := C.Send(links.ChatID, msg.Message)
 
 					if msg.Pic != "" {
-						C.Send(links[0].ChatID, msg.Message)
-						ms, err = C.SendWithMedia(links[0].ChatID, msg.Pic)
+						ms, err = C.SendPhoto(links.ChatID, msg.Pic)
 					}
 
-					fmc.Printfln("<-MessageTGChannel : %d, %s", links[0].ChatID, msg.Message)
+					fmc.Printfln("<-MessageTGChannel : %d, %s", links.ChatID, msg.Message)
 					fmc.Printfln("#ybtpic> #gbt%s", msg.Pic)
 
 					if err != nil {
@@ -147,8 +146,8 @@ func (s *SNBot) Send(chatID int64, msg string) (tgbotapi.Message, error) {
 	return s.bot.Send(m)
 }
 
-//SendWithMedia Send(chatID int64, msg string) send Message to chat by id
-func (s *SNBot) SendWithMedia(chatID int64, pic string) (tgbotapi.Message, error) {
+//SendPhoto Send(chatID int64, msg string) send Message to chat by id
+func (s *SNBot) SendPhoto(chatID int64, pic string) (tgbotapi.Message, error) {
 	m := tgbotapi.NewPhotoUpload(chatID, pic)
 	return s.bot.Send(m)
 }
