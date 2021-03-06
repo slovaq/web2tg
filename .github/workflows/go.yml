@@ -20,7 +20,9 @@ jobs:
     - name: Build
       env:
         GO111MODULE: auto
-      run: go build -v ./...
 
-    - name: Test
-      run: go test -v ./...
+      run: |
+              go get -u gorm.io/gorm
+              go get -u gorm.io/driver/sqlite
+              go get -u github.com/go-chi/chi
+              go build -v ./...
