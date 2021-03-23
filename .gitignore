@@ -12,3 +12,4 @@ web/test.db
 *.jpeg
 *.jpg
 .github/*
+bin/*
