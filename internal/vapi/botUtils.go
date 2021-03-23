@@ -1,13 +1,15 @@
 package vapi
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/mallvielfrass/coloredPrint/fmc"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
-	"github.com/slovaq/web2tg/web/DAL"
+	"github.com/slovaq/web2tg/internal/DAL"
 )
 
 func userIsAdmin(member *tgbotapi.User, members []tgbotapi.ChatMember) bool {
@@ -46,6 +48,18 @@ func checkChat(message *tgbotapi.Message, UserURLlink string) (int64, string) {
 
 }
 
+//CheckLink (msg string) (string, error)
+func CheckLink(msg string) (string, error) {
+
+	fmc.Println("#ybtCheckLink> #gbtmsg")
+	if (strings.Contains(msg, "@")) != true && (strings.Contains(msg, "t.me")) != true || msg == "" {
+		errMsg := "Не указана ссылка на чат. Требуется ссылка формата `t.me/joinchat/RWltlc4VqhWRzezx` или `@link`"
+		err1 := errors.New(errMsg)
+		return errMsg, err1
+
+	}
+	return "", nil
+}
 func linkChat(bot *SNBot, message *tgbotapi.Message) {
 	var link Link
 	var msg string
@@ -66,7 +80,7 @@ func linkChat(bot *SNBot, message *tgbotapi.Message) {
 
 	var links []Link
 	DAL.DB.Where("chat_id = ?", message.Chat.ID).Find(&links)
-	fmt.Printf("%s %s link: %s\n", redPrint("botAwait>"), greenPrint("find link>"), yellowPrint(link))
+	fmc.Printf("#rbtbotAwait> #gbtfind link> link: %s\n", link.UserLink)
 	link = Link{
 		UserLink: args,
 		ChatID:   message.Chat.ID,
@@ -76,13 +90,13 @@ func linkChat(bot *SNBot, message *tgbotapi.Message) {
 		msg = "Чат еще не привязан. Привязываем."
 		final, _ := bot.Send(id, msg)
 		if result := DB.Create(&link); result.Error != nil {
-			fmt.Printf("%s  %s  %d is exists\n", redPrint("error>"), args, uint64(message.Chat.ID))
+			fmc.Printfln("#rbterror> #ybt  %d is exists\n", args, uint64(message.Chat.ID))
 			msg = "Произошла ошибка при привязке. Попробуйте еще раз или обратитесь к системному администратору!"
 		} else {
 			bot.bot.DeleteMessage(tgbotapi.DeleteMessageConfig{
-				ChannelUsername: message.Chat.UserName,
-				ChatID:          message.Chat.ID,
-				MessageID:       final.MessageID,
+				//ChannelUsername: message.Chat.UserName,
+				ChatID:    message.Chat.ID,
+				MessageID: final.MessageID,
 			})
 			msg = "Чат теперь привязан! Проверить можно по команде /check"
 		}
@@ -95,6 +109,5 @@ func linkChat(bot *SNBot, message *tgbotapi.Message) {
 	fmc.Printfln("#rbt message>#ybt %d>#btt %s> #gbt%s", message.Chat.ID, message.From.UserName, message.Text)
 
 	bot.Send(id, msg)
-	return
 
 }

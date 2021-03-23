@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/slovaq/web2tg/web/DAL"
+	"github.com/slovaq/web2tg/internal/DAL"
 )
 
 func chk(result *JsonObject, w http.ResponseWriter, err error) {

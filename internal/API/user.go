@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/slovaq/web2tg/web/DAL"
+	"github.com/slovaq/web2tg/internal/DAL"
 )
 
 func UserCreate(writer http.ResponseWriter, request *http.Request) {

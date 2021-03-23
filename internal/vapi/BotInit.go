@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/mallvielfrass/coloredPrint/fmc"
-	"github.com/slovaq/web2tg/web/DAL"
+	"github.com/slovaq/web2tg/internal/DAL"
 )
 
 var (

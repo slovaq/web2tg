@@ -16,7 +16,7 @@ import (
 
 	"github.com/disintegration/imaging"
 	"github.com/mallvielfrass/coloredPrint/fmc"
-	"github.com/slovaq/web2tg/web/data"
+	"github.com/slovaq/web2tg/internal/data"
 )
 
 //RecordCreate (w http.ResponseWriter, r *http.Request)

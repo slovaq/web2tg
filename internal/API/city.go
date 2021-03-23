@@ -3,10 +3,11 @@ package API
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/slovaq/web2tg/web/DAL"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/slovaq/web2tg/internal/DAL"
 )
 
 func CityGetList(writer http.ResponseWriter, r *http.Request) {

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"net/url"
 
-	DAL "github.com/slovaq/web2tg/web/DAL"
+	DAL "github.com/slovaq/web2tg/internal/DAL"
 )
 
 func authMiddleware(next http.Handler) http.Handler {
@@ -91,7 +91,6 @@ func authMiddleware(next http.Handler) http.Handler {
 			tmpl.Execute(w, nil)
 			return
 		}
-
 		next.ServeHTTP(w, r)
 	})
 }

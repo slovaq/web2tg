@@ -11,10 +11,10 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
-	"github.com/slovaq/web2tg/web/API"
-	"github.com/slovaq/web2tg/web/DAL"
+	"github.com/slovaq/web2tg/internal/API"
+	"github.com/slovaq/web2tg/internal/DAL"
 
-	"github.com/slovaq/web2tg/web/vapi"
+	"github.com/slovaq/web2tg/internal/vapi"
 )
 
 var debug bool
@@ -46,7 +46,7 @@ func staticRouter(w http.ResponseWriter, r *http.Request) {
 	default:
 		log.Printf("Undefined type [%s] of file: [%s]\n", typeFile, file)
 	}
-	path := "./static/" + typeFile + "/" + file
+	path := "./web/static/" + typeFile + "/" + file
 	//	log.Println(path)
 	http.ServeFile(w, r, path)
 }
@@ -69,7 +69,7 @@ func init() {
 
 }
 func reg(w http.ResponseWriter, _ *http.Request) {
-	tmpl, err := template.ParseFiles("templates/reg.html", "templates/base.html")
+	tmpl, err := template.ParseFiles("web/templates/reg.html", "web/templates/base.html")
 	if err != nil {
 		_, err := w.Write([]byte(err.Error()))
 		if err != nil {

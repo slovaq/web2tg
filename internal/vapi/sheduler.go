@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/mallvielfrass/coloredPrint/fmc"
-	"github.com/slovaq/web2tg/web/data"
+	"github.com/slovaq/web2tg/internal/data"
 )
 
 func (upd *UpdateStorage) dBCheck() {
