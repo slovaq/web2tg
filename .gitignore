@@ -11,3 +11,4 @@ web/test.db
 *.png
 *.jpeg
 *.jpg
+.github/*
