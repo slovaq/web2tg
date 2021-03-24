@@ -1,7 +1,7 @@
 package vapi
 
 import (
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	"github.com/slovaq/web2tg/internal/bot"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -9,6 +9,10 @@ import (
 var DB, _ = gorm.Open(sqlite.Open("test.db"), &gorm.Config{
 	//Logger: logger.Default.LogMode(logger.Silent)
 })
+
+type Data struct {
+	User string
+}
 
 type Link struct {
 	ID       int `gorm:"primaryKey"`
@@ -50,19 +54,6 @@ type Update struct {
 	UpdateToken chan string
 }
 
-//Config struct {Token string, UpdateTime int}
-type Config struct {
-	Token      string
-	UpdateTime int
-}
-
-//SNBot struct { cfg *Config, bot *tgbotapi.BotAPI, upd tgbotapi.UpdatesChannel}
-type SNBot struct {
-	cfg *Config
-	bot *tgbotapi.BotAPI
-	upd tgbotapi.UpdatesChannel
-}
-
 type infoMutex struct {
 	Status    bool
 	Locker    string
@@ -97,5 +88,5 @@ type UpdateStorage struct {
 	CheckInit    chan bool
 	Updatetoken  chan bool
 	Box          []Box
-	MessageTG    chan MessageTG
+	MessageTG    chan bot.MessageTG
 }

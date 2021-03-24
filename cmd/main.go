@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"runtime"
-	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -71,13 +70,13 @@ func init() {
 }
 func registration(w http.ResponseWriter, r *http.Request) {
 	//check if user already authorized
-	login, err := HandleCookie(r.Cookie("login"))
+	login, err := vapi.HandleCookie(r.Cookie("login"))
 	if err != nil {
 		fmc.Printfln("#gbt(registration)> Check: #ybt%s", err.Error())
 		//http.Redirect(w, r, "/reg", http.StatusMovedPermanently)
 		//return
 	}
-	password, err := HandleCookie(r.Cookie("password"))
+	password, err := vapi.HandleCookie(r.Cookie("password"))
 	if err != nil {
 		fmc.Printfln("#gbt(registration)> Check: #ybt%s", err.Error())
 		//http.Redirect(w, r, "/reg", http.StatusMovedPermanently)
@@ -102,14 +101,6 @@ func registration(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	tmpl.Execute(w, nil)
-}
-
-var epoch = time.Unix(0, 0).Format(time.RFC1123)
-var noCacheHeaders = map[string]string{
-	"Expires":         epoch,
-	"Cache-Control":   "no-cache, private, max-age=0",
-	"Pragma":          "no-cache",
-	"X-Accel-Expires": "0",
 }
 
 type Box struct {

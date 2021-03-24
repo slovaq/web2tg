@@ -4,53 +4,35 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"text/template"
 
 	"github.com/go-chi/chi"
+	"github.com/mallvielfrass/coloredPrint/fmc"
 )
 
-type Data struct {
-	User string
-}
-
 func GetHandler(w http.ResponseWriter, r *http.Request) {
-	login, err := r.Cookie("login")
+	login, err := HandleCookie(r.Cookie("login"))
 	if err != nil {
-		fmt.Printf("[login] error %s\n", err.Error())
-
-		//fmt.Fprintf(w, "[login] error %s", err)
-		http.Redirect(w, r, "/reg", 301)
+		fmc.Printfln("#rbt(HandleCookie)> Error: #ybt%s", err.Error())
+		http.Redirect(w, r, "/reg", http.StatusMovedPermanently)
 		return
-
-	}
-	decodedlogin, err := url.QueryUnescape(login.Value)
-	if err != nil {
-
-		fmt.Printf("[login] error %s\n", err.Error())
-
-		//fmt.Fprintf(w, "[login] error %s", err)
-		http.Redirect(w, r, "/reg", 301)
-		return
-
 	}
 	obj := Data{
-		User: decodedlogin,
+		User: login,
 	}
 
-	fmt.Printf("Hello, %s!\n", decodedlogin)
+	fmt.Printf("Hello, %s!\n", login)
 	dat, err := ioutil.ReadFile("templates/home.html")
 	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Print(string(dat))
 	tmpl, err := template.New("").Delims("[[", "]]").Parse(string(dat))
+	if err != nil {
+		fmt.Println(err)
+	}
 	//	fmt.Fprintf(w, "[login]  %s", obj)
 	tmpl.Execute(w, obj)
-}
-
-type Infos struct {
-	Title, Content string
 }
 
 func PutHandler(w http.ResponseWriter, r *http.Request) {

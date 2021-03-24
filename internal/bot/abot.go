@@ -1,4 +1,4 @@
-package vapi
+package bot
 
 import (
 	"log"
@@ -8,14 +8,7 @@ import (
 	"github.com/slovaq/web2tg/internal/DAL"
 )
 
-type MessageTG struct {
-	Message string
-	ChatID  string
-	Pic     string
-}
-
 var (
-	token = ""
 	//C *SNBot
 	C *SNBot
 	//Skip bool
@@ -91,7 +84,7 @@ func (upd *UpdateStorage) runBot() {
 
 					} else {
 						fmc.Printfln("#ybtmsg: #bbt%s %s> #gbt %s", update.Message.From.FirstName, update.Message.From.LastName, update.Message.Text)
-						if update.Message.IsCommand() == true {
+						if update.Message.IsCommand() {
 							switch update.Message.Command() {
 							case "id":
 								returnChatid(C.bot, update.Message)

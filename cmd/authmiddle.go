@@ -2,35 +2,25 @@ package main
 
 import (
 	"net/http"
-	"net/url"
 
 	"github.com/mallvielfrass/coloredPrint/fmc"
 	DAL "github.com/slovaq/web2tg/internal/DAL"
+	"github.com/slovaq/web2tg/internal/vapi"
 )
 
-func HandleCookie(hCookie *http.Cookie, err error) (string, error) {
-	if err != nil {
-		return "", err
-	}
-	decodedValue, err := url.QueryUnescape(hCookie.Value)
-	if err != nil {
-		return "", err
-	}
-	return decodedValue, nil
-}
 func authMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		//for k, v := range noCacheHeaders {
 		//	w.Header().Set(k, v)
 		//}
-		login, err := HandleCookie(r.Cookie("login"))
+		login, err := vapi.HandleCookie(r.Cookie("login"))
 		if err != nil {
 			fmc.Printfln("#rbt(HandleCookie)> Error: #ybt%s", err.Error())
 			http.Redirect(w, r, "/reg", http.StatusMovedPermanently)
 			return
 		}
-		password, err := HandleCookie(r.Cookie("password"))
+		password, err := vapi.HandleCookie(r.Cookie("password"))
 		if err != nil {
 			fmc.Printfln("#rbt(HandleCookie)> Error: #ybt%s", err.Error())
 			http.Redirect(w, r, "/reg", http.StatusMovedPermanently)

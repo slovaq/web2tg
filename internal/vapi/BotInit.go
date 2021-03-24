@@ -13,9 +13,7 @@ import (
 var (
 	m         sync.Mutex
 	stateM    infoMutex
-	d         int
 	CheckDate chan bool
-	checkInit chan bool
 	layout    = "2021-01-18 17:53"
 	records   []VapiRecord
 )
@@ -43,7 +41,7 @@ func checkerChannel() {
 	for {
 		if stateM.Locker != memory {
 			v := ""
-			if stateM.Status == true {
+			if stateM.Status {
 				v = "true"
 			} else {
 				v = "false"
@@ -85,18 +83,14 @@ func (upd *UpdateStorage) initBot() {
 	} else {
 		fmc.Println("#rbtinitBot>False Run>")
 	}
-	for {
-		select {
-		case <-upd.CheckInit:
-			if initV == 0 {
-				fmc.Println("#rbtinitBot>Run bot>")
-				go upd.runBot()
-				initV = 1
-			} else {
-				fmc.Println("#rbtinitBot>Update Token>")
-				upd.Updatetoken <- true
-			}
-
+	for range upd.CheckInit {
+		if initV == 0 {
+			fmc.Println("#rbtinitBot>Run bot>")
+			go upd.runBot()
+			initV = 1
+		} else {
+			fmc.Println("#rbtinitBot>Update Token>")
+			upd.Updatetoken <- true
 		}
 	}
 }
