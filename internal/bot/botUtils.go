@@ -1,4 +1,4 @@
-package vapi
+package bot
 
 import (
 	"errors"
@@ -33,7 +33,7 @@ func checkChat(message *tgbotapi.Message, UserURLlink string) (int64, string) {
 
 	IsLinked := strconv.FormatBool(user == ClientConfig{})
 
-	DB.Where("chat_id = ?", message.Chat.ID).Find(&link)
+	DAL.DB.Where("chat_id = ?", message.Chat.ID).Find(&link)
 
 	fmt.Println("links: ", link)
 	if link.UserLink != "" {
@@ -52,10 +52,10 @@ func checkChat(message *tgbotapi.Message, UserURLlink string) (int64, string) {
 func CheckLink(msg string) (string, error) {
 
 	fmc.Println("#ybtCheckLink> #gbtmsg")
-	if (strings.Contains(msg, "@")) != true && (strings.Contains(msg, "t.me")) != true || msg == "" {
-		errMsg := "Не указана ссылка на чат. Требуется ссылка формата `t.me/joinchat/RWltlc4VqhWRzezx` или `@link`"
-		err1 := errors.New(errMsg)
-		return errMsg, err1
+	if !(strings.Contains(msg, "@")) && !(strings.Contains(msg, "t.me")) || msg == "" {
+		errmsg := "Не указана ссылка на чат. Требуется ссылка формата `t.me/joinchat/RWltlc4VqhWRzezx` или `@link`"
+		err1 := errors.New("the link to the chat was not specified")
+		return errmsg, err1
 
 	}
 	return "", nil
@@ -89,7 +89,7 @@ func linkChat(bot *SNBot, message *tgbotapi.Message) {
 	if len(links) == 0 {
 		msg = "Чат еще не привязан. Привязываем."
 		final, _ := bot.Send(id, msg)
-		if result := DB.Create(&link); result.Error != nil {
+		if result := DAL.DB.Create(&link); result.Error != nil {
 			fmc.Printfln("#rbterror> #ybt  %d is exists\n", args, uint64(message.Chat.ID))
 			msg = "Произошла ошибка при привязке. Попробуйте еще раз или обратитесь к системному администратору!"
 		} else {
@@ -104,7 +104,7 @@ func linkChat(bot *SNBot, message *tgbotapi.Message) {
 		return
 	}
 
-	DB.Model(&link).Where("chat_id = ?", message.Chat.ID).Updates(link)
+	DAL.DB.Model(&link).Where("chat_id = ?", message.Chat.ID).Updates(link)
 	msg = "Ссылка обновлена! Проверить можно по команде /check"
 	fmc.Printfln("#rbt message>#ybt %d>#btt %s> #gbt%s", message.Chat.ID, message.From.UserName, message.Text)
 

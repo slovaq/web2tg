@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/mallvielfrass/coloredPrint/fmc"
+	"github.com/slovaq/web2tg/internal/bot"
 	"github.com/slovaq/web2tg/internal/data"
 )
 
@@ -42,7 +43,7 @@ func (upd *UpdateStorage) dBCheck() {
 	fmc.Printfln("#rbtfunc DBCheck> #gbtclosed")
 }
 
-func InitChannel(UpdateRecord chan bool, UpdateConfig chan string, ReadRecord chan bool, ReadConfig chan string, CheckInit chan bool, UpdateToken chan bool, Box Boxs, msg chan MessageTG) *UpdateStorage {
+func InitChannel(UpdateRecord chan bool, UpdateConfig chan string, ReadRecord chan bool, ReadConfig chan string, CheckInit chan bool, UpdateToken chan bool, Box Boxs, msg chan bot.MessageTG) *UpdateStorage {
 	return &UpdateStorage{
 		UpdateRecord: UpdateRecord,
 		UpdateConfig: UpdateConfig,
@@ -70,7 +71,7 @@ func (box *Boxs) add(item int64) {
 	*box = append(*box, Box{Time: item})
 }
 func (upd *UpdateStorage) ManageMessage(f Box) {
-	msg := MessageTG{
+	msg := bot.MessageTG{
 		Message: f.Message,
 		ChatID:  f.URL,
 		Pic:     f.Pic,

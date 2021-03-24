@@ -13,6 +13,7 @@ import (
 	"github.com/mallvielfrass/coloredPrint/fmc"
 	"github.com/slovaq/web2tg/internal/API"
 	"github.com/slovaq/web2tg/internal/DAL"
+	"github.com/slovaq/web2tg/internal/bot"
 
 	"github.com/slovaq/web2tg/internal/vapi"
 )
@@ -139,7 +140,7 @@ func main() {
 	UpdateToken := make(chan bool)
 	ReadConfig := make(chan string)
 	checkInit := make(chan bool)
-	msg := make(chan vapi.MessageTG)
+	msg := make(chan bot.MessageTG)
 	box := vapi.Boxs{}
 	upd := vapi.InitChannel(UpdateRecord, UpdateConfig, ReadRecord, ReadConfig, checkInit, UpdateToken, box, msg)
 

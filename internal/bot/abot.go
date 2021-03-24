@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"fmt"
 	"log"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
@@ -35,12 +36,35 @@ func New(cfg *Config) (*SNBot, error) {
 		upd: updates,
 	}, nil
 }
-
-func (upd *UpdateStorage) runBot() {
+func (upd *UpdateStorage) initBot() {
+	fmc.Println("#rbtinitBot")
+	var user []DAL.ClientConfig
+	DAL.DB.Where("").Find(&user)
+	initV := 0
+	if len(user) != 0 {
+		fmt.Println("init>user>", user[0].BotToken)
+		fmc.Println("#rbtinitBot>Run bot>")
+		go upd.RunBot()
+		initV = 1
+	} else {
+		fmc.Println("#rbtinitBot>False Run>")
+	}
+	for range upd.CheckInit {
+		if initV == 0 {
+			fmc.Println("#rbtinitBot>Run bot>")
+			go upd.RunBot()
+			initV = 1
+		} else {
+			fmc.Println("#rbtinitBot>Update Token>")
+			upd.Updatetoken <- true
+		}
+	}
+}
+func (upd *UpdateStorage) RunBot() {
 	fmc.Println("#rbtrun bot> run")
 
 	var user []DAL.ClientConfig
-	DB.Where("").Find(&user)
+	DAL.DB.Where("").Find(&user)
 	for _, u := range user {
 		u := u
 		go func() {
@@ -62,7 +86,7 @@ func (upd *UpdateStorage) runBot() {
 				select {
 				case <-upd.Updatetoken:
 					var user []DAL.ClientConfig
-					DB.Where("").Find(&user)
+					DAL.DB.Where("").Find(&user)
 					for _, u := range user {
 						fmc.Printfln("user:%s", u.BotToken)
 						if C.bot.Token == u.BotToken {
@@ -109,7 +133,7 @@ func (upd *UpdateStorage) runBot() {
 				//
 				case msg := <-upd.MessageTG:
 					var links Link
-					DB.Where("user_link = ?", msg.ChatID).First(&links)
+					DAL.DB.Where("user_link = ?", msg.ChatID).First(&links)
 					if (links == Link{}) {
 						fmc.Println("#rbtupd.MessageTG Error> #ybtlen(links) = 0")
 						return

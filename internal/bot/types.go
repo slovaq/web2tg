@@ -7,6 +7,17 @@ type MessageTG struct {
 	ChatID  string
 	Pic     string
 }
+type Link struct {
+	ID       int `gorm:"primaryKey"`
+	UserLink string
+	ChatID   int64 `gorm:"unique"`
+}
+type ClientConfig struct {
+	Login    string
+	City     string
+	ChatLink string
+	BotToken string
+}
 
 //SNBot struct { cfg *Config, bot *tgbotapi.BotAPI, upd tgbotapi.UpdatesChannel}
 type SNBot struct {
