@@ -144,7 +144,7 @@ func main() {
 	r.Use(middleware.Logger)
 	//	go sheduler.Listen()
 	r.HandleFunc("/", index) //redirect to auth/not auth methods
-
+	r.NotFound(index)
 	//only to this method must be acces for not authorized user
 	r.HandleFunc("/reg", registration)
 	r.HandleFunc("/user_create", API.UserCreate)

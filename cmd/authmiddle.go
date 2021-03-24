@@ -31,7 +31,7 @@ func authMiddleware(next http.Handler) http.Handler {
 
 		_, useErr := DAL.GetUser(login, password)
 		if useErr != nil {
-			fmc.Printfln("#rbt(middleware.getUser)> Error: #ybt%s", err.Error())
+			fmc.Printfln("#rbt(middleware.getUser)> Error: #ybt%s", useErr.Error())
 			http.Redirect(w, r, "/reg", http.StatusMovedPermanently)
 			return
 		}
