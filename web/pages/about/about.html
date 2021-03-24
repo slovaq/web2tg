@@ -1,0 +1,42 @@
+<html>
+
+<head>
+    <title>Hello, my friend!</title>
+</head>
+<style>
+    li p {
+    margin: 0;
+    padding: 0;
+}
+hr {
+    border: none; /* Убираем границу */
+    background-color: blue; /* Цвет линии */
+    color: blue; /* Цвет линии для IE6-7 */
+    height: 2px; /* Толщина линии */
+   }
+</style>
+<body>
+    <img src=/static/ttf/egg.png></img>
+    <hr>
+    <p>Cookies:</p>
+    {{range .Cookie}}
+       <p>
+            <font size="3" color="black" face="Times New Roman">
+                <br> Name: {{ .Name }}
+                <br> Value: {{ .Value }}
+                <br> Path: {{ .Path }}
+                <br> Domain: {{ .Domain }}
+                <br> Expires: {{ .Expires }}
+                <br> RawExpires: {{ .RawExpires }}
+                <br> MaxAge: {{ .MaxAge }}
+           </font>
+        </p>
+    {{end}}
+    <hr>
+    <p>{{ .EHeading}}</p>
+    {{range .Env}}
+       <p><font size="3" color="black" face="Times New Roman">{{ . }}</font></p>
+    {{end}}
+</body>
+
+</html>

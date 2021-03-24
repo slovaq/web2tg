@@ -30,7 +30,26 @@ func chk(err error) {
 		}
 	}
 }
-
+func pages(w http.ResponseWriter, r *http.Request) {
+	file := chi.URLParam(r, "page")
+	typeFile := chi.URLParam(r, "type")
+	switch typeFile {
+	case "css":
+		log.Printf("Type [%s] of file: [%s]\n", typeFile, file)
+		w.Header().Set("Content-Type", "text/css")
+	case "js":
+		log.Printf("Type [%s] of file: [%s]\n", typeFile, file)
+		w.Header().Set("Content-Type", "application/javascript")
+	case "ttf":
+		log.Printf("Type [%s] of file: [%s]\n", typeFile, file)
+		w.Header().Set("Content-Type", "application/x-font-ttf")
+	default:
+		log.Printf("Undefined type [%s] of file: [%s]\n", typeFile, file)
+	}
+	path := "./web/static/" + typeFile + "/" + file
+	//	log.Println(path)
+	http.ServeFile(w, r, path)
+}
 func staticRouter(w http.ResponseWriter, r *http.Request) {
 	file := chi.URLParam(r, "file")
 	typeFile := chi.URLParam(r, "type")
@@ -107,20 +126,33 @@ type Box struct {
 	User    string
 }
 
-func about(writer http.ResponseWriter, request *http.Request) {
-	envVariables := func() string {
-		x := "<br>Environment Variables"
-		for _, e := range os.Environ() {
-			x += "<br>"
-			x += e
-		}
-		return x
-	}()
-	_, _ = writer.Write([]byte("" +
-		"<html><head><title>Hello, my friend!</title></head><body>" +
-		"<img src=/static/ttf/egg.png>" +
-		envVariables +
-		"</body></html>"))
+func about(w http.ResponseWriter, r *http.Request) {
+	envVariables := []string{}
+	//for _, e := range os.Environ() {
+	//x += "<br>"
+	//x += e + "end\n"
+	//	envVariables = append(envVariables, e)
+	//	}
+
+	envVariables = append(envVariables, os.Environ()...)
+	//	return x
+	//	}()
+
+	type about struct {
+		Env      []string
+		EHeading string
+		Cookie   []*http.Cookie
+	}
+	//	for _, c:= range r.Cookies() {
+	//	fmt.Println("Found a cookie named:", c.Name, c.Domain,c.Expires,c.MaxAge,c.Path,c.Raw,c.RawExpires,c.
+	//}
+	e := about{
+		Env:      envVariables,
+		EHeading: "Environment Variables:",
+		Cookie:   r.Cookies(),
+	}
+	tmpl, _ := template.ParseFiles("web/pages/about/about.html")
+	tmpl.Execute(w, e)
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
