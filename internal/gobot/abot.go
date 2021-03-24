@@ -1,4 +1,4 @@
-package bot
+package gobot
 
 import (
 	"fmt"
@@ -36,7 +36,10 @@ func New(cfg *Config) (*SNBot, error) {
 		upd: updates,
 	}, nil
 }
-func (upd *UpdateStorage) initBot() {
+func InitBotRC(upd *UpdateStorage) {
+	upd.InitBot()
+}
+func (upd *UpdateStorage) InitBot() {
 	fmc.Println("#rbtinitBot")
 	var user []DAL.ClientConfig
 	DAL.DB.Where("").Find(&user)

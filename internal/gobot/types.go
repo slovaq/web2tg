@@ -1,4 +1,4 @@
-package bot
+package gobot
 
 import tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 
