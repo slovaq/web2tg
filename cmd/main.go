@@ -11,6 +11,7 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/mallvielfrass/coloredPrint/fmc"
 	"github.com/slovaq/web2tg/internal/API"
 	"github.com/slovaq/web2tg/internal/DAL"
 
@@ -68,7 +69,30 @@ func init() {
 	chk(err)
 
 }
-func reg(w http.ResponseWriter, _ *http.Request) {
+func registration(w http.ResponseWriter, r *http.Request) {
+	//check if user already authorized
+	login, err := HandleCookie(r.Cookie("login"))
+	if err != nil {
+		fmc.Printfln("#gbt(registration)> Check: #ybt%s", err.Error())
+		//http.Redirect(w, r, "/reg", http.StatusMovedPermanently)
+		//return
+	}
+	password, err := HandleCookie(r.Cookie("password"))
+	if err != nil {
+		fmc.Printfln("#gbt(registration)> Check: #ybt%s", err.Error())
+		//http.Redirect(w, r, "/reg", http.StatusMovedPermanently)
+		//return
+	}
+	_, useErr := DAL.GetUser(login, password)
+	if useErr != nil {
+		fmc.Printfln("#gbt(registration)> Check: #ybtUser not authorized")
+		http.Redirect(w, r, "/reg", http.StatusMovedPermanently)
+		return
+	} else {
+		fmc.Printfln("#gbt(registration)> Check: Error: #ybtUser #bbt[#gbt%s#bbt]#ybt already authorized", login)
+		http.Redirect(w, r, "/", http.StatusMovedPermanently)
+	}
+	//____________________________________________
 	tmpl, err := template.ParseFiles("web/templates/reg.html", "web/templates/base.html")
 	if err != nil {
 		_, err := w.Write([]byte(err.Error()))
@@ -95,8 +119,27 @@ type Box struct {
 	URL     string
 	ID      int
 	User    string
-} // Remove it. It unused.
+}
 
+func about(writer http.ResponseWriter, request *http.Request) {
+	envVariables := func() string {
+		x := "<br>Environment Variables"
+		for _, e := range os.Environ() {
+			x += "<br>"
+			x += e
+		}
+		return x
+	}()
+	_, _ = writer.Write([]byte("" +
+		"<html><head><title>Hello, my friend!</title></head><body>" +
+		"<img src=/static/ttf/egg.png>" +
+		envVariables +
+		"</body></html>"))
+}
+
+func index(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "/auth", http.StatusMovedPermanently)
+}
 func main() {
 	r := chi.NewRouter()
 	UpdateRecord := make(chan bool)
@@ -113,40 +156,38 @@ func main() {
 
 	r.Use(middleware.Logger)
 	//	go sheduler.Listen()
-	r.HandleFunc("/", reg)
-	r.HandleFunc("/reg", reg)
+	r.HandleFunc("/", index) //redirect to auth/not auth methods
+
+	//only to this method must be acces for not authorized user
+	r.HandleFunc("/reg", registration)
+	r.HandleFunc("/user_create", API.UserCreate)
+	r.HandleFunc("/static/{type}/{file}", staticRouter)
+	r.HandleFunc("/about", about)
+
+	//r.Route("/api", API.Router)
+	//to this methods must be acces for only authorized user
 	r.Route("/auth", func(r chi.Router) {
 		r.With(authMiddleware).Route("/", func(r chi.Router) {
 			r.Get("/", vapi.GetHandler)
+			//r.Post("/", vapi.PutHandler)
+			r.Get("/index", vapi.Index)
 			r.Get("/create_config", upd.CreateConf) // /auth/create_config?chatLink=@alalgdfgfdga&token=botfathertokenegbcgbcg&city=test
 			r.Get("/get_config", vapi.GetConf)
 			r.Get("/get_post", vapi.GetPost)
-			r.Get("/index", vapi.Index)
-			r.Put("/", vapi.PutHandler)
-			r.Get("/record_get", vapi.RecordGet)
-			r.Get("/record_create", upd.RecordCreate)
-			r.Post("/record_create", upd.RecordCreate)
-			r.Get("/record_delete", upd.RecordDelete)
+
+			r.HandleFunc("/record_get", vapi.RecordGet)
+			r.HandleFunc("/record_delete", upd.RecordDelete)
+			r.HandleFunc("/record_create", upd.RecordCreate)
+
+			r.Get("/user_get", API.UserGet)
+
+			r.Get("/city_create", API.CityCreate)
+			r.Get("/city_get", API.CityGet)
+			r.Get("/city_getAll", API.CityGetList)
+
 		})
 	})
-	r.HandleFunc("/static/{type}/{file}", staticRouter)
-	//r.Route("/vue", vapi.Router)
-	r.Route("/api", API.Router)
-	r.HandleFunc("/about", func(writer http.ResponseWriter, request *http.Request) {
-		envVariables := func() string {
-			x := "<br>Environment Variables"
-			for _, e := range os.Environ() {
-				x += "<br>"
-				x += e
-			}
-			return x
-		}()
-		_, _ = writer.Write([]byte("" +
-			"<html><head><title>Hello, my friend!</title></head><body>" +
-			"<img src=/static/ttf/egg.png>" +
-			envVariables +
-			"</body></html>"))
-	})
+
 	err := http.ListenAndServe(":1111", r)
 	if err != nil {
 		fmt.Printf("Cant start server with error %s \n Exiting..", err)
