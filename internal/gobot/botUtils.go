@@ -12,7 +12,7 @@ import (
 	"github.com/slovaq/web2tg/internal/DAL"
 )
 
-func userIsAdmin(member *tgbotapi.User, members []tgbotapi.ChatMember) bool {
+func UserIsAdmin(member *tgbotapi.User, members []tgbotapi.ChatMember) bool {
 	for _, admin := range members {
 		if member == admin.User {
 			return true

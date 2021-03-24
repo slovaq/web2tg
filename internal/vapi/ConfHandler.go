@@ -17,7 +17,6 @@ func (upd *UpdateStorage) CreateConf(w http.ResponseWriter, r *http.Request) {
 		return
 
 	}
-
 	fmt.Println(logix.Value)
 	login := logix.Value
 	chatLink := r.FormValue("chatLink")
@@ -29,7 +28,7 @@ func (upd *UpdateStorage) CreateConf(w http.ResponseWriter, r *http.Request) {
 		User:   user,
 		Status: status,
 	}
-	upd.CheckInit <- true
+	upd.GobotConnect.CheckInit <- true
 	json.NewEncoder(w).Encode(data)
 }
 

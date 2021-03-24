@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/mallvielfrass/coloredPrint/fmc"
-	"github.com/slovaq/web2tg/internal/bot"
 	"github.com/slovaq/web2tg/internal/data"
+	"github.com/slovaq/web2tg/internal/gobot"
 )
 
 func (upd *UpdateStorage) dBCheck() {
@@ -43,16 +43,14 @@ func (upd *UpdateStorage) dBCheck() {
 	fmc.Printfln("#rbtfunc DBCheck> #gbtclosed")
 }
 
-func InitChannel(UpdateRecord chan bool, UpdateConfig chan string, ReadRecord chan bool, ReadConfig chan string, CheckInit chan bool, UpdateToken chan bool, Box Boxs, msg chan bot.MessageTG) *UpdateStorage {
+func InitChannel(UpdateRecord chan bool, UpdateConfig chan string, ReadRecord chan bool, ReadConfig chan string, Box Boxs, GobotConnect gobot.GobotConnect) *UpdateStorage {
 	return &UpdateStorage{
 		UpdateRecord: UpdateRecord,
 		UpdateConfig: UpdateConfig,
 		ReadRecord:   ReadRecord,
 		ReadConfig:   ReadConfig,
-		CheckInit:    CheckInit,
-		Updatetoken:  UpdateToken,
 		Box:          Box,
-		MessageTG:    msg,
+		GobotConnect: GobotConnect,
 	}
 }
 func (upd *UpdateStorage) checkDateCounter() {
@@ -69,24 +67,6 @@ func (upd *UpdateStorage) checkDateCounter() {
 }
 func (box *Boxs) add(item int64) {
 	*box = append(*box, Box{Time: item})
-}
-func (upd *UpdateStorage) ManageMessage(f Box) {
-	msg := bot.MessageTG{
-		Message: f.Message,
-		ChatID:  f.URL,
-		Pic:     f.Pic,
-	}
-	upd.MessageTG <- msg
-	if f.Period == "one" {
-
-		DB.Table("vapi_records").Where("id = ?", f.ID).Updates(VapiRecord{Status: "deleted", DataRead: data.GetCurrentDate()})
-
-	} else {
-		DB.Table("vapi_records").Where("id = ?", f.ID).Updates(VapiRecord{DataRead: data.GetCurrentDate()})
-
-	}
-	fmc.Printfln("#ybtManageMessage> #bbtMessage[#gbt%s#bbt]#wbt, #bbtChatID[#gbt%s#bbt]", msg.Message, msg.ChatID)
-
 }
 
 func (upd *UpdateStorage) read() {

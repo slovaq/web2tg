@@ -36,10 +36,11 @@ func New(cfg *Config) (*SNBot, error) {
 		upd: updates,
 	}, nil
 }
-func InitBotRC(upd *UpdateStorage) {
+func InitBotRC(upd *GobotConnect) {
+	fmc.Printfln("#rbt Run> #gbtInitBotRC")
 	upd.InitBot()
 }
-func (upd *UpdateStorage) InitBot() {
+func (upd *GobotConnect) InitBot() {
 	fmc.Println("#rbtinitBot")
 	var user []DAL.ClientConfig
 	DAL.DB.Where("").Find(&user)
@@ -63,7 +64,7 @@ func (upd *UpdateStorage) InitBot() {
 		}
 	}
 }
-func (upd *UpdateStorage) RunBot() {
+func (upd *GobotConnect) RunBot() {
 	fmc.Println("#rbtrun bot> run")
 
 	var user []DAL.ClientConfig

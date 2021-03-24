@@ -1,7 +1,7 @@
 package vapi
 
 import (
-	"github.com/slovaq/web2tg/internal/bot"
+	"github.com/slovaq/web2tg/internal/gobot"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -85,8 +85,6 @@ type UpdateStorage struct {
 	UpdateConfig chan string
 	ReadRecord   chan bool
 	ReadConfig   chan string
-	CheckInit    chan bool
-	Updatetoken  chan bool
 	Box          []Box
-	MessageTG    chan bot.MessageTG
+	GobotConnect gobot.GobotConnect
 }

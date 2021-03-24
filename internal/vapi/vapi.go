@@ -25,7 +25,6 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("%d: %v", i, x)
 	}
 	w.Header().Set("Content-Type", "application/json")
-
 	json.NewEncoder(w).Encode(user)
 }
 

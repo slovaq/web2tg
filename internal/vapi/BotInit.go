@@ -1,12 +1,10 @@
 package vapi
 
 import (
-	"math/rand"
 	"sync"
 	"time"
 
 	"github.com/mallvielfrass/coloredPrint/fmc"
-	"github.com/slovaq/web2tg/internal/gobot"
 )
 
 var (
@@ -51,21 +49,4 @@ func checkerChannel() {
 
 		time.Sleep(time.Duration(10) * time.Millisecond)
 	}
-}
-
-//Initrc  start sheduler module
-func (upd *gobot.UpdateStorage) Initrc() {
-	stateM.MutexName = "stateM"
-	stateM.Status = false
-	rand.Seed(time.Now().UnixNano())
-	fmc.Printfln("#rbt Run> #gbtInnitrc")
-	//box.add(2)
-	//	f := make(chan bool)
-	//go upd.Check()
-	//go upd.checkDateCounter()
-	//sgo upd.read()
-	upd.ReadRecord <- true
-	go checkerChannel()
-	go gobot.InitBotRC(upd)
-
 }

@@ -18,6 +18,11 @@ type ClientConfig struct {
 	ChatLink string
 	BotToken string
 }
+type GobotConnect struct {
+	MessageTG   chan MessageTG
+	Updatetoken chan bool
+	CheckInit   chan bool
+}
 
 //SNBot struct { cfg *Config, bot *tgbotapi.BotAPI, upd tgbotapi.UpdatesChannel}
 type SNBot struct {
@@ -30,10 +35,8 @@ type UpdateStorage struct {
 	UpdateConfig chan string
 	ReadRecord   chan bool
 	ReadConfig   chan string
-	CheckInit    chan bool
-	Updatetoken  chan bool
-	Box          []Box
-	MessageTG    chan MessageTG
+
+	Box []Box
 }
 
 //Box Message string, Time int64, Token string, URL string, ID int, User string

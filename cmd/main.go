@@ -13,7 +13,7 @@ import (
 	"github.com/mallvielfrass/coloredPrint/fmc"
 	"github.com/slovaq/web2tg/internal/API"
 	"github.com/slovaq/web2tg/internal/DAL"
-	"github.com/slovaq/web2tg/internal/bot"
+	"github.com/slovaq/web2tg/internal/gobot"
 
 	"github.com/slovaq/web2tg/internal/vapi"
 )
@@ -74,20 +74,14 @@ func registration(w http.ResponseWriter, r *http.Request) {
 	login, err := vapi.HandleCookie(r.Cookie("login"))
 	if err != nil {
 		fmc.Printfln("#gbt(registration)> Check: #ybt%s", err.Error())
-		//http.Redirect(w, r, "/reg", http.StatusMovedPermanently)
-		//return
 	}
 	password, err := vapi.HandleCookie(r.Cookie("password"))
 	if err != nil {
 		fmc.Printfln("#gbt(registration)> Check: #ybt%s", err.Error())
-		//http.Redirect(w, r, "/reg", http.StatusMovedPermanently)
-		//return
 	}
 	_, useErr := DAL.GetUser(login, password)
 	if useErr != nil {
 		fmc.Printfln("#gbt(registration)> Check: #ybtUser not authorized")
-		http.Redirect(w, r, "/reg", http.StatusMovedPermanently)
-		return
 	} else {
 		fmc.Printfln("#gbt(registration)> Check: Error: #ybtUser #bbt[#gbt%s#bbt]#ybt already authorized", login)
 		http.Redirect(w, r, "/", http.StatusMovedPermanently)
@@ -137,12 +131,13 @@ func main() {
 	UpdateRecord := make(chan bool)
 	UpdateConfig := make(chan string)
 	ReadRecord := make(chan bool)
-	UpdateToken := make(chan bool)
+
 	ReadConfig := make(chan string)
-	checkInit := make(chan bool)
-	msg := make(chan bot.MessageTG)
+
+	//msg := make(chan bot.MessageTG)
+	GobotConnect := gobot.GobotConnect{}
 	box := vapi.Boxs{}
-	upd := vapi.InitChannel(UpdateRecord, UpdateConfig, ReadRecord, ReadConfig, checkInit, UpdateToken, box, msg)
+	upd := vapi.InitChannel(UpdateRecord, UpdateConfig, ReadRecord, ReadConfig, box, GobotConnect)
 
 	go upd.Initrc()
 
