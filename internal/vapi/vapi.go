@@ -31,6 +31,6 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 //Index (w http.ResponseWriter, r *http.Request)
 func Index(w http.ResponseWriter, r *http.Request) {
 	log.Println(">vapi index")
-	http.ServeFile(w, r, "vapi/template/home/posts.html")
+	http.ServeFile(w, r, "web/pages/posts/posts.html")
 	//fmt.Fprintf(w, "v index")
 }

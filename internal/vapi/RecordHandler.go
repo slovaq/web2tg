@@ -221,10 +221,6 @@ func (upd *UpdateStorage) RecordCreate(w http.ResponseWriter, r *http.Request) {
 
 }
 
-type HandleError struct {
-	HttpError string
-}
-
 //RecordGet (w http.ResponseWriter, r *http.Request)
 func RecordGet(w http.ResponseWriter, r *http.Request) {
 	log.Println(">vapi RecordGet")

@@ -1,0 +1,47 @@
+{{ define "base_header"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="static/css/classic_styles.css">
+</head>
+{{end}}
+
+{{ define "base_footer"}}
+</html>
+{{end}}
+
+
+{{ define "header"}}
+
+<!doctype html>
+<html lang="ru">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="/static/css/sandbox.css" />
+    <!-- template for the modal component -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/uikit.min.css" />
+
+</head>
+
+{{end}}
+
+{{ define "footer"}}
+<script src="/static/js/compressed.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flat-ui/2.3.0/js/vendor/jquery.min.js"
+    integrity="sha512-ju6u+4bPX50JQmgU97YOGAXmRMrD9as4LE05PdC3qycsGQmjGlfm041azyB1VfCXpkpt1i9gqXCT6XuxhBJtKg=="
+    crossorigin="anonymous"></script>
+    <script src="/static/js/dtsel.js"></script>
+<script src="/static/js/app.js"></script>
+<script src="/static/js/uikit.min.js"></script>
+<script src="/static/js/uikit-icons.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/vue-cookies@1.5.12/vue-cookies.js"></script>
+
+{{end}}

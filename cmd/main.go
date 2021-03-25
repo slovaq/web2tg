@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"runtime"
+	"strings"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -30,8 +31,9 @@ func chk(err error) {
 		}
 	}
 }
-func pages(w http.ResponseWriter, r *http.Request) {
-	file := chi.URLParam(r, "page")
+
+func staticRouter(w http.ResponseWriter, r *http.Request) {
+	file := chi.URLParam(r, "file")
 	typeFile := chi.URLParam(r, "type")
 	switch typeFile {
 	case "css":
@@ -50,23 +52,21 @@ func pages(w http.ResponseWriter, r *http.Request) {
 	//	log.Println(path)
 	http.ServeFile(w, r, path)
 }
-func staticRouter(w http.ResponseWriter, r *http.Request) {
+func pageRouter(w http.ResponseWriter, r *http.Request) {
+	fmc.Printfln("#gbt(pageRouter)#bbt> #wbturl: [%s]", r.URL.Path)
+
 	file := chi.URLParam(r, "file")
-	typeFile := chi.URLParam(r, "type")
-	switch typeFile {
-	case "css":
-		log.Printf("Type [%s] of file: [%s]\n", typeFile, file)
-		w.Header().Set("Content-Type", "text/css")
-	case "js":
-		log.Printf("Type [%s] of file: [%s]\n", typeFile, file)
-		w.Header().Set("Content-Type", "application/javascript")
-	case "ttf":
-		log.Printf("Type [%s] of file: [%s]\n", typeFile, file)
-		w.Header().Set("Content-Type", "application/x-font-ttf")
-	default:
-		log.Printf("Undefined type [%s] of file: [%s]\n", typeFile, file)
+	folder := chi.URLParam(r, "folder")
+
+	path := "./web/pages/" + folder + "/" + file
+	ext := strings.Split(file, ".")
+	fmt.Printf("len ext:%d , ext: %s\n", len(ext), ext)
+	if 1 < len(ext) {
+		ex := ext[1]
+		if ex == "js" {
+			fmc.Printfln("#gbt(pageRouter)#bbt> #wbtfile [%s] was type js.", r.URL.Path)
+		}
 	}
-	path := "./web/static/" + typeFile + "/" + file
 	//	log.Println(path)
 	http.ServeFile(w, r, path)
 }
@@ -106,7 +106,7 @@ func registration(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusMovedPermanently)
 	}
 	//____________________________________________
-	tmpl, err := template.ParseFiles("web/templates/reg.html", "web/templates/base.html")
+	tmpl, err := template.ParseFiles("web/pages/registration/reg.html", "web/pages/registration/base.html")
 	if err != nil {
 		_, err := w.Write([]byte(err.Error()))
 		if err != nil {
@@ -182,7 +182,7 @@ func main() {
 	r.HandleFunc("/user_create", API.UserCreate)
 	r.HandleFunc("/static/{type}/{file}", staticRouter)
 	r.HandleFunc("/about", about)
-
+	r.HandleFunc("/pages/{folder}/{file}", pageRouter)
 	//r.Route("/api", API.Router)
 	//to this methods must be acces for only authorized user
 	r.Route("/auth", func(r chi.Router) {

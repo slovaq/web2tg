@@ -22,11 +22,10 @@ func GetHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Printf("Hello, %s!\n", login)
-	dat, err := ioutil.ReadFile("templates/home.html")
+	dat, err := ioutil.ReadFile("./web/pages/home/home.html")
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Print(string(dat))
 	tmpl, err := template.New("").Delims("[[", "]]").Parse(string(dat))
 	if err != nil {
 		fmt.Println(err)

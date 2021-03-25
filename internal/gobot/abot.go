@@ -36,9 +36,9 @@ func New(cfg *Config) (*SNBot, error) {
 		upd: updates,
 	}, nil
 }
-func InitBotRC(upd *GobotConnect) {
+func TestRC(upd *GobotConnect) {
 	fmc.Printfln("#rbt Run> #gbtInitBotRC")
-	upd.InitBot()
+	//upd.InitBot()
 }
 func (upd *GobotConnect) InitBot() {
 	fmc.Println("#rbtinitBot")
@@ -47,7 +47,7 @@ func (upd *GobotConnect) InitBot() {
 	initV := 0
 	if len(user) != 0 {
 		fmt.Println("init>user>", user[0].BotToken)
-		fmc.Println("#rbtinitBot>Run bot>")
+		fmc.Println("#rbtinitBot> Run bot>")
 		go upd.RunBot()
 		initV = 1
 	} else {
@@ -65,99 +65,103 @@ func (upd *GobotConnect) InitBot() {
 	}
 }
 func (upd *GobotConnect) RunBot() {
-	fmc.Println("#rbtrun bot> run")
-
+	fmc.Println("#rbtrun bot> #gbtrun")
 	var user []DAL.ClientConfig
 	DAL.DB.Where("").Find(&user)
-	for _, u := range user {
-		u := u
-		go func() {
-			s := &Config{
-				Token:      u.BotToken,
-				UpdateTime: 60,
+	//for _, u := range user {
+	u := user[0]
+	//go func() {
+	s := &Config{
+		Token:      u.BotToken,
+		UpdateTime: 60,
+	}
+
+	C, err := New(s)
+	if err != nil {
+		fmc.Printfln("err: %s", err)
+		//select {}
+	}
+	C.bot.Debug = false
+	log.Printf("Authorized on account %s", C.bot.Self.UserName)
+	fmc.Printfln("#ybtrange> #gbtstart")
+	for x := range upd.MessageTG {
+
+		fmc.Printfln("range> %s", x.ChatID)
+	}
+	for {
+		fmc.Println("#ybt(loop) #gbtselect")
+		select {
+		case <-upd.Updatetoken:
+			var user []DAL.ClientConfig
+			DAL.DB.Where("").Find(&user)
+			for _, u := range user {
+				fmc.Printfln("user:%s", u.BotToken)
+				if C.bot.Token == u.BotToken {
+					fmc.Printfln("#rbtskip Token> #gbt%s", u.BotToken)
+				} else {
+					fmc.Printfln("#rbtchange Token> #gbt%s", u.BotToken)
+					C.bot.StopReceivingUpdates()
+					s := &Config{
+						Token:      u.BotToken,
+						UpdateTime: 60,
+					}
+					C, _ = New(s)
+				}
 			}
+		case update := <-C.upd:
 
-			C, err := New(s)
-			C.bot.Debug = false
-			log.Printf("Authorized on account %s", C.bot.Self.UserName)
+			if update.EditedMessage != nil {
+				fmc.Printfln("#ybtedited message> #gbtmsg: %s", update.EditedMessage.Text)
 
-			if err != nil {
-
-				fmc.Printfln("err: %s", err)
-				select {}
-			}
-			for {
-				select {
-				case <-upd.Updatetoken:
-					var user []DAL.ClientConfig
-					DAL.DB.Where("").Find(&user)
-					for _, u := range user {
-						fmc.Printfln("user:%s", u.BotToken)
-						if C.bot.Token == u.BotToken {
-							fmc.Printfln("#rbtskip Token> #gbt%s", u.BotToken)
+			} else {
+				fmc.Printfln("#ybtmsg: #bbt%s %s> #gbt %s", update.Message.From.FirstName, update.Message.From.LastName, update.Message.Text)
+				if update.Message.IsCommand() {
+					switch update.Message.Command() {
+					case "id":
+						returnChatid(C.bot, update.Message)
+					case "check":
+						if update.Message.CommandArguments() == "" {
+							C.Send(update.Message.Chat.ID, "/check https://t.me/joinchat/asdhajksdasd")
 						} else {
-							fmc.Printfln("#rbtchange Token> #gbt%s", u.BotToken)
-							C.bot.StopReceivingUpdates()
-							s := &Config{
-								Token:      u.BotToken,
-								UpdateTime: 60,
-							}
-							C, _ = New(s)
+							id, msg := checkChat(update.Message, update.Message.CommandArguments()) // По другому никак.
+							C.Send(id, msg)
+							fmc.Printfln("#gbtid: %d, #bbtupdate.id: %d, msg:%s", id, update.Message.Chat.ID, msg)
+
 						}
-					}
-				case update := <-C.upd:
 
-					if update.EditedMessage != nil {
-						fmc.Printfln("#ybtedited message> #gbtmsg: %s", update.EditedMessage.Text)
-
-					} else {
-						fmc.Printfln("#ybtmsg: #bbt%s %s> #gbt %s", update.Message.From.FirstName, update.Message.From.LastName, update.Message.Text)
-						if update.Message.IsCommand() {
-							switch update.Message.Command() {
-							case "id":
-								returnChatid(C.bot, update.Message)
-							case "check":
-								if update.Message.CommandArguments() == "" {
-									C.Send(update.Message.Chat.ID, "/check https://t.me/joinchat/asdhajksdasd")
-								} else {
-									id, msg := checkChat(update.Message, update.Message.CommandArguments()) // По другому никак.
-									C.Send(id, msg)
-									fmc.Printfln("#gbtid: %d, #bbtupdate.id: %d, msg:%s", id, update.Message.Chat.ID, msg)
-
-								}
-
-							case "link":
-								linkChat(C, update.Message)
-							default:
-								fmc.Printfln("#rbtCommandHandler Error> command not found: #gbt%s", update.Message.Command())
-							}
-						}
-					}
-
-				//
-				case msg := <-upd.MessageTG:
-					var links Link
-					DAL.DB.Where("user_link = ?", msg.ChatID).First(&links)
-					if (links == Link{}) {
-						fmc.Println("#rbtupd.MessageTG Error> #ybtlen(links) = 0")
-						return
-					}
-					ms, err := C.Send(links.ChatID, msg.Message)
-
-					if msg.Pic != "" {
-						ms, err = C.SendPhoto(links.ChatID, msg.Pic)
-					}
-
-					fmc.Printfln("<-MessageTGChannel : %d, %s", links.ChatID, msg.Message)
-					fmc.Printfln("#ybtpic> #gbt%s", msg.Pic)
-
-					if err != nil {
-						fmc.Printfln("message error>%s \n\t ms: %v", err.Error(), ms)
+					case "link":
+						linkChat(C, update.Message)
+					default:
+						fmc.Printfln("#rbtCommandHandler Error> command not found: #gbt%s", update.Message.Command())
 					}
 				}
 			}
-		}()
+
+		case msg := <-upd.MessageTG:
+			fmc.Println("#rbtupd.MessageTG start> ")
+			var links Link
+			DAL.DB.Where("user_link = ?", msg.ChatID).First(&links)
+			if (links == Link{}) {
+				fmc.Println("#rbtupd.MessageTG Error> #ybtlen(links) = 0")
+				return
+			}
+			ms, err := C.Send(links.ChatID, msg.Message)
+
+			if msg.Pic != "" {
+				ms, err = C.SendPhoto(links.ChatID, msg.Pic)
+			}
+
+			fmc.Printfln("<-MessageTGChannel : %d, %s", links.ChatID, msg.Message)
+			fmc.Printfln("#ybtpic> #gbt%s", msg.Pic)
+
+			if err != nil {
+				fmc.Printfln("message error>%s \n\t ms: %v", err.Error(), ms)
+			}
+			fmc.Println("#rbtupd.MessageTG stop> ")
+		}
 	}
+	//	}()
+	//}
 }
 
 //Send Send(chatID int64, msg string) send Message to chat by id

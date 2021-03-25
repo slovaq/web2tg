@@ -88,3 +88,6 @@ type UpdateStorage struct {
 	Box          []Box
 	GobotConnect gobot.GobotConnect
 }
+type HandleError struct {
+	HttpError string
+}

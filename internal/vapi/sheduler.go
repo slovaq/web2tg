@@ -7,7 +7,6 @@ import (
 
 	"github.com/mallvielfrass/coloredPrint/fmc"
 	"github.com/slovaq/web2tg/internal/data"
-	"github.com/slovaq/web2tg/internal/gobot"
 )
 
 func (upd *UpdateStorage) dBCheck() {
@@ -43,27 +42,24 @@ func (upd *UpdateStorage) dBCheck() {
 	fmc.Printfln("#rbtfunc DBCheck> #gbtclosed")
 }
 
-func InitChannel(UpdateRecord chan bool, UpdateConfig chan string, ReadRecord chan bool, ReadConfig chan string, Box Boxs, GobotConnect gobot.GobotConnect) *UpdateStorage {
-	return &UpdateStorage{
-		UpdateRecord: UpdateRecord,
-		UpdateConfig: UpdateConfig,
-		ReadRecord:   ReadRecord,
-		ReadConfig:   ReadConfig,
-		Box:          Box,
-		GobotConnect: GobotConnect,
-	}
-}
 func (upd *UpdateStorage) checkDateCounter() {
-	for {
-		fmc.Printfln("#ybtcheckDateCounter> #gbtawait update")
-		time.Sleep(time.Duration(1) * time.Second)
-		select {
-		case <-upd.ReadRecord:
-			fmc.Printfln("#gbtcheck date> #rbtDBcheck")
-			upd.dBCheck()
-			//	upd.UpdateRecord <- true
-		}
+	fmc.Caller()
+	for range upd.ReadRecord {
+		fmc.Printfln("#gbtcheck date> #rbtDBcheck")
+		upd.dBCheck()
+		upd.UpdateRecord <- true
 	}
+	//for {
+	//fmc.Printfln("#ybtcheckDateCounter> #gbtawait update")
+	//time.Sleep(time.Duration(1) * time.Second)
+	//select {
+	//case <-upd.ReadRecord:
+	//	fmc.Printfln("#gbtcheck date> #rbtDBcheck")
+	//	upd.dBCheck()
+	//	upd.UpdateRecord <- true
+	//}
+	//}
+
 }
 func (box *Boxs) add(item int64) {
 	*box = append(*box, Box{Time: item})
@@ -76,7 +72,10 @@ func (upd *UpdateStorage) read() {
 			fmc.Printfln("#rbtread> #bbtupd.UpdateRecord")
 			m.Lock()
 			bx := append(Boxs{}, upd.Box...)
-			upd.ManageMessage(bx[0])
+			if 1 <= len(bx) {
+				upd.ManageMessage(bx[0])
+			}
+
 			if len(bx) == 1 {
 				upd.Box = Boxs{}
 			} else {

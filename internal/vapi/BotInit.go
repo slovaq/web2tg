@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/mallvielfrass/coloredPrint/fmc"
+	"github.com/slovaq/web2tg/internal/gobot"
 )
 
 var (
@@ -48,5 +49,16 @@ func checkerChannel() {
 		}
 
 		time.Sleep(time.Duration(10) * time.Millisecond)
+	}
+}
+
+func InitChannel(UpdateRecord chan bool, UpdateConfig chan string, ReadRecord chan bool, ReadConfig chan string, Box Boxs, GobotConnect gobot.GobotConnect) *UpdateStorage {
+	return &UpdateStorage{
+		UpdateRecord: UpdateRecord,
+		UpdateConfig: UpdateConfig,
+		ReadRecord:   ReadRecord,
+		ReadConfig:   ReadConfig,
+		Box:          Box,
+		GobotConnect: GobotConnect,
 	}
 }

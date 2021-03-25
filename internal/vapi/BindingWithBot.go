@@ -10,16 +10,18 @@ import (
 )
 
 //Initrc  start sheduler module
-func (upd UpdateStorage) Initrc() {
+func (upd *UpdateStorage) Initrc() {
 	stateM.MutexName = "stateM"
 	stateM.Status = false
 	rand.Seed(time.Now().UnixNano())
 	fmc.Printfln("#rbt Run> #gbtInitrc")
 	go upd.Check()
 	go upd.checkDateCounter()
+	go upd.read()
 	upd.ReadRecord <- true
 	go checkerChannel()
-	go gobot.InitBotRC(&upd.GobotConnect)
+	//go gobot.InitBotRC(&upd.GobotConnect)
+	upd.GobotConnect.InitBot()
 
 }
 
@@ -29,12 +31,15 @@ func (upd UpdateStorage) Initrc() {
 //go upd.checkDateCounter()
 //sgo upd.read()
 func (upd *UpdateStorage) ManageMessage(f Box) {
+	fmc.Printfln("#ybtManageMessage> #bbtrun")
+
 	msg := gobot.MessageTG{
 		Message: f.Message,
 		ChatID:  f.URL,
 		Pic:     f.Pic,
 	}
 	upd.GobotConnect.MessageTG <- msg
+	fmc.Printfln("#ybtManageMessage> #bbtsend")
 	if f.Period == "one" {
 
 		DB.Table("vapi_records").Where("id = ?", f.ID).Updates(VapiRecord{Status: "deleted", DataRead: data.GetCurrentDate()})
