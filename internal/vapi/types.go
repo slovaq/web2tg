@@ -83,7 +83,6 @@ type IntRange struct {
 type UpdateStorage struct {
 	UpdateRecord chan bool
 	UpdateConfig chan string
-	ReadRecord   chan bool
 	ReadConfig   chan string
 	Box          []Box
 	GobotConnect gobot.GobotConnect

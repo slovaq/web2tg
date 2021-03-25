@@ -52,11 +52,11 @@ func checkerChannel() {
 	}
 }
 
-func InitChannel(UpdateRecord chan bool, UpdateConfig chan string, ReadRecord chan bool, ReadConfig chan string, Box Boxs, GobotConnect gobot.GobotConnect) *UpdateStorage {
+func InitChannel(UpdateRecord chan bool, UpdateConfig chan string, ReadConfig chan string, Box Boxs, GobotConnect gobot.GobotConnect) *UpdateStorage {
 	return &UpdateStorage{
 		UpdateRecord: UpdateRecord,
 		UpdateConfig: UpdateConfig,
-		ReadRecord:   ReadRecord,
+
 		ReadConfig:   ReadConfig,
 		Box:          Box,
 		GobotConnect: GobotConnect,

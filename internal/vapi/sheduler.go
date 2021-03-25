@@ -42,34 +42,36 @@ func (upd *UpdateStorage) dBCheck() {
 	fmc.Printfln("#rbtfunc DBCheck> #gbtclosed")
 }
 
-func (upd *UpdateStorage) checkDateCounter() {
-	fmc.Caller()
-	for range upd.ReadRecord {
-		fmc.Printfln("#gbtcheck date> #rbtDBcheck")
-		upd.dBCheck()
-		upd.UpdateRecord <- true
-	}
-	//for {
-	//fmc.Printfln("#ybtcheckDateCounter> #gbtawait update")
-	//time.Sleep(time.Duration(1) * time.Second)
-	//select {
-	//case <-upd.ReadRecord:
-	//	fmc.Printfln("#gbtcheck date> #rbtDBcheck")
-	//	upd.dBCheck()
-	//	upd.UpdateRecord <- true
-	//}
-	//}
+//func (upd *UpdateStorage) checkDateCounter() {
+//fmc.Caller()
+//for range upd.ReadRecord {
+//	fmc.Printfln("#gbtcheck date> #rbtDBcheck")
+//	upd.dBCheck()
+//	upd.UpdateRecord <- true
+//	}
+//for {
+//fmc.Printfln("#ybtcheckDateCounter> #gbtawait update")
+//time.Sleep(time.Duration(1) * time.Second)
+//select {
+//case <-upd.ReadRecord:
+//	fmc.Printfln("#gbtcheck date> #rbtDBcheck")
+//	upd.dBCheck()
+//	upd.UpdateRecord <- true
+//}
+//}
 
-}
+//}
 func (box *Boxs) add(item int64) {
 	*box = append(*box, Box{Time: item})
 }
 
-func (upd *UpdateStorage) read() {
+func (upd *UpdateStorage) Read() {
 	for {
 		select {
 		case <-upd.UpdateRecord:
+
 			fmc.Printfln("#rbtread> #bbtupd.UpdateRecord")
+			upd.dBCheck()
 			m.Lock()
 			bx := append(Boxs{}, upd.Box...)
 			if 1 <= len(bx) {

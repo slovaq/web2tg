@@ -146,7 +146,7 @@ func (upd *UpdateStorage) RecordCreate(w http.ResponseWriter, r *http.Request) {
 
 			}
 			fmc.Printfln("#rbtRecordCreate> #bbt%s> #gbt%s", login, dateTimePicker)
-			upd.ReadRecord <- true
+			upd.UpdateRecord <- true
 			json.NewEncoder(w).Encode(conf)
 		case "week":
 			checkedNames := r.FormValue("week")
@@ -169,7 +169,7 @@ func (upd *UpdateStorage) RecordCreate(w http.ResponseWriter, r *http.Request) {
 
 				}
 				fmc.Printfln("#rbtRecordCreate> #bbt%s> #gbt%s", login, dateTimePicker)
-				upd.ReadRecord <- true
+				upd.UpdateRecord <- true
 				json.NewEncoder(w).Encode(conf)
 			} else {
 
@@ -203,7 +203,7 @@ func (upd *UpdateStorage) RecordCreate(w http.ResponseWriter, r *http.Request) {
 
 				}
 				fmc.Printfln("#rbtRecordCreate> #bbt%s> #gbt%s", login, dateTimePicker)
-				upd.ReadRecord <- true
+				upd.UpdateRecord <- true
 				json.NewEncoder(w).Encode(conf)
 			}
 		default:
@@ -268,7 +268,7 @@ func (upd *UpdateStorage) RecordDelete(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	fmc.Println("#gbt delete ok!")
 
-	upd.ReadRecord <- true
+	upd.UpdateRecord <- true
 	json.NewEncoder(w).Encode("{\"status\":\"ok\"}")
 
 }

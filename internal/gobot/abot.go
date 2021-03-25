@@ -84,10 +84,10 @@ func (upd *GobotConnect) RunBot() {
 	C.bot.Debug = false
 	log.Printf("Authorized on account %s", C.bot.Self.UserName)
 	fmc.Printfln("#ybtrange> #gbtstart")
-	for x := range upd.MessageTG {
+	//for x := range upd.MessageTG {
 
-		fmc.Printfln("range> %s", x.ChatID)
-	}
+	//	fmc.Printfln("range> %s", x.ChatID)
+	//}
 	for {
 		fmc.Println("#ybt(loop) #gbtselect")
 		select {

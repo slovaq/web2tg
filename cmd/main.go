@@ -160,16 +160,21 @@ func index(w http.ResponseWriter, r *http.Request) {
 }
 func main() {
 	r := chi.NewRouter()
+	modChan := make(chan gobot.MessageTG)
 	UpdateRecord := make(chan bool)
 	UpdateConfig := make(chan string)
-	ReadRecord := make(chan bool)
 
 	ReadConfig := make(chan string)
-
+	Updatetoken := make(chan bool)
+	CheckInit := make(chan bool)
 	//msg := make(chan bot.MessageTG)
-	GobotConnect := gobot.GobotConnect{}
+	GobotConnect := gobot.GobotConnect{
+		MessageTG:   modChan,
+		Updatetoken: Updatetoken,
+		CheckInit:   CheckInit,
+	}
 	box := vapi.Boxs{}
-	upd := vapi.InitChannel(UpdateRecord, UpdateConfig, ReadRecord, ReadConfig, box, GobotConnect)
+	upd := vapi.InitChannel(UpdateRecord, UpdateConfig, ReadConfig, box, GobotConnect)
 
 	go upd.Initrc()
 

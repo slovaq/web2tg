@@ -16,9 +16,9 @@ func (upd *UpdateStorage) Initrc() {
 	rand.Seed(time.Now().UnixNano())
 	fmc.Printfln("#rbt Run> #gbtInitrc")
 	go upd.Check()
-	go upd.checkDateCounter()
-	go upd.read()
-	upd.ReadRecord <- true
+	//go upd.checkDateCounter()
+	go upd.Read()
+	upd.UpdateRecord <- true
 	go checkerChannel()
 	//go gobot.InitBotRC(&upd.GobotConnect)
 	upd.GobotConnect.InitBot()
