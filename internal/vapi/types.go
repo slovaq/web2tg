@@ -45,9 +45,6 @@ type CreateConfData struct {
 	User   *ClientConfig
 	Status string
 }
-type tomlConfig struct {
-	Token string
-}
 
 //Update struct{UpdateToken chan string}
 type Update struct {
@@ -76,10 +73,6 @@ type Box struct {
 //Boxs []Box
 type Boxs []Box
 
-//IntRange struct {min, max int}
-type IntRange struct {
-	min, max int
-}
 type UpdateStorage struct {
 	UpdateRecord chan bool
 	UpdateConfig chan string

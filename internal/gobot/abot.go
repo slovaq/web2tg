@@ -1,7 +1,6 @@
 package gobot
 
 import (
-	"fmt"
 	"log"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
@@ -41,13 +40,13 @@ func TestRC(upd *GobotConnect) {
 	//upd.InitBot()
 }
 func (upd *GobotConnect) InitBot() {
-	fmc.Println("#rbtinitBot")
+	fmc.Println("#rbtInitBot> #gbtstart")
 	var user []DAL.ClientConfig
 	DAL.DB.Where("").Find(&user)
 	initV := 0
 	if len(user) != 0 {
-		fmt.Println("init>user>", user[0].BotToken)
-		fmc.Println("#rbtinitBot> Run bot>")
+		//fmt.Println("init>user>", user[0].BotToken)
+		//fmc.Println("#rbtinitBot> Run bot>")
 		go upd.RunBot()
 		initV = 1
 	} else {
@@ -55,7 +54,7 @@ func (upd *GobotConnect) InitBot() {
 	}
 	for range upd.CheckInit {
 		if initV == 0 {
-			fmc.Println("#rbtinitBot>Run bot>")
+			//fmc.Println("#rbtinitBot> Run bot>")
 			go upd.RunBot()
 			initV = 1
 		} else {
@@ -65,7 +64,7 @@ func (upd *GobotConnect) InitBot() {
 	}
 }
 func (upd *GobotConnect) RunBot() {
-	fmc.Println("#rbtrun bot> #gbtrun")
+	fmc.Println("#ybtRunBot> #gbtstart")
 	var user []DAL.ClientConfig
 	DAL.DB.Where("").Find(&user)
 	//for _, u := range user {
@@ -89,7 +88,7 @@ func (upd *GobotConnect) RunBot() {
 	//	fmc.Printfln("range> %s", x.ChatID)
 	//}
 	for {
-		fmc.Println("#ybt(loop) #gbtselect")
+		//fmc.Println("#ybt(loop) #gbtselect")
 		select {
 		case <-upd.Updatetoken:
 			var user []DAL.ClientConfig

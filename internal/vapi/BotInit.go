@@ -12,8 +12,6 @@ var (
 	m         sync.Mutex
 	stateM    infoMutex
 	CheckDate chan bool
-	layout    = "2021-01-18 17:53"
-	records   []VapiRecord
 )
 
 func (st *infoMutex) MutexInfoLocker(wci string) {

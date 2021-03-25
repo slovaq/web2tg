@@ -21,7 +21,7 @@ import (
 
 //RecordCreate (w http.ResponseWriter, r *http.Request)
 func prepareImg(file multipart.File, header *multipart.FileHeader) string {
-	FileName := "files/" + header.Filename
+	FileName := "web/files/" + header.Filename
 	f, err := os.Create(FileName)
 	if err != nil {
 		fmc.Printfln("#rbtError: #ybt%s", err.Error())
@@ -95,7 +95,7 @@ func (upd *UpdateStorage) RecordCreate(w http.ResponseWriter, r *http.Request) {
 	logix, err := r.Cookie("login")
 	if err != nil {
 		fmt.Printf("[login] error %s\n", err.Error())
-		http.Redirect(w, r, "/reg", 301)
+		http.Redirect(w, r, "/reg", http.StatusMovedPermanently)
 		return
 	}
 	pic := ""
@@ -227,7 +227,7 @@ func RecordGet(w http.ResponseWriter, r *http.Request) {
 	logix, err := r.Cookie("login")
 	if err != nil {
 		fmt.Printf("[login] error %s\n", err.Error())
-		http.Redirect(w, r, "/reg", 301)
+		http.Redirect(w, r, "/reg", http.StatusMovedPermanently)
 		return
 
 	}
@@ -255,7 +255,7 @@ func (upd *UpdateStorage) RecordDelete(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("[login] error %s\n", err.Error())
 
-		http.Redirect(w, r, "/reg", 301)
+		http.Redirect(w, r, "/reg", http.StatusMovedPermanently)
 		return
 	}
 	fmt.Println(logix.Value)

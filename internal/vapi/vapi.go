@@ -13,7 +13,7 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 	logix, err := r.Cookie("login")
 	if err != nil {
 		fmt.Printf("[login] error %s\n", err.Error())
-		http.Redirect(w, r, "/reg", 301)
+		http.Redirect(w, r, "/reg", http.StatusMovedPermanently)
 		return
 	}
 	fmt.Println(logix.Value)
