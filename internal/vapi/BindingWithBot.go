@@ -11,15 +11,13 @@ import (
 
 //Initrc  start sheduler module
 func (upd *UpdateStorage) Initrc() {
-	stateM.MutexName = "stateM"
-	stateM.Status = false
 	rand.Seed(time.Now().UnixNano())
 	fmc.Printfln("#rbt Run> #gbtInitrc")
 	go upd.Check()
 	//go upd.checkDateCounter()
 	go upd.Read()
 	upd.UpdateRecord <- true
-	go checkerChannel()
+	//go checkerChannel()
 	//go gobot.InitBotRC(&upd.GobotConnect)
 	upd.GobotConnect.InitBot()
 

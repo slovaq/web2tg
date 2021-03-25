@@ -51,12 +51,6 @@ type Update struct {
 	UpdateToken chan string
 }
 
-type infoMutex struct {
-	Status    bool
-	Locker    string
-	MutexName string
-}
-
 //Box Message string, Time int64, Token string, URL string, ID int, User string
 type Box struct {
 	Message string
