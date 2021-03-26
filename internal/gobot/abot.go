@@ -79,7 +79,7 @@ func (upd *GobotConnect) RunBot() {
 	if err != nil {
 		fmc.Printfln("#rbtError TOken: err: %s", err)
 		//C.bot.StopReceivingUpdates()
-	readChannel:
+	ReadChannel:
 		for {
 			select {
 			case <-upd.Updatetoken:
@@ -97,7 +97,7 @@ func (upd *GobotConnect) RunBot() {
 				if err != nil {
 					fmc.Printfln("#rbtError TOken: err: %s", err)
 				} else {
-					break readChannel
+					break ReadChannel
 
 				}
 
@@ -129,7 +129,34 @@ func (upd *GobotConnect) RunBot() {
 					Token:      user[0].BotToken,
 					UpdateTime: 60,
 				}
-				C, _ = New(s)
+				C, err = New(s)
+				if err != nil {
+					fmc.Printfln("#rbtError TOken: err: %s", err)
+				RChannel:
+					for {
+						select {
+						case <-upd.Updatetoken:
+							var user []DAL.ClientConfig
+							DAL.DB.Where("").Find(&user)
+							//for _, u := range user {
+							fmc.Printfln("user:%s", user[0].BotToken)
+							fmc.Printfln("#rbtchange Token> #gbt%s", user[0].BotToken)
+							//C.bot.StopReceivingUpdates()
+							s := &Config{
+								Token:      user[0].BotToken,
+								UpdateTime: 60,
+							}
+							C, err = New(s)
+							if err != nil {
+								fmc.Printfln("#rbtError TOken: err: %s", err)
+							} else {
+								break RChannel
+
+							}
+
+						}
+					}
+				}
 			}
 			//}
 		case update := <-C.upd:
@@ -184,6 +211,7 @@ func (upd *GobotConnect) RunBot() {
 			fmc.Println("#rbtupd.MessageTG stop> ")
 		}
 	}
+
 	//	}()
 	//}
 }
