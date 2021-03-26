@@ -77,7 +77,32 @@ func (upd *GobotConnect) RunBot() {
 
 	C, err := New(s)
 	if err != nil {
-		fmc.Printfln("err: %s", err)
+		fmc.Printfln("#rbtError TOken: err: %s", err)
+		//C.bot.StopReceivingUpdates()
+	readChannel:
+		for {
+			select {
+			case <-upd.Updatetoken:
+				var user []DAL.ClientConfig
+				DAL.DB.Where("").Find(&user)
+				//for _, u := range user {
+				fmc.Printfln("user:%s", user[0].BotToken)
+				fmc.Printfln("#rbtchange Token> #gbt%s", user[0].BotToken)
+				//C.bot.StopReceivingUpdates()
+				s := &Config{
+					Token:      user[0].BotToken,
+					UpdateTime: 60,
+				}
+				C, err = New(s)
+				if err != nil {
+					fmc.Printfln("#rbtError TOken: err: %s", err)
+				} else {
+					break readChannel
+
+				}
+
+			}
+		}
 		//select {}
 	}
 	C.bot.Debug = false
@@ -93,20 +118,20 @@ func (upd *GobotConnect) RunBot() {
 		case <-upd.Updatetoken:
 			var user []DAL.ClientConfig
 			DAL.DB.Where("").Find(&user)
-			for _, u := range user {
-				fmc.Printfln("user:%s", u.BotToken)
-				if C.bot.Token == u.BotToken {
-					fmc.Printfln("#rbtskip Token> #gbt%s", u.BotToken)
-				} else {
-					fmc.Printfln("#rbtchange Token> #gbt%s", u.BotToken)
-					C.bot.StopReceivingUpdates()
-					s := &Config{
-						Token:      u.BotToken,
-						UpdateTime: 60,
-					}
-					C, _ = New(s)
+			//for _, u := range user {
+			fmc.Printfln("user:%s", user[0].BotToken)
+			if C.bot.Token == user[0].BotToken {
+				fmc.Printfln("#rbtskip Token> #gbt%s", user[0].BotToken)
+			} else {
+				fmc.Printfln("#rbtchange Token> #gbt%s", user[0].BotToken)
+				C.bot.StopReceivingUpdates()
+				s := &Config{
+					Token:      user[0].BotToken,
+					UpdateTime: 60,
 				}
+				C, _ = New(s)
 			}
+			//}
 		case update := <-C.upd:
 
 			if update.EditedMessage != nil {
