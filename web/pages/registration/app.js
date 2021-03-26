@@ -20,29 +20,35 @@ const app = new Vue({
         removeLog(){
             $cookies.remove("login") 
             $cookies.remove("password")
-            location.href = '/reg'
+            location.href = '/'
         },
         axiosLog() {
             console.log("send")
             console.log("this.login: " + this.login + " this.passF: " + this.passF )
-            axios.get(`/api/user_get?login=${this.login}&password=${this.passF}`)
+            axios.get(`/user_get?login=${this.login}&password=${this.passF}`)
                 .then(function (response) {
                     // handle success
                     console.log(response);
-                    if (response.data.Error!=null){
-                        console.log(response.data.Error);
-                        $cookies.remove("login") 
-                        $cookies.remove("password")
-                        app.SuccFalse=false
-                        app.SuccFalseMessage=response.data.Error
-                    } else{
+                    if (response.data.Success==true){
                         console.log("this.login: " + app.login + " this.passF: " + app.passF )
-                       // $cookies.set("login", app.login,{ expires: "30d" } );
-                       // $cookies.set("password", app.passF,{ expires: "30d" } );
-                        console.log("this.login set: " + app.login + " this.passF: " + app.passF)
-                        document.cookie = "login=" +app.login+ ";path=/";
-                        document.cookie = "password=" +app.passF+ ";path=/";
+                        // $cookies.set("login", app.login,{ expires: "30d" } );
+                        // $cookies.set("password", app.passF,{ expires: "30d" } );
+                         console.log("this.login set: " + app.login + " this.passF: " + app.passF)
+                         document.cookie = "login=" +app.login+ ";  max-age=32140800;path=/";
+                         document.cookie = "password=" +app.passF+ ";  max-age=32140800;path=/";
+                         app.RegSuccess=false
+                    }else{
+
+                        if (response.data.Error!=null){
+                            alert("логин или пароль не корректный")
+                            console.log(response.data.Error);
+                            $cookies.remove("login") 
+                            $cookies.remove("password")
+                            app.SuccFalse=false
+                            app.SuccFalseMessage=response.data.Error
+                        } 
                     }
+                 
                     
                 })
                 .catch(function (error) {
@@ -82,7 +88,6 @@ const app = new Vue({
 
             if (this.errors.length == 0) {
                 console.log("log ok")
-                this.RegSuccess=false
                 this.axiosLog()
             }
 

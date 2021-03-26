@@ -159,7 +159,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/auth", http.StatusMovedPermanently)
 }
 func favicon(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("%s\n", r.RequestURI)
+	//fmt.Printf("%s\n", r.RequestURI)
 	w.Header().Set("Content-Type", "image/x-icon")
 	w.Header().Set("Cache-Control", "public, max-age=7776000")
 	http.ServeFile(w, r, "./web/favicon/favicon.ico")
@@ -193,6 +193,7 @@ func main() {
 	r.HandleFunc("/reg", registration)
 	r.HandleFunc("/favicon.ico", favicon)
 	r.HandleFunc("/user_create", API.UserCreate)
+	r.HandleFunc("/user_get", API.UserGet)
 	r.HandleFunc("/static/{type}/{file}", staticRouter)
 	r.HandleFunc("/about", about)
 	r.HandleFunc("/pages/{folder}/{file}", pageRouter)
@@ -211,7 +212,7 @@ func main() {
 			r.HandleFunc("/record_delete", upd.RecordDelete)
 			r.HandleFunc("/record_create", upd.RecordCreate)
 
-			r.Get("/user_get", API.UserGet)
+			//r.Get("/user_get", API.UserGet)
 
 			r.Get("/city_create", API.CityCreate)
 			r.Get("/city_get", API.CityGet)
