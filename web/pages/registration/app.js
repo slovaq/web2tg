@@ -11,7 +11,7 @@ const app = new Vue({
         passF: null,
         passLogin: null,
         passT: null,
-        logreg: true,
+        logreg: false,
         RegSuccess:true,
         SuccFalse:true,
         SuccFalseMessage:""
