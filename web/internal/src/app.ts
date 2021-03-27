@@ -1,4 +1,7 @@
-
+import Vue from 'vue'
+import VueCookies from 'vue-cookies'
+import axios from 'axios'
+Vue.use(VueCookies)
 
 const app = new Vue({
 
@@ -19,8 +22,8 @@ const app = new Vue({
     },
     methods: {
         removeLog(){
-            $cookies.remove("login") 
-            $cookies.remove("password")
+            Vue.$cookies.remove("login") 
+            Vue.$cookies.remove("password")
             location.href = '/reg'
         },
         axiosLog() {
@@ -32,14 +35,17 @@ const app = new Vue({
                     console.log(response);
                     if (response.data.Error!=null){
                         console.log(response.data.Error);
-                        $cookies.remove("login") 
-                        $cookies.remove("password")
+                        Vue.$cookies.remove("login") 
+                        Vue.$cookies.remove("password")
                         app.SuccFalse=false
                         app.SuccFalseMessage=response.data.Error
                     } else{
                         console.log("this.login: " + app.login + " this.passF: " + app.passF )
-                        $cookies.set("login", app.login,{ expires: "30d" } );
-                        $cookies.set("password", app.passF,{ expires: "30d" } );
+                       // $cookies.set("login", app.login,{ expires: "30d" } );
+                       // $cookies.set("password", app.passF,{ expires: "30d" } );
+                        console.log("this.login set: " + app.login + " this.passF: " + app.passF)
+                        document.cookie = "login=" +app.login+ ";path=/";
+                        document.cookie = "password=" +app.passF+ ";path=/";
                     }
                     
                 })
@@ -55,8 +61,11 @@ const app = new Vue({
                 .then(function (response) {
                     // handle success
                     console.log(response);
-                    document.cookie = `login=${app.email}; expires=30d`;// vue-cookies mocha blyad
+                    document.cookie = `login=${app.email}; expires=30d`;
                     document.cookie = `password=${app.passF}; expires=30d`;
+                    // $cookies.set("login", app.email,{ expires: "30d" } );
+                    // $cookies.set("password", app.passF,{ expires: "30d" } );
+                    
                 })
                 .catch(function (error) {
                     // handle error
@@ -82,7 +91,7 @@ const app = new Vue({
             }
 
         },
-        subHandler() {
+        subHandler: {
             this.errors = [];
             console.log("this.login: " + this.login + " this.passF: " + this.passF + " this.passT: " + this.passT)
             if (!this.login) {
@@ -106,7 +115,7 @@ const app = new Vue({
             }
 
         },
-        validEmail: function (email) {
+        validEmail(email): {
             var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return re.test(email);
         }

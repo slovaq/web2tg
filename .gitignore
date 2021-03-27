@@ -13,3 +13,4 @@ web/test.db
 *.jpg
 .github/*
 bin/*
+web/internal/node_modules
