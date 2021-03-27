@@ -1,15 +1,14 @@
 import Vue from 'vue'
-import VueCookies from 'vue-cookies'
+import VueCookies from 'vue-cookies' // меня заебал линтер, хули он орёт? надо потом вью с аксиосом притащить к себе
 import axios from 'axios'
 Vue.use(VueCookies)
-
 const app = new Vue({
 
     delimiters: ['${', '}'],
     el: '#app',
     data: {
         errors: [],
-        login: null,
+        login: undefined,
         email: null,
         movie: null,
         passF: null,
@@ -73,9 +72,9 @@ const app = new Vue({
                 });
 
         },
-        logHandler() {
-            this.errors = [];
-            console.log("this.login: " + this.login + " this.passF: " + this.passF )
+        logHandler: {
+            this.errors = []
+            console.log("this.login: ", this.login," \t this.passF: ", this.passF )
             if (!this.login) {
                 this.errors.push('Укажите имя.');
             }
@@ -115,7 +114,7 @@ const app = new Vue({
             }
 
         },
-        validEmail(email): {
+        validEmail: function (email) {
             var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return re.test(email);
         }

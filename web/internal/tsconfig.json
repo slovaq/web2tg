@@ -1,6 +1,8 @@
 {
     "compilerOptions": {
-        "target":"es5",
+        "module": "es6",
+        "target":"es6",
+        "lib": ["dom","es6"],
         "removeComments": true,
         "outDir": "js",
         "sourceMap": true
