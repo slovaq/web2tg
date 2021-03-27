@@ -11,83 +11,7 @@
 
     <title>Error</title>
 </head>
-<style>
-    table,
-    tr,
-    td {
-        padding: 2px;
-        border: 1px solid black;
-    }
-</style>
-<style>
-    table {
-        font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-        font-size: 14px;
-        border-radius: 10px;
-        border-spacing: 0;
-        text-align: center;
-    }
 
-    th {
-        background: #2C7279;
-        color: white;
-        text-shadow: 0 1px 1px #2D2020;
-        padding: 10px;
-    }
-
-    th,
-    td {
-        border-style: solid;
-        border-width: 0 1px 1px 0;
-        border-color: white;
-    }
-
-    th:first-child,
-    td:first-child {
-        text-align: left;
-    }
-
-    th:first-child {
-        border-top-left-radius: 10px;
-    }
-
-    th:last-child {
-        border-top-right-radius: 10px;
-        border-right: none;
-    }
-
-    td {
-
-        background: #f2f0ee;
-        color: black;
-
-    }
-
-    tr:last-child td:first-child {
-        border-radius: 0 0 0 10px;
-    }
-
-    tr:last-child td:last-child {
-        border-radius: 0 0 10px 0;
-    }
-
-    tr td:last-child {
-        border-right: none;
-    }
-
-    .break {
-        max-width: 100px;
-
-        word-wrap: break-word;
-    }
-
-    .centre {
-        padding-top: 10px;
-        margin-left: auto;
-        margin-right: auto;
-
-    }
-</style>
 
 <body>
 
@@ -96,7 +20,7 @@
     <div v-if="regVisible">
         <div class="modal-mask">
             <div class="modal-wrapper">
-                <div class="modal-container" style="width: 400px;height: 400px;">
+                <div class="modal-container">
                     <form @submit.prevent="createHandler">
 
                         <fieldset class="uk-fieldset">
@@ -143,7 +67,7 @@
         <div v-if="modVisible">
             <div class="modal-mask">
                 <div class="modal-wrapper">
-                    <div class="modal-container" style="width: 400px;height: 400px;">
+                    <div class="modal-container" style>
                         <form @submit.prevent="updateHandler">
 
                             <fieldset class="uk-fieldset">
@@ -191,30 +115,29 @@
 
                 <div class="modal-wrapper">
 
-                    <div class="modal-container" style="width: 450px;height: 400px;">
+                    <div class="modal-container">
 
                         <div id='list-wrapper' v-if="posts.length > 0">
 
-                            <table style="width:450px;margin-left: auto;
-                            margin-right: auto;">
+                            <table class="uk-table">
 
-                                <tr>
+                                <thead>
                                     <th>Login</th>
                                     <th>ChatLink</th>
                                     <th>BotToken </th>
                                     <th>Button </th>
-                                </tr>
+                                </thead>
 
 
-                                <tr v-for="post in posts">
+                                <tbody><tr v-for="post in posts">
 
                                     <td>
                                         <div class="break">{{ post.login }}</div>
                                     </td>
-                                    <td>
+                                    <td >
                                         <div class="break">{{ post.ChatLink }}</div>
                                     </td>
-                                    <td>
+                                    <td class="">
                                         <div class="break">{{ post.BotToken }}</div>
                                     </td>
                                    
@@ -223,13 +146,13 @@
                                                  style="font-size: 2rem;padding:0 1px;" value="return to login page!">
                                         &#9998;</button></td>
                                 </tr>
+                            </tbody>
 
                             </table>
 
                         </div>
                         <div id='list-wrapper' v-else>
-                            <table style="width:450px;margin-left: auto;
-                            margin-right: auto;">
+                            <table>
 
                                 <tr>
                                     <td> Login</td>
@@ -425,7 +348,6 @@
 
 <link rel="stylesheet" type="text/css" href="/static/css/sandbox.css" />
 <!-- template for the modal component -->
-<link rel="stylesheet" href="/static/css/styles.css">
 
 
 <script src="https://unpkg.com/vue-cookies@1.5.12/vue-cookies.js"></script>
