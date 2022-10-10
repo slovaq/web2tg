@@ -1,3 +1,6 @@
+#Web2tg
+##Сервис постинга сообщений в телеграм в назначенное время, с web управлением. 
+
 # Web stack
     go get -u gorm.io/gorm
     go get -u gorm.io/driver/sqlite
@@ -8,9 +11,9 @@
 ### API
 Если необходимо создать пользователя то используйте **это**
 `localhost:1111/api/user_create?`
-`localhost:1111/api/user_create?login=analwormx&name=123&password=123`
+`localhost:1111/api/user_create?login=testuser&name=123&password=123`
 А если узнать, существуют ли пользователь, то **это**
-/api/user_get?login=analwormx&name=123&password=123`
+/api/user_get?login=testuser&name=123&password=123`
 
 #### Поля
 	login - логин пользователя ( пример: torvarlds) 
@@ -25,7 +28,7 @@
   "Result": {
     "ID": 6,
     "Name": "123",
-    "Login": "analwormx",
+    "Login": "testuser",
     "Password": "hidden"
   },
   "Error": null
@@ -36,7 +39,7 @@
 {
   "Success": false,
   "Result": null,
-  "Error": "login zhopa not found"
+  "Error": "login not found"
 }
 ```
 # Работа с городами.
